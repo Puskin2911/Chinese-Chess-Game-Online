@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ChineseChessGame.iml" filepath="$PROJECT_DIR$/.idea/ChineseChessGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ccgame-service/ccgame.iml" filepath="$PROJECT_DIR$/ccgame-service/ccgame.iml" />
+    </modules>
+  </component>
+</project>

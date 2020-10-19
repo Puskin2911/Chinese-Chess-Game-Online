@@ -1,4 +1,4 @@
-package config;
+package com.doubleat.ccgame.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("Chinese Chess Game API")
                 .description("Chinese Chess Game online with WebSocket")
-                .contact(new Contact("@@", "http://doubleat.com/ccgames", "hulk@gmail.com"))
+                .contact(new Contact("@@", "http://doubleat.com/ccgame", "hulk@gmail.com"))
                 .version("1.0.0")
                 .build();
     }
