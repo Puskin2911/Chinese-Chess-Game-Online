@@ -18,5 +18,5 @@ logging:
       web: debug
       security: debug
       boot.autoconfigure: info
-game:
+games:
   elo: 1200
