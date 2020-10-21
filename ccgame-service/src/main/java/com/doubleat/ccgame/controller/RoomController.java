@@ -5,6 +5,7 @@ import com.doubleat.ccgame.entity.User;
 import com.doubleat.ccgame.model.Room;
 import com.doubleat.ccgame.service.RoomService;
 import com.doubleat.ccgame.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/v1/rooms/")
+@Api(tags = {"room service"})
 public class RoomController {
     @Autowired
     private RoomService roomService;
@@ -40,7 +42,7 @@ public class RoomController {
     }
 
     @PostMapping(value = "/{roomId}/join")
-    public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication){
+    public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
         Room room = roomService.joinRoom(userConverter.toDto(user), roomId);
 
