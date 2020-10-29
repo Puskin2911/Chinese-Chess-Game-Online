@@ -33,10 +33,10 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
-    @PostMapping(value = "/leave")
-    public ResponseEntity<Boolean> leaveRoom(Authentication authentication) {
+    @PostMapping(value = "/{roomId}/leave")
+    public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Boolean success = roomService.leaveRoom(userConverter.toDto(user));
+        Boolean success = roomService.leaveRoom(roomId, userConverter.toDto(user));
 
         return ResponseEntity.ok(success);
     }

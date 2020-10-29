@@ -11,9 +11,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Room {
     @NonNull
-    private Integer id;
-    private UserDto redUser;
-    private UserDto blackUser;
-    private List<UserDto> watchingUsers;
+    private int id;
+    private UserDto redPlayer;
+    private UserDto blackPlayer;
+    private List<UserDto> viewers;
     private String boardStatus;
 }

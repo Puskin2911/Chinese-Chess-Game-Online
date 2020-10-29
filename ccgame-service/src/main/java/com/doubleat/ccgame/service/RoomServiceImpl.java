@@ -1,25 +1,36 @@
 package com.doubleat.ccgame.service;
 
+import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.model.Room;
-import com.doubleat.ccgame.utils.RoomUtils;
 import org.springframework.stereotype.Service;
 
 
+/**
+ * @author Hop Nguyen
+ */
 @Service
 public class RoomServiceImpl implements RoomService {
-    @Override
-    public Room joinRoom(UserDto userDto) {
-        return RoomUtils.addUserToRoom(userDto);
+
+    private final RoomCache roomCache;
+
+    public RoomServiceImpl(RoomCache roomCache) {
+        this.roomCache = roomCache;
     }
 
     @Override
-    public Boolean leaveRoom(UserDto userDto) {
-        return RoomUtils.removeUserToRoom(userDto);
+    public Room joinRoom(UserDto userDto) {
+        return roomCache.addPlayerToRoom(userDto);
+    }
+
+    @Override
+    public Boolean leaveRoom(int roomId, UserDto userDto) {
+        roomCache.removePlayerFromRoom(userDto, roomId);
+        return true;
     }
 
     @Override
     public Room joinRoom(UserDto userDto, int roomId) {
-        return RoomUtils.addUserToRoom(userDto, roomId);
+        return roomCache.addPlayerToRoom(userDto, roomId);
     }
 }
