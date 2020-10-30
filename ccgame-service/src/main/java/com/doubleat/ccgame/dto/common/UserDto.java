@@ -1,6 +1,5 @@
 package com.doubleat.ccgame.dto.common;
 
-import com.sun.istack.Nullable;
 import lombok.*;
 
 @Data

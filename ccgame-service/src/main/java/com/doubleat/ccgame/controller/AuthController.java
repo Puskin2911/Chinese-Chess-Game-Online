@@ -3,7 +3,8 @@ package com.doubleat.ccgame.controller;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExists;
-import com.doubleat.ccgame.jwt.JwtUtils;
+import com.doubleat.ccgame.utils.JwtService;
+import com.doubleat.ccgame.utils.JwtServiceImpl;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+
     private final UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserService userService) {
@@ -41,7 +46,7 @@ public class AuthController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = JwtUtils.generateJwtToken(authentication);
+        String token = jwtService.generateJwtToken(authentication);
 
         return ResponseEntity.ok(token);
     }
@@ -56,7 +61,7 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = JwtUtils.generateJwtToken(authentication);
+            String token = jwtService.generateJwtToken(authentication);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(token);
         } else throw new UsernameOrEmailHasAlreadyExists("Username Or Email has already exists!");
