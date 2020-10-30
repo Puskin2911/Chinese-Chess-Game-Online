@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.jwt;
+package com.doubleat.ccgame.utils;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -6,19 +6,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-public final class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+@Service
+public class JwtServiceImpl implements JwtService {
+    private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Value("${jwt.secret}")
-    private static String jwtSecret;
+    private String jwtSecret;
 
     @Value("${jwt.expirationMs}")
-    private static int jwtExpirationMs;
+    private Long jwtExpirationMs;
 
-    public static String generateJwtToken(Authentication authentication) {
+    @Override
+    public String generateJwtToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         Date now = new Date();
@@ -31,7 +34,8 @@ public final class JwtUtils {
                 .compact();
     }
 
-    public static String getUsernameFromJwtToken(String token) {
+    @Override
+    public String getUsernameFromJwtToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
@@ -39,7 +43,8 @@ public final class JwtUtils {
                 .getSubject();
     }
 
-    public static void validateJwtToken(String token) {
+    @Override
+    public void validateJwtToken(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(jwtSecret)

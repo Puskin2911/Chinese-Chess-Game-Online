@@ -18,5 +18,8 @@ logging:
       web: debug
       security: debug
       boot.autoconfigure: info
+jwt:
+  secret: ccgame
+  expirationMs: 86400000    # One day
 games:
   elo: 1200
