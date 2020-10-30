@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.utils;
+package com.doubleat.ccgame.jwt;
 
 import org.springframework.security.core.Authentication;
 

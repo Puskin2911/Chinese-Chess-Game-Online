@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.utils;
+package com.doubleat.ccgame.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
