@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ChatMessage {
-    private String content;
     private String username;
+    private String message;
 }

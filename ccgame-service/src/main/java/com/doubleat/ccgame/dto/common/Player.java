@@ -2,11 +2,12 @@ package com.doubleat.ccgame.dto.common;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class UserDto {
+public class Player {
     @NonNull
     private int id;
     @NonNull
@@ -15,4 +16,13 @@ public class UserDto {
     private int elo;
     private int numberOfWins;
     private int numberOfLoses;
+    private boolean ready;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Player)
+            return this.username == ((Player) obj).getUsername();
+
+        return false;
+    }
 }

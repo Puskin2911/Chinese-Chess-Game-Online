@@ -1,8 +1,9 @@
 package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.cache.RoomCache;
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.common.Player;
 import com.doubleat.ccgame.dto.common.Room;
+import com.doubleat.ccgame.utils.RoomUtils;
 import org.springframework.stereotype.Service;
 
 
@@ -19,18 +20,39 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room joinRoom(UserDto userDto) {
-        return roomCache.addPlayerToRoom(userDto);
+    public Room playerJoinRoom(Player player) {
+        return roomCache.addPlayerToRoom(player);
     }
 
     @Override
-    public Boolean leaveRoom(int roomId, UserDto userDto) {
-        roomCache.removePlayerFromRoom(userDto, roomId);
+    public boolean playerLeaveRoom(Player player, int roomId) {
+        roomCache.removePlayerFromRoom(player, roomId);
         return true;
     }
 
     @Override
-    public Room joinRoom(UserDto userDto, int roomId) {
-        return roomCache.addPlayerToRoom(userDto, roomId);
+    public Room playerJoinRoom(Player player, int roomId) {
+        return roomCache.addPlayerToRoom(player, roomId);
     }
+
+    @Override
+    public boolean playerReady(Player player, int roomId) {
+        assert player != null;
+
+        Room room = roomCache.getRoomById(roomId);
+
+        RoomUtils.updateReadyPlayerInRoom(player, true, room);
+
+        return RoomUtils.getReadyPlayers(room) == 2;
+    }
+
+    @Override
+    public void playerUnReady(Player player, int roomId) {
+        assert player != null;
+
+        Room room = roomCache.getRoomById(roomId);
+
+        RoomUtils.updateReadyPlayerInRoom(player, false, room);
+    }
+
 }

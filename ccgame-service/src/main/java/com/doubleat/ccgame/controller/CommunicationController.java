@@ -9,19 +9,32 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 @Controller
 public class CommunicationController {
 
-    @MessageMapping("/chat/room/{id}")
+    @MessageMapping("/chat/{id}")
     @SendTo("/room/{id}")
-    public ChatMessage handleChat(@Payload ChatMessage message, @DestinationVariable(value = "id") Integer roomId, Authentication authentication) {
-        message.setUsername(authentication.getName());
+    public ChatMessage handleChat(@Payload ChatMessage message,
+                                  @DestinationVariable(value = "id") Integer roomId,
+                                  Principal principal) {
+        message.setUsername(principal.getName());
         return message;
     }
 
-    @MessageMapping("/move/room/{id}")
+    @MessageMapping("/move/{id}")
     @SendTo("/room/{id}")
-    public MoveMessage handleMove(@Payload MoveMessage move, @DestinationVariable Integer id) {
+    public MoveMessage handleMove(@Payload MoveMessage move,
+                                  @DestinationVariable Integer id,
+                                  Principal principal) {
         return move;
     }
+
+    @MessageMapping("/start/{roomId}")
+    public boolean handleReady(@DestinationVariable Integer roomId,
+                                   Principal principal){
+        return false;
+    }
+
 }
