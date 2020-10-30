@@ -2,7 +2,7 @@ package com.doubleat.ccgame.cache;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
-import com.doubleat.ccgame.model.Room;
+import com.doubleat.ccgame.dto.common.Room;
 
 /**
  * @author Hop Nguyen

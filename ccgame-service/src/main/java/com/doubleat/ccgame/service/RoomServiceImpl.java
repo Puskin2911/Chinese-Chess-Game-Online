@@ -2,7 +2,7 @@ package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
-import com.doubleat.ccgame.model.Room;
+import com.doubleat.ccgame.dto.common.Room;
 import org.springframework.stereotype.Service;
 
 

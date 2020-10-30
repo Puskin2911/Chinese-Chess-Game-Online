@@ -2,7 +2,7 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.entity.User;
-import com.doubleat.ccgame.model.Room;
+import com.doubleat.ccgame.dto.common.Room;
 import com.doubleat.ccgame.service.RoomService;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;

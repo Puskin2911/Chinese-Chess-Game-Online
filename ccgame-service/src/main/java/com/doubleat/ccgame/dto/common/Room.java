@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.model;
+package com.doubleat.ccgame.dto.common;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import lombok.Data;
