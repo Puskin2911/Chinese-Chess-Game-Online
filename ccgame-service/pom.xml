@@ -97,4 +97,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://github.com/Puskin2911/SE04-Group-23.1</url>
+        </repository>
+    </distributionManagement>
+
 </project>
