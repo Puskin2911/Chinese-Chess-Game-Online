@@ -109,20 +109,20 @@ public final class RoomUtils {
     /**
      * Update specific ready player to {@code isReady} in specific room.
      *
-     * @param player  player need to update {@code ready}.
-     * @param isReady state to update for use. {@code true} or {@code false}.
-     * @param room    room where have player.
+     * @param username username of player need to update {@code ready}.
+     * @param isReady  state to update for use. {@code true} or {@code false}.
+     * @param room     room where have player.
      * @throws RoomNotFoundException if {@code room} is null.
      */
-    public static void updateReadyPlayerInRoom(Player player, boolean isReady, Room room) throws RoomNotFoundException {
-        assert player != null;
+    public static void updateReadyPlayerInRoom(String username, boolean isReady, Room room) throws RoomNotFoundException {
+        assert username != null;
 
         Player redPlayer = room.getRedPlayer();
-        if (redPlayer != null && redPlayer.getId() == player.getId()) {
+        if (redPlayer != null && redPlayer.getUsername().equals(username)) {
             redPlayer.setReady(isReady);
         } else {
             Player blackPlayer = room.getBlackPlayer();
-            if (blackPlayer != null && blackPlayer.getId() == player.getId()) {
+            if (blackPlayer != null && blackPlayer.getUsername().equals(username)) {
                 blackPlayer.setReady(isReady);
             }
         }

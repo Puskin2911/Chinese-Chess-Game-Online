@@ -4,6 +4,7 @@ import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.Player;
 import com.doubleat.ccgame.dto.common.Room;
 import com.doubleat.ccgame.utils.RoomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -15,6 +16,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomCache roomCache;
 
+    @Autowired
     public RoomServiceImpl(RoomCache roomCache) {
         this.roomCache = roomCache;
     }
@@ -36,23 +38,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public boolean playerReady(Player player, int roomId) {
-        assert player != null;
-
+    public void updatePlayerReady(String username, int roomId, boolean ready) {
         Room room = roomCache.getRoomById(roomId);
 
-        RoomUtils.updateReadyPlayerInRoom(player, true, room);
-
-        return RoomUtils.getReadyPlayers(room) == 2;
+        RoomUtils.updateReadyPlayerInRoom(username, true, room);
     }
 
     @Override
-    public void playerUnReady(Player player, int roomId) {
-        assert player != null;
-
+    public boolean startGame(int roomId) {
         Room room = roomCache.getRoomById(roomId);
 
-        RoomUtils.updateReadyPlayerInRoom(player, false, room);
+        return RoomUtils.getReadyPlayers(room) == 2;
     }
 
 }
