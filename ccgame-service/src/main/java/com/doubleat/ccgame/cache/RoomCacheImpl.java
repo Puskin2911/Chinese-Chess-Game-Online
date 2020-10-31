@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.cache;
 
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.common.Player;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
 import com.doubleat.ccgame.dto.common.Room;
 import com.doubleat.ccgame.utils.RoomUtils;
@@ -29,7 +29,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addPlayerToRoom(UserDto player) {
+    public Room addPlayerToRoom(Player player) {
         assert player != null;
 
         synchronized (roomMap) {
@@ -58,7 +58,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addPlayerToRoom(UserDto player, int roomId) {
+    public Room addPlayerToRoom(Player player, int roomId) {
         assert player != null;
 
         synchronized (roomMap) {
@@ -69,7 +69,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public void removePlayerFromRoom(UserDto player, int roomId) {
+    public void removePlayerFromRoom(Player player, int roomId) {
         assert player != null;
 
         synchronized (roomMap) {
@@ -80,7 +80,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addViewerToRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
+    public Room addViewerToRoom(Player viewer, int roomId) throws RoomNotFoundException {
         assert viewer != null;
 
         synchronized (roomMap) {
@@ -91,7 +91,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public void removeViewerFromRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
+    public void removeViewerFromRoom(Player viewer, int roomId) throws RoomNotFoundException {
         assert viewer != null;
 
         synchronized (roomMap) {

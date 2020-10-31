@@ -28,7 +28,7 @@ public class RoomController {
     @PostMapping(value = "/join")
     public ResponseEntity<Room> joinRoom(Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomService.joinRoom(userConverter.toDto(user));
+        Room room = roomService.playerJoinRoom(userConverter.toDto(user));
 
         return ResponseEntity.ok(room);
     }
@@ -36,7 +36,7 @@ public class RoomController {
     @PostMapping(value = "/{roomId}/leave")
     public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Boolean success = roomService.leaveRoom(roomId, userConverter.toDto(user));
+        Boolean success = roomService.playerLeaveRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(success);
     }
@@ -44,7 +44,7 @@ public class RoomController {
     @PostMapping(value = "/{roomId}/join")
     public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomService.joinRoom(userConverter.toDto(user), roomId);
+        Room room = roomService.playerJoinRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(room);
     }
