@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Player {
+public class UserDto {
     @NonNull
     private int id;
     @NonNull
@@ -20,8 +20,8 @@ public class Player {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Player)
-            return this.username == ((Player) obj).getUsername();
+        if (obj instanceof UserDto)
+            return this.username == ((UserDto) obj).getUsername();
 
         return false;
     }

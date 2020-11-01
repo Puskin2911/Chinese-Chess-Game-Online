@@ -11,8 +11,8 @@ import java.util.List;
 public class Room {
     @NonNull
     private int id;
-    private Player redPlayer;
-    private Player blackPlayer;
-    private List<Player> viewers;
+    private UserDto redUserDto;
+    private UserDto blackUserDto;
+    private List<UserDto> viewers;
     private String boardStatus;
 }

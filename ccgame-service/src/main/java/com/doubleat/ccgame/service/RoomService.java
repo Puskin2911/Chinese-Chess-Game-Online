@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.service;
 
-import com.doubleat.ccgame.dto.common.Player;
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.common.Room;
 
 /**
@@ -8,11 +8,11 @@ import com.doubleat.ccgame.dto.common.Room;
  */
 public interface RoomService {
 
-    Room playerJoinRoom(Player player);
+    Room playerJoinRoom(UserDto userDto);
 
-    boolean playerLeaveRoom(Player player, int roomId);
+    boolean playerLeaveRoom(UserDto userDto, int roomId);
 
-    Room playerJoinRoom(Player player, int roomId);
+    Room playerJoinRoom(UserDto userDto, int roomId);
 
     void updatePlayerReady(String username, int roomId, boolean ready);
 
