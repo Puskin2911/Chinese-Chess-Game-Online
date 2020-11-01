@@ -28,6 +28,12 @@ public class Board {
                 + "_90rch_91rho_92rel_93rad_94rge_95rad_96rel_97rho_98rch");
     }
 
+    public Piece getPieceByPosition(Position position) {
+        assert position != null;
+
+        return pieces[position.getX()][position.getY()];
+    }
+
     public static Piece[][] convertToMatrix(String boardStatus) {
         Piece[][] pieces = new Piece[Board.ROW][Board.COLUMN];
 
