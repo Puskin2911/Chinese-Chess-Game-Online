@@ -1,5 +1,7 @@
-package com.doubleat.ccgame.game;
+package com.doubleat.ccgame.game.utils;
 
+import com.doubleat.ccgame.game.Board;
+import com.doubleat.ccgame.game.Position;
 import com.doubleat.ccgame.game.exception.PieceNotFoundException;
 import com.doubleat.ccgame.game.piece.Piece;
 import org.slf4j.Logger;
@@ -38,10 +40,6 @@ public final class MoveUtils {
 
     public static boolean isHorseMove(Board board, Position from, Position to) {
         return false;
-    }
-
-    private boolean isValidMove(Board board, Position from, Position to) {
-        return true;
     }
 
 }
