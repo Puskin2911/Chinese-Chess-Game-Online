@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.utils;
 
-import com.doubleat.ccgame.dto.common.Player;
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.exception.RoomIsFullPlayersException;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
 import com.doubleat.ccgame.dto.common.Room;
@@ -21,8 +21,8 @@ public final class RoomUtils {
         if (room == null) throw new RoomNotFoundException();
 
         int totals = 0;
-        if (room.getRedPlayer() != null) totals++;
-        if (room.getBlackPlayer() != null) totals++;
+        if (room.getRedUserDto() != null) totals++;
+        if (room.getBlackUserDto() != null) totals++;
 
         return totals;
     }
@@ -30,38 +30,38 @@ public final class RoomUtils {
     /**
      * Add specific player to specific room.
      *
-     * @param player the player need to add to room.
+     * @param userDto the player need to add to room.
      * @param room   the room need to add player.
      * @throws RoomNotFoundException      if {@code room} is null.
      * @throws RoomIsFullPlayersException if {@code room} is full players.
      */
-    public static void addPlayerToRoom(Player player, Room room) throws RoomNotFoundException, RoomIsFullPlayersException {
+    public static void addPlayerToRoom(UserDto userDto, Room room) throws RoomNotFoundException, RoomIsFullPlayersException {
         if (room == null) throw new RoomNotFoundException();
         if (getCurrentPlayers(room) > 2) throw new RoomIsFullPlayersException();
 
-        if (room.getRedPlayer() == null) room.setRedPlayer(player);
-        else room.setBlackPlayer(player);
+        if (room.getRedUserDto() == null) room.setRedUserDto(userDto);
+        else room.setBlackUserDto(userDto);
     }
 
     /**
      * Remove specific player to specific room.
      *
-     * @param player the player need to remove to room.
+     * @param userDto the player need to remove to room.
      * @param room   the room need to remove player.
      * @throws RoomNotFoundException if {@code room} is null.
      */
-    public static void removePlayerFromRoom(Player player, Room room) throws RoomNotFoundException {
+    public static void removePlayerFromRoom(UserDto userDto, Room room) throws RoomNotFoundException {
         if (room == null) throw new RoomNotFoundException();
 
-        Player redPlayer = room.getRedPlayer();
-        if (redPlayer.equals(player)) {
-            room.setRedPlayer(null);
+        UserDto redUserDto = room.getRedUserDto();
+        if (redUserDto.equals(userDto)) {
+            room.setRedUserDto(null);
             return;
         }
 
-        Player blackPlayer = room.getBlackPlayer();
-        if (blackPlayer.equals(player)) {
-            room.setBlackPlayer(null);
+        UserDto blackUserDto = room.getBlackUserDto();
+        if (blackUserDto.equals(userDto)) {
+            room.setBlackUserDto(null);
         }
     }
 
@@ -72,7 +72,7 @@ public final class RoomUtils {
      * @param room   the room need to add viewer.
      * @throws RoomNotFoundException if {@code room} is null.
      */
-    public static void addViewerToRoom(Player viewer, Room room) throws RoomNotFoundException {
+    public static void addViewerToRoom(UserDto viewer, Room room) throws RoomNotFoundException {
         if (room == null) throw new RoomNotFoundException();
         room.getViewers().add(viewer);
     }
@@ -84,7 +84,7 @@ public final class RoomUtils {
      * @param room   the room need to remove viewer.
      * @throws RoomNotFoundException if {@code room} is null.
      */
-    public static void removeViewerFromRoom(Player viewer, Room room) throws RoomNotFoundException {
+    public static void removeViewerFromRoom(UserDto viewer, Room room) throws RoomNotFoundException {
         if (room == null) throw new RoomNotFoundException();
         room.getViewers().remove(viewer);
     }
@@ -100,8 +100,8 @@ public final class RoomUtils {
         if (room == null) throw new RoomNotFoundException();
 
         int readyPlayers = 0;
-        if (room.getBlackPlayer() != null && room.getBlackPlayer().isReady()) readyPlayers++;
-        if (room.getRedPlayer() != null && room.getRedPlayer().isReady()) readyPlayers++;
+        if (room.getBlackUserDto() != null && room.getBlackUserDto().isReady()) readyPlayers++;
+        if (room.getRedUserDto() != null && room.getRedUserDto().isReady()) readyPlayers++;
 
         return readyPlayers;
     }
@@ -117,13 +117,13 @@ public final class RoomUtils {
     public static void updateReadyPlayerInRoom(String username, boolean isReady, Room room) throws RoomNotFoundException {
         assert username != null;
 
-        Player redPlayer = room.getRedPlayer();
-        if (redPlayer != null && redPlayer.getUsername().equals(username)) {
-            redPlayer.setReady(isReady);
+        UserDto redUserDto = room.getRedUserDto();
+        if (redUserDto != null && redUserDto.getUsername().equals(username)) {
+            redUserDto.setReady(isReady);
         } else {
-            Player blackPlayer = room.getBlackPlayer();
-            if (blackPlayer != null && blackPlayer.getUsername().equals(username)) {
-                blackPlayer.setReady(isReady);
+            UserDto blackUserDto = room.getBlackUserDto();
+            if (blackUserDto != null && blackUserDto.getUsername().equals(username)) {
+                blackUserDto.setReady(isReady);
             }
         }
     }

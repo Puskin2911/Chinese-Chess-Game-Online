@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.cache;
 
-import com.doubleat.ccgame.dto.common.Player;
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
 import com.doubleat.ccgame.dto.common.Room;
 import com.doubleat.ccgame.utils.RoomUtils;
@@ -29,15 +29,15 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addPlayerToRoom(Player player) {
-        assert player != null;
+    public Room addPlayerToRoom(UserDto userDto) {
+        assert userDto != null;
 
         synchronized (roomMap) {
             for (Map.Entry<Integer, Room> entry : roomMap.entrySet()) {
                 Room room = entry.getValue();
                 if (RoomUtils.getCurrentPlayers(room) < 2) {
-                    if (room.getRedPlayer() == null) room.setRedPlayer(player);
-                    else room.setBlackPlayer(player);
+                    if (room.getRedUserDto() == null) room.setRedUserDto(userDto);
+                    else room.setBlackUserDto(userDto);
                     return room;
                 }
             }
@@ -51,36 +51,36 @@ public class RoomCacheImpl implements RoomCache {
             atomicId.set(0);
         }
         Room room = new Room(roomId);
-        room.setBlackPlayer(player);
+        room.setBlackUserDto(userDto);
         roomMap.put(roomId, room);
 
         return room;
     }
 
     @Override
-    public Room addPlayerToRoom(Player player, int roomId) {
-        assert player != null;
+    public Room addPlayerToRoom(UserDto userDto, int roomId) {
+        assert userDto != null;
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
-            RoomUtils.addPlayerToRoom(player, room);
+            RoomUtils.addPlayerToRoom(userDto, room);
             return room;
         }
     }
 
     @Override
-    public void removePlayerFromRoom(Player player, int roomId) {
-        assert player != null;
+    public void removePlayerFromRoom(UserDto userDto, int roomId) {
+        assert userDto != null;
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
 
-            RoomUtils.removePlayerFromRoom(player, room);
+            RoomUtils.removePlayerFromRoom(userDto, room);
         }
     }
 
     @Override
-    public Room addViewerToRoom(Player viewer, int roomId) throws RoomNotFoundException {
+    public Room addViewerToRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
         assert viewer != null;
 
         synchronized (roomMap) {
@@ -91,7 +91,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public void removeViewerFromRoom(Player viewer, int roomId) throws RoomNotFoundException {
+    public void removeViewerFromRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
         assert viewer != null;
 
         synchronized (roomMap) {
