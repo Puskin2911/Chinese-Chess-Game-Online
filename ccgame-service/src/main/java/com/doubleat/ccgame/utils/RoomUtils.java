@@ -10,6 +10,9 @@ import com.doubleat.ccgame.dto.common.Room;
  */
 public final class RoomUtils {
 
+    private RoomUtils() {
+    }
+
     /**
      * Return current players in specific room.
      *
@@ -31,7 +34,7 @@ public final class RoomUtils {
      * Add specific player to specific room.
      *
      * @param userDto the player need to add to room.
-     * @param room   the room need to add player.
+     * @param room    the room need to add player.
      * @throws RoomNotFoundException      if {@code room} is null.
      * @throws RoomIsFullPlayersException if {@code room} is full players.
      */
@@ -47,7 +50,7 @@ public final class RoomUtils {
      * Remove specific player to specific room.
      *
      * @param userDto the player need to remove to room.
-     * @param room   the room need to remove player.
+     * @param room    the room need to remove player.
      * @throws RoomNotFoundException if {@code room} is null.
      */
     public static void removePlayerFromRoom(UserDto userDto, Room room) throws RoomNotFoundException {
