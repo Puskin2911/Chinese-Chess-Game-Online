@@ -12,6 +12,9 @@ public class Board {
 
     private Piece[][] pieces;
 
+    /**
+     * Initial a new board with default board.
+     */
     public Board() {
         pieces = convertToMatrix("00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch"
                 + "_10000_11000_12000_13000_14000_15000_16000_17000_18000"
