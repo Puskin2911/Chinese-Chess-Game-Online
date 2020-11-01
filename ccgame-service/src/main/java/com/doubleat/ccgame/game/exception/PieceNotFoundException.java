@@ -1,2 +1,4 @@
-package com.doubleat.ccgame.game.exception;public class PieceNotFoundException {
+package com.doubleat.ccgame.game.exception;
+
+public class PieceNotFoundException extends RuntimeException {
 }
