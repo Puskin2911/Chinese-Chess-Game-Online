@@ -6,13 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CCBoard {
+public class Board {
     public static final int COLUMN = 9;
     public static final int ROW = 10;
 
     private Piece[][] pieces;
 
-    public CCBoard() {
+    public Board() {
         pieces = convertToMatrix("00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch"
                 + "_10000_11000_12000_13000_14000_15000_16000_17000_18000"
                 + "_20000_21bca_22000_23000_24000_25000_26000_27bca_28000"
@@ -26,7 +26,7 @@ public class CCBoard {
     }
 
     public static Piece[][] convertToMatrix(String boardStatus) {
-        Piece[][] pieces = new Piece[CCBoard.ROW][CCBoard.COLUMN];
+        Piece[][] pieces = new Piece[Board.ROW][Board.COLUMN];
 
         String[] temp = boardStatus.split("_");
         for (String pieceText : temp) {
@@ -77,9 +77,9 @@ public class CCBoard {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        for (int i = 0; i < CCBoard.ROW; i++) {
+        for (int i = 0; i < Board.ROW; i++) {
             if (i == 5) res.append("==========================\n");
-            for (int j = 0; j < CCBoard.COLUMN; j++) {
+            for (int j = 0; j < Board.COLUMN; j++) {
                 Piece piece = pieces[i][j];
                 if (piece == null) {
                     res.append("00 ");
