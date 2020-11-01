@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.game.logic;
+package com.doubleat.ccgame.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

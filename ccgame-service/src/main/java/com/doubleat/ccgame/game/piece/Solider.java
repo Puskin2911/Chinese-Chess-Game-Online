@@ -1,8 +1,7 @@
-package com.doubleat.ccgame.game.picece;
+package com.doubleat.ccgame.game.piece;
 
-import com.doubleat.ccgame.game.logic.CCBoard;
-import com.doubleat.ccgame.game.logic.MoveUtils;
-import com.doubleat.ccgame.game.logic.Position;
+import com.doubleat.ccgame.game.Board;
+import com.doubleat.ccgame.game.Position;
 
 public class Solider extends Piece {
     public Solider(String shortName) {
@@ -10,7 +9,7 @@ public class Solider extends Piece {
     }
 
     @Override
-    public boolean isValidMove(CCBoard board, Position from, Position to) {
-        return MoveUtils.canMoveAhead(board, from, to);
+    public boolean isValidMove(Board board, Position from, Position to) {
+        return false;
     }
 }

@@ -1,7 +1,7 @@
-package com.doubleat.ccgame.game.picece;
+package com.doubleat.ccgame.game.piece;
 
-import com.doubleat.ccgame.game.logic.CCBoard;
-import com.doubleat.ccgame.game.logic.Position;
+import com.doubleat.ccgame.game.Board;
+import com.doubleat.ccgame.game.Position;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ public abstract class Piece {
     protected final String shortName;
     protected boolean isRed;
 
-    public boolean isValidMove(CCBoard board, Position from, Position to) {
+    public boolean isValidMove(Board board, Position from, Position to) {
         return false;
     }
 }
