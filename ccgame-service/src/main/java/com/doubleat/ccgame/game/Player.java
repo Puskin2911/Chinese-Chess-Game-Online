@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class Player {
     private String username;
+
     private boolean red;
 }
