@@ -61,7 +61,6 @@ public class Game {
 
         if (!MoveUtils.isValidMove(move))
             throw new InvalidMoveException("Move is not valid format: [0-9][0-8]_[0-9][0-8]");
-
         if (player.isRed() != redTurn)
             throw new IllegalArgumentException("This turn is not for: " + player.getUsername());
 
@@ -73,10 +72,12 @@ public class Game {
         if (current == null || !current.isValidMove(board, from, to))
             throw new InvalidMoveException("Invalid move");
 
+        // Do move
         Piece[][] pieces = board.getPieces();
         pieces[from.getX()][from.getY()] = null;
         pieces[to.getX()][to.getY()] = current;
 
+        redTurn = !redTurn;
         moves.push(move);
     }
 
