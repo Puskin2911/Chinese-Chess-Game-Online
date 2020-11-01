@@ -6,6 +6,8 @@ import com.doubleat.ccgame.game.utils.MoveUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Stack;
+
 /**
  * Chinese Chess Game.
  *
@@ -24,6 +26,11 @@ public class Game {
     private boolean redTurn;
 
     private boolean playing;
+
+    /**
+     * Save all moves.
+     */
+    private Stack<String> moves;
 
     /**
      * @param redPlayer   red player of game.
@@ -49,7 +56,7 @@ public class Game {
         return false;
     }
 
-    public boolean doMove(Player player, String move) {
+    public void doMove(Player player, String move) {
         assert player != null;
 
         if (!MoveUtils.isValidMove(move))
@@ -63,9 +70,14 @@ public class Game {
 
         Piece current = board.getPieceByPosition(from);
 
-        if (current == null) throw new InvalidMoveException("Can not find piece at: " + from);
+        if (current == null || !current.isValidMove(board, from, to))
+            throw new InvalidMoveException("Invalid move");
 
-        return current.isValidMove(board, from, to);
+        Piece[][] pieces = board.getPieces();
+        pieces[from.getX()][from.getY()] = null;
+        pieces[to.getX()][to.getY()] = current;
+
+        moves.push(move);
     }
 
 }
