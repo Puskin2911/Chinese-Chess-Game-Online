@@ -2,7 +2,7 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.common.ChatMessage;
 import com.doubleat.ccgame.dto.common.MoveMessage;
-import com.doubleat.ccgame.service.RoomService;
+import com.doubleat.ccgame.room.RoomStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -16,7 +16,7 @@ import java.security.Principal;
 public class CommunicationController {
 
     @Autowired
-    private RoomService roomService;
+    private RoomStrategy roomStrategy;
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/room/{roomId}")
@@ -40,9 +40,9 @@ public class CommunicationController {
                                @DestinationVariable Integer roomId,
                                Principal principal) {
 
-        roomService.updatePlayerReady(principal.getName(), roomId, ready);
+        roomStrategy.updatePlayerReady(principal.getName(), roomId, ready);
 
-        return roomService.startGame(roomId);
+        return roomStrategy.startGame(roomId);
     }
 
 }

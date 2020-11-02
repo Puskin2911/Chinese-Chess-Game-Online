@@ -2,8 +2,8 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.entity.User;
-import com.doubleat.ccgame.dto.common.Room;
-import com.doubleat.ccgame.service.RoomService;
+import com.doubleat.ccgame.room.Room;
+import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = {"room service"})
 public class RoomController {
     @Autowired
-    private RoomService roomService;
+    private RoomStrategy roomStrategy;
     @Autowired
     private UserService userService;
     @Autowired
@@ -28,7 +28,7 @@ public class RoomController {
     @PostMapping(value = "/join")
     public ResponseEntity<Room> joinRoom(Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomService.playerJoinRoom(userConverter.toDto(user));
+        Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
 
         return ResponseEntity.ok(room);
     }
@@ -36,7 +36,7 @@ public class RoomController {
     @PostMapping(value = "/{roomId}/leave")
     public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Boolean success = roomService.playerLeaveRoom(userConverter.toDto(user), roomId);
+        Boolean success = roomStrategy.playerLeaveRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(success);
     }
@@ -44,7 +44,7 @@ public class RoomController {
     @PostMapping(value = "/{roomId}/join")
     public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomService.playerJoinRoom(userConverter.toDto(user), roomId);
+        Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(room);
     }

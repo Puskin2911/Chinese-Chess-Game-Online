@@ -1,8 +1,7 @@
-package com.doubleat.ccgame.service;
+package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
-import com.doubleat.ccgame.dto.common.Room;
 import com.doubleat.ccgame.utils.RoomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
  * @author Hop Nguyen
  */
 @Service
-public class RoomServiceImpl implements RoomService {
+public class RoomStrategyImpl implements RoomStrategy {
 
     private final RoomCache roomCache;
 
     @Autowired
-    public RoomServiceImpl(RoomCache roomCache) {
+    public RoomStrategyImpl(RoomCache roomCache) {
         this.roomCache = roomCache;
     }
 
