@@ -1,5 +1,6 @@
-package com.doubleat.ccgame.dto.common;
+package com.doubleat.ccgame.room;
 
+import com.doubleat.ccgame.dto.common.UserDto;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

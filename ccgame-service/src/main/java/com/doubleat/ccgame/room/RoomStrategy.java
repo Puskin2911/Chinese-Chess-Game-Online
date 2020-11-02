@@ -1,12 +1,12 @@
-package com.doubleat.ccgame.service;
+package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.common.UserDto;
-import com.doubleat.ccgame.dto.common.Room;
+import com.doubleat.ccgame.room.Room;
 
 /**
  * @author Hop Nguyen
  */
-public interface RoomService {
+public interface RoomStrategy {
 
     Room playerJoinRoom(UserDto userDto);
 
