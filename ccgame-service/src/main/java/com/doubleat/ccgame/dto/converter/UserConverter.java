@@ -8,14 +8,16 @@ import org.springframework.stereotype.Component;
 public class UserConverter {
     public User toEntity(UserDto userDto) {
         User entity = new User();
-        //TODO convert
+        entity.setUsername(userDto.getUsername());
+        entity.setElo(userDto.getElo());
+
         return entity;
     }
 
     public UserDto toDto(User entity) {
-        UserDto dto = new UserDto(entity.getId(), entity.getUsername(), entity.getElo());
-
-        // TODO convert
+        UserDto dto = new UserDto(entity.getUsername(), entity.getElo());
+        dto.setNumberOfWins(entity.getGamesWin().size());
+        dto.setNumberOfLoses(entity.getGamesLose().size());
 
         return dto;
     }
