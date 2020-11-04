@@ -2,7 +2,7 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
-import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExists;
+import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
 import com.doubleat.ccgame.jwt.JwtService;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
@@ -65,6 +65,6 @@ public class AuthController {
             String token = jwtService.generateJwtToken(authentication);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(token);
-        } else throw new UsernameOrEmailHasAlreadyExists("Username Or Email has already exists!");
+        } else throw new UsernameOrEmailHasAlreadyExistsException("Username Or Email has already exists!");
     }
 }
