@@ -9,8 +9,6 @@ import lombok.*;
 @RequiredArgsConstructor
 public class UserDto {
     @NonNull
-    private int id;
-    @NonNull
     private String username;
     @NonNull
     private int elo;
