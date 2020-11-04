@@ -1,13 +1,14 @@
 package com.doubleat.ccgame.cache;
 
 import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.exception.RoomIsFullPlayersException;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
 import com.doubleat.ccgame.room.Room;
-import com.doubleat.ccgame.utils.RoomUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -35,9 +36,10 @@ public class RoomCacheImpl implements RoomCache {
         synchronized (roomMap) {
             for (Map.Entry<Integer, Room> entry : roomMap.entrySet()) {
                 Room room = entry.getValue();
-                if (RoomUtils.getCurrentPlayers(room) < 2) {
-                    if (room.getRedUserDto() == null) room.setRedUserDto(userDto);
-                    else room.setBlackUserDto(userDto);
+                Set<UserDto> players = room.getPlayers();
+
+                if (players.size() < 2) {
+                    players.add(userDto);
                     return room;
                 }
             }
@@ -47,12 +49,14 @@ public class RoomCacheImpl implements RoomCache {
         int roomId = atomicId.getAndIncrement();
         // TODO: check conflict id.
         if (roomId == Integer.MAX_VALUE - 1) {
-            roomId = 0;
             atomicId.set(0);
         }
         Room room = new Room(roomId);
-        room.setBlackUserDto(userDto);
-        roomMap.put(roomId, room);
+        room.getPlayers().add(userDto);
+
+        synchronized (roomMap) {
+            roomMap.put(roomId, room);
+        }
 
         return room;
     }
@@ -63,7 +67,12 @@ public class RoomCacheImpl implements RoomCache {
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
-            RoomUtils.addPlayerToRoom(userDto, room);
+            if (room == null) throw new RoomNotFoundException("Have no room have id: " + roomId);
+
+            Set<UserDto> players = room.getPlayers();
+            if (players.size() == 2) throw new RoomIsFullPlayersException("Room have id: " + roomId + " is full");
+
+            players.add(userDto);
             return room;
         }
     }
@@ -74,8 +83,10 @@ public class RoomCacheImpl implements RoomCache {
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
+            if (room == null) throw new RoomNotFoundException("Have no room have id: " + roomId);
 
-            RoomUtils.removePlayerFromRoom(userDto, room);
+            Set<UserDto> players = room.getPlayers();
+            players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
         }
     }
 
@@ -85,7 +96,7 @@ public class RoomCacheImpl implements RoomCache {
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
-            RoomUtils.addViewerToRoom(viewer, room);
+            room.getPlayers().add(viewer);
             return room;
         }
     }
@@ -96,7 +107,10 @@ public class RoomCacheImpl implements RoomCache {
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
-            RoomUtils.removeViewerFromRoom(viewer, room);
+            if (room == null) throw new RoomNotFoundException("Have no room have id: " + roomId);
+
+            Set<UserDto> viewers = room.getViewers();
+            viewers.removeIf(viewerInSet -> viewerInSet.getUsername().equals(viewer.getUsername()));
         }
     }
 
