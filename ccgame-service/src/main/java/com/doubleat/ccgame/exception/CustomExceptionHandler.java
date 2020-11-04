@@ -23,7 +23,7 @@ public class CustomExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    @ExceptionHandler(UsernameOrEmailHasAlreadyExists.class)
+    @ExceptionHandler(UsernameOrEmailHasAlreadyExistsException.class)
     public final ResponseEntity<ResponseError> handleUsernameOrEmailHasAlreadyExistsException(Exception exception) {
         ResponseError error = new ResponseError();
         error.setTimestamp(new Date());

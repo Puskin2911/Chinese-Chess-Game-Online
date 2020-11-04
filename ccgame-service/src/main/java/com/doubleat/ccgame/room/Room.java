@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
 public class Room {
     @NonNull
     private int id;
-    private UserDto redUserDto;
-    private UserDto blackUserDto;
-    private List<UserDto> viewers;
+    private Set<UserDto> players = new HashSet<>(2);
+    private Set<UserDto> viewers;
     private String boardStatus;
 }

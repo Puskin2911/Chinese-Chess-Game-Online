@@ -21,7 +21,7 @@ public class UserDto {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof UserDto)
-            return this.username == ((UserDto) obj).getUsername();
+            return this.username.equals(((UserDto) obj).getUsername());
 
         return false;
     }
