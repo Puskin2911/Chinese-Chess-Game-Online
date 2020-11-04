@@ -47,6 +47,7 @@ public class Game {
     public void start() {
         board = new Board();
         redTurn = true;
+        playing = true;
     }
 
     /**
