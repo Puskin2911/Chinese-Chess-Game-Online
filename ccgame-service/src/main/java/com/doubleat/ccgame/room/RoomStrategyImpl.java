@@ -40,7 +40,7 @@ public class RoomStrategyImpl implements RoomStrategy {
     public void updatePlayerReady(String username, int roomId, boolean ready) {
         Room room = roomCache.getRoomById(roomId);
 
-        RoomUtils.updateReadyPlayerInRoom(username, true, room);
+        RoomUtils.updateReadyPlayerInRoom(username, ready, room);
     }
 
     @Override
