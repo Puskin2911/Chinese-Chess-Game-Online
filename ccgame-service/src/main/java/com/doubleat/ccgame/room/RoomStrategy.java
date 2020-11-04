@@ -1,7 +1,6 @@
 package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.common.UserDto;
-import com.doubleat.ccgame.room.Room;
 
 /**
  * @author Hop Nguyen
