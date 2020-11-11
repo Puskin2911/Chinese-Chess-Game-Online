@@ -7,8 +7,7 @@ import com.doubleat.ccgame.jwt.JwtService;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,9 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/api/auth")
@@ -42,8 +38,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginRequest loginRequest
-            , HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -53,14 +48,19 @@ public class AuthController {
 
         String token = jwtService.generateJwtToken(authentication);
 
-        Cookie cookie = new Cookie("access_token", token);
-        cookie.setMaxAge(7 * 4 * 60 * 60); // expires in 7 days
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
+        HttpCookie cookie = ResponseCookie
+                .from("access_token", token)
+                .maxAge(7 * 4 * 60 * 60) // expires in 7 days
+                .httpOnly(true)
+                .path("/")
+                .build();
 
-        response.addCookie(cookie);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .build();
     }
 
     @PostMapping(value = "/signup")
