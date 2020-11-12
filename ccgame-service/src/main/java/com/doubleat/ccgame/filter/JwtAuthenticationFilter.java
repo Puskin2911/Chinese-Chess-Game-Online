@@ -1,5 +1,7 @@
-package com.doubleat.ccgame.jwt;
+package com.doubleat.ccgame.filter;
 
+import com.doubleat.ccgame.security.SecurityUtils;
+import com.doubleat.ccgame.security.jwt.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -36,27 +37,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            String jwtToken = authHeader.substring(7);
-            try {
-                jwtService.validateJwtToken(jwtToken);
+        String jwtToken = SecurityUtils.resolveToken(request);
+        try {
+            jwtService.validateJwtToken(jwtToken);
 
-                String username = jwtService.getUsernameFromJwtToken(jwtToken);
+            String username = jwtService.getUsernameFromJwtToken(jwtToken);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                // TODO learn why
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+            // TODO learn why
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            } catch (Exception e) {
-                logger.error("Exception at JwtAuthentication Filter: {}", e.getMessage());
-            }
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } catch (Exception e) {
+            logger.error("Exception at JwtAuthentication Filter: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

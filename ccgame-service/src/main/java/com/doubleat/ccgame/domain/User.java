@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.entity;
+package com.doubleat.ccgame.domain;
 
 import lombok.Data;
 

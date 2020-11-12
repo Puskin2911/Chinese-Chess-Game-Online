@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.config;
 
-import com.doubleat.ccgame.jwt.JwtAuthenticationEntryPoint;
-import com.doubleat.ccgame.jwt.JwtAuthenticationFilter;
+import com.doubleat.ccgame.security.JwtAuthenticationEntryPoint;
+import com.doubleat.ccgame.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.converter.UserConverter;
-import com.doubleat.ccgame.entity.User;
+import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.room.Room;
 import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.UserService;

@@ -1,6 +1,6 @@
-package com.doubleat.ccgame.service;
+package com.doubleat.ccgame.security;
 
-import com.doubleat.ccgame.entity.User;
+import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +12,7 @@ import java.util.Collections;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -23,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
 
-        if(user == null) throw new UsernameNotFoundException("User not exist!");
+        if (user == null) throw new UsernameNotFoundException("User not exist!");
 
         return new org.springframework.security.core.userdetails.User(username, user.getPassHashed(), Collections.emptyList());
     }

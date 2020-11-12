@@ -20,17 +20,22 @@ export default function Login() {
             password: password
         };
 
-        axios.post("http://localhost:8080/api/auth/login", userInfo)
-            .then(res => {
-                console.log(res);
-                if (res.status === 200) {
-                    auth.setAuthenticated(true);
-                    setLoggedIn(true);
+        axios.post(
+            "http://127.0.0.1:8080/api/auth/login",
+            userInfo,
+            {
+                withCredentials: true
+            }
+        ).then(res => {
+            console.log(res);
+            if (res.status === 200) {
+                auth.setAuthenticated(true);
+                setLoggedIn(true);
 
-                } else {
-                    setIsError(true);
-                }
-            }).catch(() => {
+            } else {
+                setIsError(true);
+            }
+        }).catch(() => {
             setIsError(true);
         })
     }

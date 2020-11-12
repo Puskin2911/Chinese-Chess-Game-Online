@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.dto.request.SignupRequest;
-import com.doubleat.ccgame.entity.User;
+import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Value("${games.elo}")

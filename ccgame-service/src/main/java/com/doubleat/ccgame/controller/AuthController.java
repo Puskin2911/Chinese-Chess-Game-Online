@@ -2,17 +2,11 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
-import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
-import com.doubleat.ccgame.jwt.JwtService;
-import com.doubleat.ccgame.service.UserService;
+import com.doubleat.ccgame.security.SecurityUtils;
+import com.doubleat.ccgame.security.authenticate.AuthStrategy;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,48 +14,39 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Authentication")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-
-    private final UserService userService;
-
-    private final JwtService jwtService;
+    private final AuthStrategy authStrategy;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager,
-                          UserService userService,
-                          JwtService jwtService) {
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.jwtService = jwtService;
+    public AuthController(AuthStrategy authStrategy) {
+        this.authStrategy = authStrategy;
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        String token = authStrategy.authenticateUser(loginRequest);
 
-        String token = jwtService.generateJwtToken(authentication);
+        HttpCookie cookie = SecurityUtils.createAuthCookie(token, 604800L);
 
-        return ResponseEntity.ok(token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .build();
+    }
+
+    @GetMapping(value = "/validate")
+    public ResponseEntity<?> validateAccessToken(@CookieValue(name = "access_token", required = false) String accessToken) {
+        boolean isValid = authStrategy.validateAccessToken(accessToken);
+
+        if (isValid) return ResponseEntity.ok().build();
+        else return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<String> signupUser(@RequestBody SignupRequest signupRequest) {
-        if (userService.addNew(signupRequest)) {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            signupRequest.getUsername(),
-                            signupRequest.getPassword())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest) {
+        authStrategy.signupUser(signupRequest);
 
-            String token = jwtService.generateJwtToken(authentication);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(token);
-        } else throw new UsernameOrEmailHasAlreadyExistsException("Username Or Email has already exists!");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
