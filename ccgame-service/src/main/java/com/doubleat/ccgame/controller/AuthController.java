@@ -2,6 +2,7 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
+import com.doubleat.ccgame.security.SecurityUtils;
 import com.doubleat.ccgame.security.authenticate.AuthStrategy;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,7 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         String token = authStrategy.authenticateUser(loginRequest);
 
-        HttpCookie cookie = ResponseCookie
-                .from("access_token", token)
-                .maxAge(7 * 4 * 60 * 60) // expires in 7 days
-                .httpOnly(true)
-                .path("/")
-                .build();
+        HttpCookie cookie = SecurityUtils.createAuthCookie(token, 604800L);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
