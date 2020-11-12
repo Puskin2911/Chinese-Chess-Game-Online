@@ -8,11 +8,8 @@ export default function Login() {
     const [isLoggedIn, setLoggedIn] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
 
-    const auth = useAuth();
-
     const handleLogin = (event) => {
         event.preventDefault();
-        console.log(auth);
 
         const userInfo = {
             username: username,
@@ -28,9 +25,7 @@ export default function Login() {
         ).then(res => {
             console.log(res);
             if (res.status === 200) {
-                auth.setAuthenticated(true);
                 setLoggedIn(true);
-
             } else {
                 setIsError(true);
             }
