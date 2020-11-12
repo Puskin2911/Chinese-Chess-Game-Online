@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.jwt;
+package com.doubleat.ccgame.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+
     private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Value("${jwt.secret}")

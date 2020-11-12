@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.filter;
 
-import com.doubleat.ccgame.jwt.JwtService;
+import com.doubleat.ccgame.security.jwt.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

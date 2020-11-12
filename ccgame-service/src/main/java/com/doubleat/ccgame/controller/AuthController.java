@@ -3,7 +3,7 @@ package com.doubleat.ccgame.controller;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
-import com.doubleat.ccgame.jwt.JwtService;
+import com.doubleat.ccgame.security.jwt.JwtService;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
