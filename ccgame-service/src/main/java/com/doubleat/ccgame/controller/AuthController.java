@@ -61,9 +61,11 @@ public class AuthController {
     }
 
     @GetMapping(value = "/validate")
-    public ResponseEntity<?> validate(){
-        // TODO: get
-        return null;
+    public ResponseEntity<?> validate(@CookieValue(name = "access_token", required = false) String accessToken) {
+        boolean isValid = jwtService.validateJwtToken(accessToken);
+
+        if (isValid) return ResponseEntity.ok().build();
+        else return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(value = "/signup")

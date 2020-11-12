@@ -44,21 +44,27 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public void validateJwtToken(String token) {
+    public boolean validateJwtToken(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(jwtSecret)
                     .parseClaimsJws(token);
+            return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
+            return false;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
+            return false;
         } catch (ExpiredJwtException e) {
             logger.error("JWT token is expired: {}", e.getMessage());
+            return false;
         } catch (UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: {}", e.getMessage());
+            return false;
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
+            return false;
         }
     }
 }
