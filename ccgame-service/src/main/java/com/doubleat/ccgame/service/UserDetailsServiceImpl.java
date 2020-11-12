@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.service;
 
-import com.doubleat.ccgame.entity.User;
+import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
