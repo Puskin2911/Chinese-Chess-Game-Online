@@ -21,6 +21,11 @@
     transition: all 0.1s linear;
 }
 
+.header .active {
+    color: #029f5b;
+    font-size: 18px;
+}
+
 .social-login {
     position: relative;
     float: left;
