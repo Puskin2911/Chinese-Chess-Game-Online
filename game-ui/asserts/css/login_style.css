@@ -83,7 +83,7 @@
 .social-login a:last-child{
     background-color: #DF4A32;
 }
-.login-user {
+.login-user, .signup-user {
     position: relative;
     float: right;
     width: 100%;
