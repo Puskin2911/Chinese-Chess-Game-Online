@@ -13,6 +13,17 @@
     font-family: "Comic Sans MS";
 }
 
+.login-box {
+    position: relative;
+    margin: 5% auto;
+    width: 500px;
+    height: 380px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.33);
+}
+
 .header {
     position: relative;
     color: #00415d;
