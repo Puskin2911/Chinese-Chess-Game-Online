@@ -3,12 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link href="asserts/css/login_style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../css/login_style.css" rel="stylesheet" type="text/css">
 </head>
-<body>
-<div class="container">
-    <p>asjhhhhhh</p>
-</div>
-
+<body class="g-body">
+    <div class="login-box">
+        <div class="header">
+            <a href="#" id="login-link" class="active">Login</a>
+            <a href="#" id="signup-link">Sign up</a>
+        </div>
+        <div class="social-login">
+            <a href="#"><i class="fa fa-facebook fa-lg"></i> Login with facebook</a>
+            <a href="#"><i class="fa fa-google-plus fa-lg"></i> Login with Google</a>
+        </div>
+        <form class="login-user">
+            <div class="modal-box">
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+                <button>Log in</button>
+                <a href="#" class="forgot-password">Forgot Password</a>
+            </div>
+        </form>
+        <form class="signup-user">
+            <div class="modal-box">
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Confirm password">
+                <button>Sign up</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
