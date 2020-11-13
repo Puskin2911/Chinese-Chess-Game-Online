@@ -15,7 +15,7 @@
 
 .login-box {
     position: relative;
-    margin: 5% auto;
+    margin: 3% auto;
     width: 500px;
     height: 500px;
     background-color: #fff;
@@ -67,7 +67,7 @@
     padding: 12px;
     border-radius: 2px;
     font-size: 15px;
-    margin: 5% 3%;
+    margin: 4% 3%;
     text-align: center;
 
 }
@@ -89,7 +89,7 @@
     width: 100%;
     height: auto;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 15px;
     text-align: center;
 }
 .modal-box {
@@ -125,7 +125,7 @@
     border-radius: 2px;
     text-transform: uppercase;
 }
-.forgot-password {
+.forgot-password , .goto_login, .goto_signup{
     width: 50%;
     text-align: left;
     text-decoration: underline;
