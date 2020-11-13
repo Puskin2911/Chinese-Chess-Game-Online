@@ -2,12 +2,14 @@
     box-sizing: border-box;
 }
 .g-body {
-    background-image: url("https://zigavn.com/res/big_bg.jpg?v=1");
-    /*!*background-position: center top;*!*/
-    /*!*background-repeat: no-repeat;*!*/
-    /*top: 0;*/
+    background-image: url("https://image.winudf.com/v2/image/Y29tLkxpdmVXYWxscGFwZXJzVUEuYXBwMDUwMl9zY3JlZW5fMV9mODB5YnJvOA/screen-1.jpg?fakeurl=1&type=.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top: 0;
     width: 100%;
     height: 100%;
+    font-family: "Comic Sans MS";
 }
 .login-box {
     position: relative;
@@ -58,8 +60,7 @@
     border: 1px solid rgba(0,0,0,0.05);
     padding: 12px;
     border-radius: 2px;
-    font-size: 12px;
-    text-transform: uppercase;
+    font-size: 15px;
     margin: 0 3%;
     text-align: center;
 
@@ -78,7 +79,7 @@
 }
 .login-user, .signup-user {
     position: relative;
-    float: left;
+    float: right;
     width: 100%;
     height: auto;
     margin-top: 20px;
@@ -87,7 +88,6 @@
 .modal-box {
     width: 100%;
     margin-bottom: 10px;
-    /*display: block;*/
 }
 .modal-box input[type="text"], .modal-box input[type="password"] {
     width: 50%;
@@ -96,10 +96,9 @@
     border: 1px solid #ddd;
     padding: 0 10px;
     border-radius: 2px;
-    color: #333;
-    font-size: 0.8rem;
+    color: #282c34;
+    font-size: 14px;
     transition: all 0.1s linear;
-    /*margin: 5px 0;*/
 }
 .signup-user{
     display: none;
@@ -124,6 +123,5 @@
     text-align: left;
     text-decoration: underline;
     color: #888;
-    font-size: 0.75rem;
-    /*margin-bottom: 10%;*/
+    font-size: 14px;
 }
