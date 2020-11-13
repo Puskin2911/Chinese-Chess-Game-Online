@@ -11,6 +11,15 @@
     text-align: center;
     height: 28px;
 }
+.header a {
+    margin: 0 25px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.1s linear;
+}
 
 .social-login {
     position: relative;
