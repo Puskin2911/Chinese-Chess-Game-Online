@@ -31,3 +31,9 @@
     width: 20px;
     top: 2px;
 }
+.social-login a:first-child{
+    background-color: #49639F;
+}
+.social-login a:last-child{
+    background-color: #DF4A32;
+}
