@@ -46,5 +46,20 @@
             </div>
         </form>
     </div>
+<script language="JavaScript">
+    const login_click = document.getElementById('login-link');
+    const  signup_click = document.getElementById('signup-link');
+    const form_login = document.getElementById('login-user');
+    const form_signup = document.getElementById('signup-user');
+
+
+    login_click.onclick = function () {
+        form_login.style.display = "block";
+        form_signup.style.display = "none";
+
+        login_click.classList.add('active');
+        signup_click.classList.remove('active');
+    }
+</script>
 </body>
 </html>
