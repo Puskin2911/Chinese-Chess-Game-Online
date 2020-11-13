@@ -49,3 +49,14 @@
     width: 100%;
     margin-bottom: 10px;
 }
+.modal-box input[type="text"], .modal-box input[type="password"] {
+    width: 50%;
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #282c34;
+    font-size: 14px;
+    transition: all 0.1s linear;
+}
