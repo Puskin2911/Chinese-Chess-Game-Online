@@ -2,6 +2,17 @@
     box-sizing: border-box;
 }
 
+.g-body {
+    background-image: url("https://image.winudf.com/v2/image/Y29tLkxpdmVXYWxscGFwZXJzVUEuYXBwMDUwMl9zY3JlZW5fMV9mODB5YnJvOA/screen-1.jpg?fakeurl=1&type=.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Comic Sans MS";
+}
+
 .header {
     position: relative;
     color: #00415d;
