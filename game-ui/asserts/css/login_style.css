@@ -17,7 +17,7 @@
     position: relative;
     margin: 5% auto;
     width: 500px;
-    height: 380px;
+    height: 500px;
     background-color: #fff;
     padding: 10px;
     border-radius: 3px;
@@ -54,7 +54,7 @@
     width: 100%;
     height: auto;
     padding: 10px 0 15px 0;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
 }
 
 .social-login a {
@@ -67,7 +67,7 @@
     padding: 12px;
     border-radius: 2px;
     font-size: 15px;
-    margin: 0 3%;
+    margin: 5% 3%;
     text-align: center;
 
 }
@@ -89,13 +89,14 @@
     width: 100%;
     height: auto;
     margin-top: 20px;
+    margin-bottom: 40px;
     text-align: center;
 }
 .modal-box {
     width: 100%;
     margin-bottom: 10px;
 }
-.modal-box input[type="text"], .modal-box input[type="password"] {
+.modal-box input[type="text"], .modal-box input[type="password"], .modal-box input[type="email"]{
     width: 50%;
     height: 45px;
     outline: none;
