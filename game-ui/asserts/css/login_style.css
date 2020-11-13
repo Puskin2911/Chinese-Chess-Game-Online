@@ -11,7 +11,7 @@
 }
 .login-box {
     position: relative;
-    margin: 10px auto;
+    margin: 5% auto;
     width: 500px;
     height: 380px;
     background-color: #fff;
@@ -87,6 +87,7 @@
 .modal-box {
     width: 100%;
     margin-bottom: 10px;
+    /*display: block;*/
 }
 .modal-box input[type="text"], .modal-box input[type="password"] {
     width: 50%;
@@ -98,6 +99,10 @@
     color: #333;
     font-size: 0.8rem;
     transition: all 0.1s linear;
+    /*margin: 5px 0;*/
+}
+.signup-user{
+    display: none;
 }
 .modal-box input:focus {
     border-color: #029f5b;
@@ -120,4 +125,5 @@
     text-decoration: underline;
     color: #888;
     font-size: 0.75rem;
+    /*margin-bottom: 10%;*/
 }

@@ -16,22 +16,57 @@
             <a href="#"><i class="fa fa-facebook fa-lg"></i> Login with facebook</a>
             <a href="#"><i class="fa fa-google-plus fa-lg"></i> Login with Google</a>
         </div>
-        <form class="login-user">
+        <form class="login-user" id="login-user">
             <div class="modal-box">
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
+                <input type="text" placeholder="Username" required>
+            </div>
+            <div class="modal-box">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <div class="modal-box">
                 <button>Log in</button>
+            </div>
+            <div class="modal-box">
                 <a href="#" class="forgot-password">Forgot Password</a>
             </div>
         </form>
-        <form class="signup-user">
+        <form class="signup-user" id="signup-user">
             <div class="modal-box">
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
-                <input type="password" placeholder="Confirm password">
+                <input type="text" placeholder="Username" required>
+            </div>
+            <div class="modal-box">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <div class="modal-box">
+                <input type="password" placeholder="Confirm password"required>
+            </div>
+            <div class="modal-box">
                 <button>Sign up</button>
             </div>
         </form>
     </div>
+<script language="JavaScript">
+    const login_click = document.getElementById('login-link');
+    const  signup_click = document.getElementById('signup-link');
+    const form_login = document.getElementById('login-user');
+    const form_signup = document.getElementById('signup-user');
+
+
+    login_click.onclick = function () {
+        form_login.style.display = "block";
+        form_signup.style.display = "none";
+
+        login_click.classList.add('active');
+        signup_click.classList.remove('active');
+    }
+
+    signup_click.onclick = function () {
+        form_signup.style.display = "block";
+        form_login.style.display = "none";
+
+        signup_click.classList.add('active');
+        login_click.classList.remove('active');
+    }
+</script>
 </body>
 </html>
