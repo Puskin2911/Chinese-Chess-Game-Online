@@ -2,6 +2,16 @@
     box-sizing: border-box;
 }
 
+.header {
+    position: relative;
+    color: #00415d;
+    margin: 5px 5px 10px 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    height: 28px;
+}
+
 .social-login {
     position: relative;
     float: left;
