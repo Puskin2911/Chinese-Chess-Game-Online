@@ -60,6 +60,13 @@
         login_click.classList.add('active');
         signup_click.classList.remove('active');
     }
+    signup_click.onclick = function () {
+        form_signup.style.display = "block";
+        form_login.style.display = "none";
+
+        signup_click.classList.add('active');
+        login_click.classList.remove('active');
+    }
 </script>
 </body>
 </html>
