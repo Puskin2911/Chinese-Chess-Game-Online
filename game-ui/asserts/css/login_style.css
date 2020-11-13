@@ -25,3 +25,9 @@
     text-align: center;
 
 }
+.social-login a i {
+    position: relative;
+    float: left;
+    width: 20px;
+    top: 2px;
+}
