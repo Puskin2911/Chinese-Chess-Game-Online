@@ -87,3 +87,18 @@
 .signup-user{
     display: none;
 }
+.modal-box input:focus {
+    border-color: #029f5b;
+}
+.modal-box button {
+    width: 50%;
+    background-color: mediumseagreen;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 14px 0;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
