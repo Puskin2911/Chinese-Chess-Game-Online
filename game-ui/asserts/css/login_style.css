@@ -84,3 +84,6 @@
     font-size: 14px;
     transition: all 0.1s linear;
 }
+.signup-user{
+    display: none;
+}
