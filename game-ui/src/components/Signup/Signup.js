@@ -1,66 +1,104 @@
 import React from "react";
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
-    document.title = "Chinese Chess | Login";
+export default function Signup() {
+    document.title = "Chinese Chess | Signup";
 
     const [username, setUsername] = React.useState("");
+    const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [isLoggedIn, setLoggedIn] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
+    const [rePassword, setRePassword] = React.useState("");
+    const [isCorrectPassword, setCorrectPassword] = React.useState(true);
+    const [error, setError] = React.useState("");
 
-    const handleLogin = (event) => {
+    const [success, setSuccess] = React.useState(false);
+
+    React.useEffect(() => {
+            if (password === rePassword) {
+                setCorrectPassword(true);
+                setError("");
+            } else {
+                setCorrectPassword(false);
+                setError("Password didn't match");
+            }
+        }, [password, rePassword]
+    );
+
+    const handleSignup = (event) => {
         event.preventDefault();
-
         const userInfo = {
             username: username,
+            email: email,
             password: password
         };
 
+        if (!isCorrectPassword) return;
+
         axios.post(
-            "http://127.0.0.1:8080/api/auth/login",
-            userInfo,
-            {
-                withCredentials: true
-            }
+            "http://127.0.0.1:8080/api/auth/signup",
+            userInfo
         ).then(res => {
             console.log(res);
-            if (res.status === 200) {
-                setLoggedIn(true);
+            if (res.status === 201) {
+                setSuccess(true);
             } else {
-                setIsError(true);
+                setSuccess(false);
+                setError("Something failed! Please Try again");
             }
-        }).catch(() => {
-            setIsError(true);
+        }).catch((error) => {
+            console.log(error.response);
+            if (error.response.status === 409) {
+                setSuccess(false);
+                setError("Username or Email has already exists!");
+            } else {
+                setSuccess(false);
+                setError("Something failed! Please Try again");
+            }
         })
+
+        setError("Processing ...");
     }
 
-    if (isLoggedIn === true) {
-        return <Redirect to="/game"/>
+    if (success === true) {
+        return (
+            <div className="container bg-white rounded w-40 p-3 mt-5">
+                <h4 className="text-center text-success">Successful</h4>
+                <p className="text-center">Go to <Link to="/login">Login</Link></p>
+            </div>
+        );
     }
 
     return (
-        <div className="container bg-white rounded w-40 p-3 mt-5" id="login-box">
-            <h2 className="text-center">Login</h2>
+        <div className="container bg-white rounded w-40 p-3 mt-5">
+            <h2 className="text-center">Sign up</h2>
+            {error === "" ? "" : (<p className="text-danger text-center">{error}</p>)}
             <form className="mx-5">
                 <div className='form-group'>
                     <input className="form-control" type="text" placeholder="Username" required
                            onChange={event => setUsername(event.target.value)}/>
                 </div>
                 <div className='form-group'>
+                    <input className="form-control" type="text" placeholder="Email" required
+                           onChange={event => setEmail(event.target.value)}/>
+                </div>
+                <div className='form-group'>
                     <input className="form-control" type="password" placeholder="Password" required
                            onChange={event => setPassword(event.target.value)}/>
                 </div>
+                <div className='form-group'>
+                    <input className="form-control" type="password" placeholder="Confirm password" required
+                           onChange={event => setRePassword(event.target.value)}/>
+                </div>
                 <div className='form-group text-center'>
-                    <button type="submit" className="form-control btn btn-success w-50" onClick={handleLogin}>Log in
+                    <button type="submit" className="form-control btn btn-success w-50" onClick={handleSignup}>Sign up
                     </button>
                 </div>
 
-                <p className="text-center">Or go to <Link to="/signup">Sign up</Link></p>
+                <p className="text-center">Or go to <Link to="/login">Login</Link></p>
 
                 <hr className="my-4"/>
-                <h6 className="text-center">Login with</h6>
+                <h6 className="text-center">Sign up with</h6>
                 <div className="row justify-content-around mt-4">
                     <div className="col-6">
                         <div className="form-group">
@@ -124,5 +162,5 @@ export default function Login() {
                 </div>
             </form>
         </div>
-    )
+    );
 }
