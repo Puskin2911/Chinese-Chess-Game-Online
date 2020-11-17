@@ -22,6 +22,13 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
     @Column(name = "elo", nullable = false)
     private Integer elo;
 
