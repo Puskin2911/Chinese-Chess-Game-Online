@@ -5,7 +5,7 @@ import com.doubleat.ccgame.domain.AuthProvider;
 import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.exception.OAuth2AuthenticationProcessingException;
 import com.doubleat.ccgame.repository.UserRepository;
-import com.doubleat.ccgame.security.UserPrincipal;
+import com.doubleat.ccgame.security.CustomOAuth2User;
 import com.doubleat.ccgame.security.oauth2.userinfo.OAuth2UserInfo;
 import com.doubleat.ccgame.security.oauth2.userinfo.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +63,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
 
-        return UserPrincipal.create(user, oAuth2User.getAttributes());
+        return CustomOAuth2User.create(user, oAuth2User.getAttributes());
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
-        
+
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setUsername(oAuth2UserInfo.getUsername());
