@@ -25,13 +25,13 @@ spring:
             #              scope:
             #                - email
             #                - public_profile
-            github:
-              client-id: fd78e5da72331f97f863
-              client-secret: fc5fff1950e15a0228f6c4df79a794d95ab3b95e
-              redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
-              scope:
-                - user:email
-                - read:user
+          github:
+            client-id: fd78e5da72331f97f863
+            client-secret: fc5fff1950e15a0228f6c4df79a794d95ab3b95e
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
 #        provider:
 #          facebook:
 #            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
@@ -43,8 +43,14 @@ logging:
       web: debug
       security: debug
       boot.autoconfigure: info
-jwt:
-  secret: ccgame
-  expirationMs: 86400000    # One day
-games:
-  elo: 1200
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMs: 86400000 # One day
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+  game:
+    elo: 1200

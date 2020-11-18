@@ -1,13 +1,15 @@
 package com.doubleat.ccgame.security.jwt;
 
+import com.doubleat.ccgame.config.AppProperties;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @Service
@@ -15,11 +17,18 @@ public class JwtServiceImpl implements JwtService {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Autowired
+    private AppProperties appProperties;
 
-    @Value("${jwt.expirationMs}")
-    private Long jwtExpirationMs;
+    private Long tokenExpirationMs;
+
+    private String tokenSecret;
+
+    @PostConstruct
+    public void init() {
+        tokenExpirationMs = appProperties.getAuth().getTokenExpirationMs();
+        tokenSecret = appProperties.getAuth().getTokenSecret();
+    }
 
     @Override
     public String generateJwtToken(Authentication authentication) {
@@ -30,15 +39,15 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .setExpiration(new Date(now.getTime() + tokenExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, tokenSecret)
                 .compact();
     }
 
     @Override
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(tokenSecret)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -48,7 +57,7 @@ public class JwtServiceImpl implements JwtService {
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtSecret)
+                    .setSigningKey(tokenSecret)
                     .parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {

@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.security.oauth2;
 
+import com.doubleat.ccgame.config.AppProperties;
 import com.doubleat.ccgame.domain.AuthProvider;
 import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.exception.OAuth2AuthenticationProcessingException;
@@ -21,8 +22,12 @@ import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AppProperties appProperties;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
