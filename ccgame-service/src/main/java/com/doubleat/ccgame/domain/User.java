@@ -16,18 +16,20 @@ public class User {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "pass_hashed", nullable = false)
+    @Column(name = "pass_hashed")
     private String passHashed;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
-
-    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
+    @Column(name = "provider_id")
     private String providerId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "elo", nullable = false)
     private Integer elo;
