@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.security;
+package com.doubleat.ccgame.security.auth;
 
 import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.repository.UserRepository;

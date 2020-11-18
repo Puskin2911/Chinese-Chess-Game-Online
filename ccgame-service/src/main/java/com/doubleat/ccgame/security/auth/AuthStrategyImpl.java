@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.security.authenticate;
+package com.doubleat.ccgame.security.auth;
 
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
