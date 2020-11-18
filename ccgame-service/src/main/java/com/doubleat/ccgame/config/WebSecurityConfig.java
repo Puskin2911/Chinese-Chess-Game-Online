@@ -82,20 +82,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/**/*.css",
                                 "/**/*.js")
                         .permitAll()
-                        .antMatchers("/api/auth/**", "/api/oauth2/**")
+                        .antMatchers("/api/auth/**", "/oauth2/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .oauth2Login()
-                .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
-                        .baseUri("/oauth2/authorize")
-                        .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
-                .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-                        .baseUri("/oauth2/callback/*"))
-                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                        .userService(customOAuth2UserService))
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                        .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
+                                .baseUri("/oauth2/authorize")
+                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                        .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
+                                .baseUri("/oauth2/callback/*"))
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
+                );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
