@@ -73,7 +73,8 @@ export default function Login() {
                     </div>
                     <div className="col-6">
                         <div className="form-group">
-                            <a href={GOOGLE_AUTH_URL} className="form-control btn btn-danger">
+                            <a href={GOOGLE_AUTH_URL} target="_blank" rel="noreferrer"
+                               className="form-control btn btn-danger">
                                 <i className="fab fa-google-plus-g"/>
                                 <span className="pl-2">Google</span>
                             </a>
