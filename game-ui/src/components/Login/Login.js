@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
+import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../../constants";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";
@@ -72,20 +73,20 @@ export default function Login() {
                     </div>
                     <div className="col-6">
                         <div className="form-group">
-                            <button type="button" className="form-control btn btn-danger">
+                            <a href={GOOGLE_AUTH_URL} className="form-control btn btn-danger">
                                 <i className="fab fa-google-plus-g"/>
                                 <span className="pl-2">Google</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div className="row justify-content-around">
                     <div className="col-6">
                         <div className="form-group">
-                            <button type="button" className="form-control btn btn-secondary">
+                            <a href={GITHUB_AUTH_URL} className="form-control btn btn-secondary">
                                 <i className="fab fa-github"/>
                                 <span className="pl-2">GitHub</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div className="col-6">
