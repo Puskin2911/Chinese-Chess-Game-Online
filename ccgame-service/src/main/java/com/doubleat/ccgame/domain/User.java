@@ -39,4 +39,5 @@ public class User {
 
     @OneToMany(mappedBy = "loser")
     private Set<Game> gamesLose;
+    
 }
