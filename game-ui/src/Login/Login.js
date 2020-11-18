@@ -1,7 +1,7 @@
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
-import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../../constants";
+import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../common/constants";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";

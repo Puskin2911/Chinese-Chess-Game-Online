@@ -1,11 +1,11 @@
 import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
-import NotFound from "./components/Error/NotFound/NotFound";
-import Login from "./components/Login/Login";
-import Home from "./components/Home/Home";
-import Game from "./components/Game/Game";
-import PrivateRoute from "./router/PrivateRoute";
-import Signup from "./components/Signup/Signup";
+import NotFound from "./common/NotFound";
+import Login from "./Login/Login";
+import Home from "./Home/Home";
+import Game from "./Game/Game";
+import PrivateRoute from "./common/PrivateRoute";
+import Signup from "./Signup/Signup";
 
 export default function App() {
     return (
