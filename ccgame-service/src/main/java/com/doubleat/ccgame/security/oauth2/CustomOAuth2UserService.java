@@ -45,9 +45,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+
+        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail()))
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-        }
+
 
         Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
         User user;
@@ -68,19 +69,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         User user = new User();
-
-        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()));
-        user.setProviderId(oAuth2UserInfo.getId());
         user.setUsername(oAuth2UserInfo.getUsername());
         user.setEmail(oAuth2UserInfo.getEmail());
+        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase()));
+        user.setProviderId(oAuth2UserInfo.getId());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        user.setElo(1200);
-        user.setPassHashed("password");
+        user.setElo(appProperties.getGame().getElo());
+
         return userRepository.save(user);
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
+
         return userRepository.save(existingUser);
     }
 
