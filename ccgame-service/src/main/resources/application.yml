@@ -7,41 +7,36 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-  devtools:
-    restart:
-      log-condition-evaluation-delta: false
-      poll-interval: 2s
-      quiet-period: 1s
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: 1047172535479-u6kekbu37o93ep3lkrt13q8ic9fjgabm.apps.googleusercontent.com
-            clientSecret: 1LFybaVldhYd6HEJAWAR8Am0
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            client-id: 1047172535479-u6kekbu37o93ep3lkrt13q8ic9fjgabm.apps.googleusercontent.com
+            client-secret: 1LFybaVldhYd6HEJAWAR8Am0
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
-            facebook:
-              clientId: 121189305185277
-              clientSecret: 42ffe5aa7379e8326387e0fe16f34132
-              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
-              scope:
-                - email
-                - public_profile
+            #            facebook:
+            #              clientId: 121189305185277
+            #              clientSecret: 42ffe5aa7379e8326387e0fe16f34132
+            #              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            #              scope:
+            #                - email
+            #                - public_profile
             github:
-              clientId: d3e47fc2ddd966fa4352
-              clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
-              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              client-id: fd78e5da72331f97f863
+              client-secret: fc5fff1950e15a0228f6c4df79a794d95ab3b95e
+              redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
               scope:
                 - user:email
                 - read:user
-        provider:
-          facebook:
-            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
-            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
-            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+#        provider:
+#          facebook:
+#            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+#            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+#            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 logging:
   level:
     org.springframework:
