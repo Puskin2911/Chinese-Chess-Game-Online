@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.config;
 
-import com.doubleat.ccgame.security.RestAuthenticationEntryPoint;
 import com.doubleat.ccgame.filter.JwtAuthenticationFilter;
+import com.doubleat.ccgame.security.RestAuthenticationEntryPoint;
 import com.doubleat.ccgame.security.oauth2.CustomOAuth2UserService;
 import com.doubleat.ccgame.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.doubleat.ccgame.security.oauth2.OAuth2AuthenticationFailureHandler;
@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -62,44 +62,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().and()
-                .formLogin()
-                .disable()
-                .httpBasic()
-                .disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/",
-                        "/error",
-                        "/favicon.ico",
-                        "/**/*.png",
-                        "/**/*.gif",
-                        "/**/*.svg",
-                        "/**/*.jpg",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js")
-                .permitAll()
-                .antMatchers("/api/auth/**", "/api/oauth2/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors().and()
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
+                        .authenticationEntryPoint(restAuthenticationEntryPoint))
+                .authorizeRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
+                        .antMatchers("/",
+                                "/error",
+                                "/favicon.ico",
+                                "/**/*.png",
+                                "/**/*.gif",
+                                "/**/*.svg",
+                                "/**/*.jpg",
+                                "/**/*.html",
+                                "/**/*.css",
+                                "/**/*.js")
+                        .permitAll()
+                        .antMatchers("/api/auth/**", "/api/oauth2/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/oauth2/callback/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and()
+                .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
+                        .baseUri("/oauth2/authorize")
+                        .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
+                        .baseUri("/oauth2/callback/*"))
+                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOAuth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler);
 
