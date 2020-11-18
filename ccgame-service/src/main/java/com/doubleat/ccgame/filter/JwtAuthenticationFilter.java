@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.filter;
 
 import com.doubleat.ccgame.security.SecurityUtils;
-import com.doubleat.ccgame.security.jwt.JwtService;
+import com.doubleat.ccgame.security.jwt.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +27,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
-    private final JwtService jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public JwtAuthenticationFilter(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JwtService jwtService) {
+    public JwtAuthenticationFilter(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
-        this.jwtService = jwtService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = SecurityUtils.resolveToken(request);
         try {
-            jwtService.validateJwtToken(jwtToken);
+            jwtTokenProvider.validateJwtToken(jwtToken);
 
-            String username = jwtService.getUsernameFromJwtToken(jwtToken);
+            String username = jwtTokenProvider.getUsernameFromJwtToken(jwtToken);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

@@ -2,7 +2,7 @@ package com.doubleat.ccgame.security.jwt;
 
 import org.springframework.security.core.Authentication;
 
-public interface JwtService {
+public interface JwtTokenProvider {
 
     String generateJwtToken(Authentication authentication);
 

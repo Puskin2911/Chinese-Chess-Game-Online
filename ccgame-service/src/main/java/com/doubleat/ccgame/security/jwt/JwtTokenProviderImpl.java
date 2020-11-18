@@ -13,9 +13,9 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+public class JwtTokenProviderImpl implements JwtTokenProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProviderImpl.class);
 
     @Autowired
     private AppProperties appProperties;
