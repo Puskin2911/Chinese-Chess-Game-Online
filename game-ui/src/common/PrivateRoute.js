@@ -2,6 +2,7 @@ import React from "react";
 import {Redirect, Route} from "react-router-dom";
 import axios from "axios";
 import {CHECK_AUTH_URL} from "./constants";
+import LoadingIndicator from "./LoadingIndicator";
 
 const PrivateRoute = ({component: Component, ...rest}) => {
 
@@ -25,9 +26,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
         });
     }, []);
 
-    if (isLoading) return (
-        <h2 className="text-center text-danger">Processing...</h2>
-    );
+    if (isLoading) return <LoadingIndicator/>;
 
     return (
         <Route

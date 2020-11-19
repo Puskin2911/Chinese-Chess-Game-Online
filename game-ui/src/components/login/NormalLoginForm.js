@@ -1,17 +1,17 @@
-import {Link, useHistory, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import axios from "axios";
 import {LOGIN_URL} from "../../common/constants";
 import React from "react";
 
-export default function NormalLoginForm() {
+export default function NormalLoginForm(props) {
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [notification, setNotification] = React.useState("");
 
-    let history = useHistory();
-    let location = useLocation();
-    let {from} = location.state || {from: {pathname: "/"}};
+    const history = props.history;
+    const from = props.from;
+
 
     const handleLogin = (event) => {
         event.preventDefault();
