@@ -1,8 +1,7 @@
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
-import axios from "axios";
-import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../common/constants";
-import {useAuth} from "../common/AuthProvider";
+import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../../common/constants";
+import {login} from "../../common/AuthService";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";
@@ -10,9 +9,7 @@ export default function Login() {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [isLoggedIn, setLoggedIn] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
-
-    const auth = useAuth();
+    const [notification, setNotification] = React.useState("");
 
     const handleLogin = (event) => {
         event.preventDefault();
@@ -22,21 +19,12 @@ export default function Login() {
             password: password
         };
 
-        axios.post(
-            "http://127.0.0.1:8080/api/auth/login",
-            userInfo,
-            {
-                withCredentials: true
-            }
-        ).then(res => {
+        login(userInfo).then(res => {
             console.log(res);
-            if (res.status === 200) {
-                setLoggedIn(true);
-            } else {
-                setIsError(true);
-            }
-        }).catch(() => {
-            setIsError(true);
+            setLoggedIn(true);
+        }).catch((error) => {
+            console.log(error.response);
+            setNotification(error.response.data.details);
         })
     }
 
