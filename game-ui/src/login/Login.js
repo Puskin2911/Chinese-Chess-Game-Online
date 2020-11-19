@@ -2,6 +2,7 @@ import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
 import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../common/constants";
+import {useAuth} from "../common/AuthProvider";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";
@@ -10,6 +11,8 @@ export default function Login() {
     const [password, setPassword] = React.useState("");
     const [isLoggedIn, setLoggedIn] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
+
+    const auth = useAuth();
 
     const handleLogin = (event) => {
         event.preventDefault();

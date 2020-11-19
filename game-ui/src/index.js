@@ -8,12 +8,15 @@ import Popper from 'popper.js';
 import "bootstrap/dist/js/bootstrap.min";
 import App from './App';
 import {BrowserRouter} from "react-router-dom";
+import AuthProvider from "./common/AuthProvider";
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <App/>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
+        </AuthProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
