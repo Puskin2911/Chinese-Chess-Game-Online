@@ -1,6 +1,7 @@
 import React from "react";
 import {Redirect, Route} from "react-router-dom";
-import {checkAuth} from "./AuthService";
+import axios from "axios";
+import {CHECK_AUTH_URL} from "./constants";
 
 const PrivateRoute = ({component: Component, ...rest}) => {
 
@@ -9,7 +10,13 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
     // Run only one after init render.
     React.useEffect(() => {
-        checkAuth.then(res => {
+        axios.get(
+            CHECK_AUTH_URL,
+            {
+                withCredentials: true
+            }
+        ).then(res => {
+            console.log(res);
             setAuthenticated(true);
         }).catch((error) => {
             console.log(error.response);

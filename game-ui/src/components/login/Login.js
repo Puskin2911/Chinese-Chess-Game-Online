@@ -1,15 +1,18 @@
 import React from "react";
-import {Link, Redirect} from "react-router-dom";
-import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../../common/constants";
-import {login} from "../../common/AuthService";
+import {Link, useHistory, useLocation} from "react-router-dom";
+import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL, LOGIN_URL} from "../../common/constants";
+import axios from "axios";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [isLoggedIn, setLoggedIn] = React.useState(false);
     const [notification, setNotification] = React.useState("");
+
+    let history = useHistory();
+    let location = useLocation();
+    let {from} = location.state || {from: {pathname: "/"}};
 
     const handleLogin = (event) => {
         event.preventDefault();
@@ -19,30 +22,40 @@ export default function Login() {
             password: password
         };
 
-        login(userInfo).then(res => {
+        axios.post(
+            LOGIN_URL,
+            userInfo,
+            {
+                withCredentials: true
+            }
+        ).then(res => {
             console.log(res);
-            setLoggedIn(true);
+
+            history.replace(from);
         }).catch((error) => {
             console.log(error.response);
             setNotification(error.response.data.details);
         })
     }
 
-    if (isLoggedIn === true) {
-        return <Redirect to="/game"/>
-    }
-
     return (
         <div className="container bg-white rounded w-40 p-3 mt-5" id="login-box">
-            <h2 className="text-center">Login</h2>
+            <h2 className="text-center mb-4">Login@@</h2>
+            <h5 className="text-center text-danger">{notification}</h5>
             <form className="mx-5">
                 <div className='form-group'>
                     <input className="form-control" type="text" placeholder="Username" required
-                           onChange={event => setUsername(event.target.value)}/>
+                           onChange={event => {
+                               setUsername(event.target.value);
+                               setNotification("");
+                           }}/>
                 </div>
                 <div className='form-group'>
                     <input className="form-control" type="password" placeholder="Password" required
-                           onChange={event => setPassword(event.target.value)}/>
+                           onChange={event => {
+                               setPassword(event.target.value);
+                               setNotification("");
+                           }}/>
                 </div>
                 <div className='form-group text-center'>
                     <button type="submit" className="form-control btn btn-success w-50" onClick={handleLogin}>Log in
