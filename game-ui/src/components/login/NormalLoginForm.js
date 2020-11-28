@@ -1,44 +1,51 @@
-import {Link} from "react-router-dom";
-import axios from "axios";
-import {LOGIN_URL} from "../../common/constants";
 import React from "react";
+import {Link, useHistory, useLocation} from "react-router-dom";
+import localStorageHelper from "../../utils/LocalStorageHelper";
+import authService from "../../service/AuthService";
+import Spinner from "../../common/Spinner";
 
-export default function NormalLoginForm(props) {
+export default function NormalLoginForm() {
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [notification, setNotification] = React.useState("");
+    const [isLoading, setLoading] = React.useState(false);
 
-    const history = props.history;
-    const from = props.from;
+    const history = useHistory();
+    const location = useLocation();
+    const {from} = location.state || {from: {pathname: "/"}};
 
 
     const handleLogin = (event) => {
         event.preventDefault();
+
+        setLoading(true);
+        setNotification("");
 
         const userInfo = {
             username: username,
             password: password
         };
 
-        axios.post(
-            LOGIN_URL,
-            userInfo,
-            {
-                withCredentials: true
-            }
-        ).then(res => {
-            console.log(res);
+        // setTimeout(() => {
+        authService.login(userInfo)
+            .then(res => {
+                console.log(res);
 
-            history.replace(from);
-        }).catch((error) => {
-            console.log(error.response);
-            setNotification(error.response.data.details);
-        })
+                localStorageHelper.setCookie("loggedIn", true, 10);
+                history.replace(from);
+            })
+            .catch((error) => {
+                console.log("Error", error.response);
+                setLoading(false);
+                setNotification(error.response.data.details);
+            });
+        // }, 2000)
     }
 
     return (
         <div>
+            <Spinner isHiding={!isLoading}/>
             <h5 className="text-center text-danger">{notification}</h5>
             <form className="mx-5">
                 <div className='form-group'>

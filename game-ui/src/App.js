@@ -1,6 +1,6 @@
 import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
-import NotFound from "./components/NotFound";
+import NotFound from "./components/Error/NotFound";
 import Login from "./components/login/Login";
 import Home from "./components/Home";
 import Game from "./components/Game";

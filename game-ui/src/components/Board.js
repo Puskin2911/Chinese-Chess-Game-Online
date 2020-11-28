@@ -1,71 +1,176 @@
 import React from "react";
+import imagePieceMap from "../common/ImagePiece";
+import Position from "../utils/Position";
+import useDidUpdateEffect from "../common/CustomizeHook";
+import BoardConstants from "../constants/BoardConstants";
 
-class Board extends React.Component {
-    constructor(props) {
-        super(props);
-        this.setState({
-            boardStatus: "'00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch'\n" +
-                "            + '_10000_11000_12000_13000_14000_15000_16000_17000_18000'\n" +
-                "            + '_20000_21bca_22000_23000_24000_25000_26000_27bca_28000'\n" +
-                "            + '_30bso_31000_32bso_33000_34bso_35000_36bso_37000_38bso'\n" +
-                "            + '_40000_41000_42000_43000_44000_45000_46000_47000_48000'\n" +
-                "            + '_50000_51000_52000_53000_54000_55000_56000_57000_58000'\n" +
-                "            + '_60rso_61000_62rso_63000_64rso_65000_66rso_67000_68rso'\n" +
-                "            + '_70000_71rca_72000_73000_74000_75000_76000_77rca_78000'\n" +
-                "            + '_80000_81000_82000_83000_84000_85000_86000_87000_88000'\n" +
-                "            + '_90rch_91rho_92rel_93rad_94rge_95rad_96rel_97rho_98rch';"
-        });
-        this.setImage();
+function Board(props) {
+
+    const canvasRef = React.useRef(null);
+
+    const CELL_SIZE = BoardConstants.CELL_SIZE;
+
+    const [boardStatus, setBoardStatus] = React.useState(BoardConstants.BOARD_DEFAULT_STATUS);
+
+    const [movingPiece, setMovingPiece] = React.useState("00000");
+
+    const [centerX, setCenterX] = React.useState(0);
+
+    const [centerY, setCenterY] = React.useState(0);
+
+    const drawBlankBoard = React.useCallback((ctx) => {
+        // Horizontal
+        for (let i = 0; i < 10; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.moveTo(CELL_SIZE / 2 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * i + 1);
+            ctx.lineTo(CELL_SIZE * 8.5 + 8 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * i + 1);
+            ctx.stroke();
+        }
+
+        // Vertical
+        for (let i = 0; i < 9; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * i + 1, CELL_SIZE / 2 + 1);
+            ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * i + 1, CELL_SIZE * 9.5 + 10);
+            ctx.stroke();
+        }
+
+        // River Side
+        ctx.clearRect(CELL_SIZE / 2 + 2, CELL_SIZE * 4.5 + 6, CELL_SIZE * 8, CELL_SIZE - 1);
+
+        // General house
+        ctx.beginPath();
+        // Top
+        ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + 1);
+        ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 2 + 1);
+        ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 2 + 1);
+        ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + 1);
+        // Bot
+        ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 7 + 1);
+        ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 9 + 1);
+        ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 9 + 1);
+        ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 7 + 1);
+        ctx.stroke();
+    }, [CELL_SIZE])
+
+    const drawPieces = React.useCallback((ctx) => {
+        const piecesOnBoard = boardStatus.split("_");
+        for (let [key, value] of imagePieceMap) {
+            for (const piece of piecesOnBoard) {
+                if (key === piece.slice(2)) {
+                    let x = piece.charAt(0);
+                    let y = piece.charAt(1);
+                    ctx.drawImage(value, (CELL_SIZE + 1) * y + 1, (CELL_SIZE + 1) * x + 1, CELL_SIZE, CELL_SIZE);
+                }
+            }
+        }
+    }, [CELL_SIZE, boardStatus]);
+
+    const drawBoard = React.useCallback(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+        drawBlankBoard(ctx);
+        drawPieces(ctx);
+    }, [drawPieces, canvasRef, drawBlankBoard]);
+
+    const drawMovingPiece = React.useCallback((x, y) => {
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'green';
+        // Left Top
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + CELL_SIZE / 4);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + CELL_SIZE / 4, y);
+        // Right Top
+        ctx.moveTo(x + CELL_SIZE, y);
+        ctx.lineTo(x + CELL_SIZE * 3 / 4, y);
+        ctx.moveTo(x + CELL_SIZE, y);
+        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE / 4);
+        // Left Bot
+        ctx.moveTo(x, y + CELL_SIZE);
+        ctx.lineTo(x, y + CELL_SIZE * 3 / 4);
+        ctx.moveTo(x, y + CELL_SIZE);
+        ctx.lineTo(x + CELL_SIZE / 4, y + CELL_SIZE);
+        // Right Bot
+        ctx.moveTo(x + CELL_SIZE, y + CELL_SIZE);
+        ctx.lineTo(x + CELL_SIZE * 3 / 4, y + CELL_SIZE);
+        ctx.moveTo(x + CELL_SIZE, y + CELL_SIZE);
+        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE * 3 / 4);
+        ctx.stroke();
+    }, [CELL_SIZE]);
+
+    function handleMove(event) {
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        console.log('x: ' + x + '\ny: ' + y);
+
+        const position = new Position(x, y);
+        const xy = position.getXY();
+        console.log(xy);
+        if (xy !== '-1') {
+            let index = boardStatus.indexOf(xy);
+            let color = boardStatus.charAt(index + 2);
+            const piece = boardStatus.slice(index, index + 5);
+
+            setCenterX(xy.slice(1) * (CELL_SIZE + 1) + 1);
+            setCenterY(xy.slice(0, 1) * (CELL_SIZE + 1) + 1);
+
+            if (movingPiece === '00000') {
+                if (color !== '0') {
+                    console.log("Picked " + piece);
+                    setMovingPiece(piece);
+                    console.log(centerX, centerY);
+                }
+            } else {
+                let newBoardStatus;
+                newBoardStatus = boardStatus.replaceAll(movingPiece, movingPiece.substring(0, 2) + '000');
+                newBoardStatus = newBoardStatus.replaceAll(piece, piece.substring(0, 2) + movingPiece.substring(2));
+
+                console.log(canvas.clientWidth, canvas.clientHeight);
+                console.log(centerX, centerY);
+
+                setMovingPiece('00000');
+                setBoardStatus(newBoardStatus);
+            }
+        }
     }
 
-    setImage(){
-        //Black
-        const bch = this.readImage('BChariot.png');
-        const bho = this.readImage('BHorse.png');
-        const bel = this.readImage('BElephant.png');
-        const bge = this.readImage('BGeneral.png');
-        const bad = this.readImage('BAdvisor.png');
-        const bca = this.readImage('BCannon.png');
-        const bso = this.readImage('BSoldier.png');
-        //Red
-        const rch = this.readImage('RChariot.png');
-        const rho = this.readImage('RHorse.png');
-        const rel = this.readImage('RElephant.png');
-        const rge = this.readImage('RGeneral.png');
-        const rad = this.readImage('RAdvisor.png');
-        const rca = this.readImage('RCannon.png');
-        const rso = this.readImage('RSoldier.png');
+    const isInGame = props.isInGame;
 
-        return [
-            ['bch', bch],
-            ['bho', bho],
-            ['bel', bel],
-            ['bge', bge],
-            ['bad', bad],
-            ['bca', bca],
-            ['bso', bso],
-            ['rch', rch],
-            ['rho', rho],
-            ['rel', rel],
-            ['rge', rge],
-            ['rad', rad],
-            ['rca', rca],
-            ['rso', rso]
-        ]
-    }
+    useDidUpdateEffect(() => {
+        if (isInGame) {
+            drawBoard();
+        }
+    }, [isInGame, drawBoard]);
 
-    readImage(name) {
-        const image = new Image();
-        image.src = '/img/3d/' + name;
-        return image;
-    }
+    useDidUpdateEffect(() => {
+        if (isInGame) {
+            drawBoard();
+            drawMovingPiece(centerX, centerY);
+        }
+    }, [drawBoard, drawMovingPiece, centerX, centerY]);
 
-    render() {
-        return (
-            <canvas id="cc-board" className="border border-success">
-            </canvas>
-        )
-    }
+    console.log("Before rendering...");
+    return (
+        <div>
+            <canvas ref={canvasRef}
+                    className="border border-success"
+                    width={BoardConstants.BOARD_WIDTH_SIZE}
+                    height={BoardConstants.BOARD_HEIGHT_SIZE}
+                    onClick={handleMove}
+            />
+        </div>
+    )
 }
 
 export default Board;

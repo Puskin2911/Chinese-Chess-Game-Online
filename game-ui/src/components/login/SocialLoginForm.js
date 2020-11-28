@@ -1,5 +1,5 @@
-import {GITHUB_AUTH_URL, GOOGLE_AUTH_URL} from "../../common/constants";
 import React from "react";
+import ApiConstants from "../../constants/ApiConstant";
 
 export default function SocialLoginForm() {
     return (
@@ -16,7 +16,7 @@ export default function SocialLoginForm() {
                 </div>
                 <div className="col-6">
                     <div className="form-group">
-                        <a href={GOOGLE_AUTH_URL} target="_blank" rel="noreferrer"
+                        <a href={ApiConstants.GOOGLE_AUTH_URL} target="_blank" rel="noreferrer"
                            className="form-control btn btn-danger">
                             <i className="fab fa-google-plus-g"/>
                             <span className="pl-2">Google</span>
@@ -27,7 +27,7 @@ export default function SocialLoginForm() {
             <div className="row justify-content-around">
                 <div className="col-6">
                     <div className="form-group">
-                        <a href={GITHUB_AUTH_URL} className="form-control btn btn-secondary">
+                        <a href={ApiConstants.GITHUB_AUTH_URL} className="form-control btn btn-secondary">
                             <i className="fab fa-github"/>
                             <span className="pl-2">GitHub</span>
                         </a>

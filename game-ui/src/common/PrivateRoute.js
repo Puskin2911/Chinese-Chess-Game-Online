@@ -1,8 +1,8 @@
 import React from "react";
 import {Redirect, Route} from "react-router-dom";
-import axios from "axios";
-import {CHECK_AUTH_URL} from "./constants";
 import LoadingIndicator from "./LoadingIndicator";
+import localStorageHelper from "../utils/LocalStorageHelper";
+import authService from "../service/AuthService";
 
 const PrivateRoute = ({component: Component, ...rest}) => {
 
@@ -11,17 +11,19 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
     // Run only one after init render.
     React.useEffect(() => {
-        axios.get(
-            CHECK_AUTH_URL,
-            {
-                withCredentials: true
-            }
-        ).then(res => {
-            console.log(res);
-            setAuthenticated(true);
-        }).catch((error) => {
-            console.log(error.response);
-        }).finally(() => {
+        const loggedIn = localStorageHelper.getCookie("loggedIn");
+        if (!loggedIn) {
+            setLoading(false);
+            return;
+        }
+        authService.checkAuth
+            .then(res => {
+                console.log(res);
+                setAuthenticated(true);
+            })
+            .catch((error) => {
+                console.log(error.response);
+            }).finally(() => {
             setLoading(false);
         });
     }, []);
