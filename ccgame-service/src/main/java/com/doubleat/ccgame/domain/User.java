@@ -16,11 +16,20 @@ public class User {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "pass_hashed", nullable = false)
+    @Column(name = "pass_hashed")
     private String passHashed;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "elo", nullable = false)
     private Integer elo;
@@ -30,4 +39,5 @@ public class User {
 
     @OneToMany(mappedBy = "loser")
     private Set<Game> gamesLose;
+
 }

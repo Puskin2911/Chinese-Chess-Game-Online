@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.service;
 
+import com.doubleat.ccgame.config.AppProperties;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.repository.UserRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -15,13 +18,20 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${games.elo}")
-    private Integer elo;
+    private int elo;
+
+    @Autowired
+    private AppProperties appProperties;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.elo = appProperties.getGame().getElo();
     }
 
     @Override

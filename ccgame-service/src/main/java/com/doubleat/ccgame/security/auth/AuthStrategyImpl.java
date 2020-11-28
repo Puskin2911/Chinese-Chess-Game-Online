@@ -1,9 +1,9 @@
-package com.doubleat.ccgame.security.authenticate;
+package com.doubleat.ccgame.security.auth;
 
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
-import com.doubleat.ccgame.security.jwt.JwtService;
+import com.doubleat.ccgame.security.jwt.JwtTokenProvider;
 import com.doubleat.ccgame.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,13 +16,13 @@ public class AuthStrategyImpl implements AuthStrategy {
 
     private final AuthenticationManager authenticationManager;
 
-    private final JwtService jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final UserService userService;
 
-    public AuthStrategyImpl(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService) {
+    public AuthStrategyImpl(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
 
@@ -36,12 +36,12 @@ public class AuthStrategyImpl implements AuthStrategy {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtService.generateJwtToken(authentication);
+        return jwtTokenProvider.generateJwtToken(authentication);
     }
 
     @Override
     public boolean validateAccessToken(String accessToken) {
-        return jwtService.validateJwtToken(accessToken);
+        return jwtTokenProvider.validateJwtToken(accessToken);
     }
 
     @Override

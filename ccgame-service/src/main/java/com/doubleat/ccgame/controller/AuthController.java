@@ -3,7 +3,7 @@ package com.doubleat.ccgame.controller;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.security.SecurityUtils;
-import com.doubleat.ccgame.security.authenticate.AuthStrategy;
+import com.doubleat.ccgame.security.auth.AuthStrategy;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
