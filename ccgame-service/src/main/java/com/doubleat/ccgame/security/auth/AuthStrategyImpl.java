@@ -1,10 +1,14 @@
 package com.doubleat.ccgame.security.auth;
 
+import com.doubleat.ccgame.domain.User;
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
+import com.doubleat.ccgame.repository.UserRepository;
 import com.doubleat.ccgame.security.jwt.JwtTokenProvider;
 import com.doubleat.ccgame.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,12 +24,16 @@ public class AuthStrategyImpl implements AuthStrategy {
 
     private final UserService userService;
 
-    public AuthStrategyImpl(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public AuthStrategyImpl(AuthenticationManager authenticationManager,
+                            JwtTokenProvider jwtTokenProvider,
+                            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
-
 
     @Override
     public String authenticateUser(LoginRequest loginRequest) {
@@ -40,14 +48,30 @@ public class AuthStrategyImpl implements AuthStrategy {
     }
 
     @Override
-    public boolean validateAccessToken(String accessToken) {
-        return jwtTokenProvider.validateJwtToken(accessToken);
+    public UserDto validateAccessToken(String accessToken) {
+        boolean isValidToken = jwtTokenProvider.validateJwtToken(accessToken);
+        if (isValidToken) {
+            String username = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
+            User user = userRepository.findByUsername(username);
+            // TODO: Check user is null
+
+            return UserDto.builder()
+                    .username(user.getUsername())
+                    .elo(user.getElo())
+                    .numberOfLoses(user.getGamesLose().size())
+                    .numberOfWins(user.getGamesWin().size())
+                    .ready(false)
+                    .build();
+        }
+
+        return null;
     }
 
     @Override
     public void signupUser(SignupRequest signupRequest) {
         boolean res = userService.addNew(signupRequest);
 
-        if (!res) throw new UsernameOrEmailHasAlreadyExistsException("Username or email has already exists!");
+        if (!res)
+            throw new UsernameOrEmailHasAlreadyExistsException("Username or email has already exists!");
     }
 }

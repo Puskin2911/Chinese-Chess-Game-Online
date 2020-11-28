@@ -9,23 +9,25 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/v1/rooms/")
-@Api(tags = {"room service"})
+@RequestMapping(value = RoomController.PREFIX_ROOM_RESOURCE_URL)
+@Api(tags = { "room service" })
 public class RoomController {
+
+    public static final String PREFIX_ROOM_RESOURCE_URL = "/api/rooms";
+
     @Autowired
     private RoomStrategy roomStrategy;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserConverter userConverter;
 
-    @PostMapping(value = "/join")
+    @GetMapping(value = "/join")
     public ResponseEntity<Room> joinRoom(Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
         Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
@@ -33,7 +35,7 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
-    @PostMapping(value = "/{roomId}/leave")
+    @GetMapping(value = "/{roomId}/leave")
     public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
         Boolean success = roomStrategy.playerLeaveRoom(userConverter.toDto(user), roomId);
@@ -41,11 +43,12 @@ public class RoomController {
         return ResponseEntity.ok(success);
     }
 
-    @PostMapping(value = "/{roomId}/join")
+    @GetMapping(value = "/{roomId}/join")
     public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
         Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(room);
     }
+
 }
