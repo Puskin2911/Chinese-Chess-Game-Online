@@ -15,6 +15,8 @@ const BASE_ROOM_URL = '/api/rooms';
 const JOIN_ROOM_URL = API_BASE_URL + BASE_ROOM_URL + '/join';
 const LEAVE_ROOM_URL = (roomId) => API_BASE_URL + BASE_ROOM_URL + '/' + roomId + '/leave';
 
+const SOCKET_CONNECT_URL = API_BASE_URL + '/ccgame';
+
 const ApiConstants = {
     ACCESS_TOKEN,
     OAUTH2_REDIRECT_URI,
@@ -24,7 +26,8 @@ const ApiConstants = {
     CHECK_AUTH_URL,
     LOGIN_URL,
     JOIN_ROOM_URL,
-    LEAVE_ROOM_URL
+    LEAVE_ROOM_URL,
+    SOCKET_CONNECT_URL
 };
 
 export default ApiConstants;
