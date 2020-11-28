@@ -145,20 +145,13 @@ function Board(props) {
         }
     }
 
-    const isInGame = props.isInGame;
+    React.useEffect(() => {
+        drawBoard();
+    }, [drawBoard]);
 
     useDidUpdateEffect(() => {
-        if (isInGame) {
-            drawBoard();
-        }
-    }, [isInGame, drawBoard]);
-
-    useDidUpdateEffect(() => {
-        if (isInGame) {
-            drawBoard();
-            drawMovingPiece(centerX, centerY);
-        }
-    }, [drawBoard, drawMovingPiece, centerX, centerY]);
+        drawMovingPiece(centerX, centerY);
+    }, [centerX, centerY]);
 
     console.log("Before rendering...");
     return (

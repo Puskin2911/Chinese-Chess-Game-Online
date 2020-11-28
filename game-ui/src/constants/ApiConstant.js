@@ -7,8 +7,13 @@ const GOOGLE_AUTH_URL = API_BASE_URL + '/oauth2/authorize/google?redirect_uri=' 
 const FACEBOOK_AUTH_URL = API_BASE_URL + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
 const GITHUB_AUTH_URL = API_BASE_URL + '/oauth2/authorize/github?redirect_uri=' + OAUTH2_REDIRECT_URI;
 
-const CHECK_AUTH_URL = API_BASE_URL + '/api/auth/validate';
-const LOGIN_URL = API_BASE_URL + '/api/auth/login';
+const BASE_AUTH_API_URL = '/api/auth';
+const CHECK_AUTH_URL = API_BASE_URL + BASE_AUTH_API_URL + '/validate';
+const LOGIN_URL = API_BASE_URL + BASE_AUTH_API_URL + '/login';
+
+const BASE_ROOM_URL = '/api/rooms';
+const JOIN_ROOM_URL = API_BASE_URL + BASE_ROOM_URL + '/join';
+const LEAVE_ROOM_URL = (roomId) => API_BASE_URL + BASE_ROOM_URL + '/' + roomId + '/leave';
 
 const ApiConstants = {
     ACCESS_TOKEN,
@@ -17,7 +22,9 @@ const ApiConstants = {
     FACEBOOK_AUTH_URL,
     GITHUB_AUTH_URL,
     CHECK_AUTH_URL,
-    LOGIN_URL
+    LOGIN_URL,
+    JOIN_ROOM_URL,
+    LEAVE_ROOM_URL
 };
 
 export default ApiConstants;

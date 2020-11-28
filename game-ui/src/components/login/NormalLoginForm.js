@@ -27,7 +27,6 @@ export default function NormalLoginForm() {
             password: password
         };
 
-        // setTimeout(() => {
         authService.login(userInfo)
             .then(res => {
                 console.log(res);
@@ -40,7 +39,6 @@ export default function NormalLoginForm() {
                 setLoading(false);
                 setNotification(error.response.data.details);
             });
-        // }, 2000)
     }
 
     return (

@@ -7,6 +7,8 @@ import authService from "../service/AuthService";
 const PrivateRoute = ({component: Component, ...rest}) => {
 
     const [isAuthenticated, setAuthenticated] = React.useState(false);
+    const [user, setUser] = React.useState(null);
+
     const [isLoading, setLoading] = React.useState(true);
 
     // Run only one after init render.
@@ -16,10 +18,11 @@ const PrivateRoute = ({component: Component, ...rest}) => {
             setLoading(false);
             return;
         }
-        authService.checkAuth
+        authService.validateUser()
             .then(res => {
                 console.log(res);
                 setAuthenticated(true);
+                setUser(res.data);
             })
             .catch((error) => {
                 console.log(error.response);
@@ -35,7 +38,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
             {...rest}
             render={props =>
                 isAuthenticated ?
-                    <Component {...rest} {...props} />
+                    <Component {...rest} {...props} user={user}/>
                     :
                     <Redirect
                         to={{
