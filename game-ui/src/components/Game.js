@@ -39,7 +39,7 @@ export default function Game(props) {
     }
 
     return (
-        <div className="container text-center">
+        <div className="container text-center border border-danger h-100">
             <div className="row justify-content-center">
                 <div className="col-6">
                     <button type="button" className="btn btn-secondary" onClick={handleLogout}>
