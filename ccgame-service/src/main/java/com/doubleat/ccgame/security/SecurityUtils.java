@@ -34,7 +34,8 @@ public final class SecurityUtils {
         return ResponseCookie
                 .from(SecurityConstants.ACCESS_TOKEN_COOKIE, accessToken)
                 .httpOnly(true)
-//                .secure(true)
+                .secure(true)
+                //                .sameSite(true)
                 .maxAge(accessTokenValidityInMilliseconds)
                 .build();
     }
