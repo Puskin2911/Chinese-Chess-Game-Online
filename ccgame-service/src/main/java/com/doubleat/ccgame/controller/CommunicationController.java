@@ -2,6 +2,7 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.common.ChatMessage;
 import com.doubleat.ccgame.dto.common.MoveMessage;
+import com.doubleat.ccgame.dto.common.ReadyMessage;
 import com.doubleat.ccgame.dto.response.MessageResponse;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +48,18 @@ public class CommunicationController {
 
     @MessageMapping("/ready/{roomId}")
     @SendTo("/room/{roomId}")
-    public boolean handleReady(@Payload boolean ready,
-                               @DestinationVariable Integer roomId,
-                               Principal principal) {
+    public MessageResponse<?> handleReady(@Payload ReadyMessage message,
+                                          @DestinationVariable Integer roomId,
+                                          Principal principal) {
 
-        roomStrategy.updatePlayerReady(principal.getName(), roomId, ready);
+        roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
 
-        return roomStrategy.startGame(roomId);
+        boolean isGameStarted = roomStrategy.startGame(roomId);
+
+        return MessageResponse.builder()
+                .type(MessageResponse.MessageResponseType.READY)
+                .data(message)
+                .build();
     }
 
 }
