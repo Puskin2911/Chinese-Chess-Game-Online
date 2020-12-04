@@ -31,13 +31,11 @@ export default function NormalLoginForm() {
             .then(res => {
                 console.log(res);
 
-                localStorageHelper.setCookie("loggedIn", true, 10);
+                localStorageHelper.setCookie("loggedIn", true, 10, true);
                 history.replace(from);
             })
-            .catch((error) => {
-                console.log("Error", error.response);
+            .catch(() => {
                 setLoading(false);
-                setNotification(error.response.data.details);
             });
     }
 

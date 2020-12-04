@@ -3,16 +3,23 @@ import Board from "./Board";
 import Chat from "./chat/Chat";
 
 export default function Room(props) {
-    const roomId = props.roomId;
+    const room = props.room;
     const user = props.user;
 
     const [isGameStarted, setGameStarted] = React.useState(false);
 
     return (
         <div className="row justify-content-center">
-            <Chat username={user.username} roomId={roomId}/>
-            <Board roomId={roomId} isGameStarted={isGameStarted} setGameStarted={setGameStarted}/>
-            <div className="col-3 border border-danger">Alo</div>
+            <div className="col-3 border border-danger">
+                <h3 className="text-center">
+                    {user.username}
+                </h3>
+                <h3 className="text-center">
+                    Room Id: {room.id}
+                </h3>
+            </div>
+            <Board room={room} user={user} isGameStarted={isGameStarted} setGameStarted={setGameStarted}/>
+            <Chat username={user.username} room={room}/>
         </div>
     );
 

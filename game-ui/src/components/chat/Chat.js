@@ -5,14 +5,16 @@ import ChatBox from "./ChatBox";
 
 export default function Chat(props) {
     const username = props.username;
-    const roomId = props.roomId;
+    const room = props.room;
+    const roomId = room.id;
 
     const clientRef = React.useRef(null);
 
     const [messages, setMessages] = React.useState([]);
     const [typedMessage, setTypedMessage] = React.useState("");
 
-    const handleSendMessage = () => {
+    const handleSendMessage = (event) => {
+        event.preventDefault();
         const msgToSend = {
             username: username,
             message: typedMessage
@@ -34,26 +36,24 @@ export default function Chat(props) {
                           }}
                           onMessage={(msg) => {
                               console.log("receive", msg);
-                              const newMessages = [...messages];
-                              newMessages.push(msg);
-                              setMessages(newMessages);
+                              if (msg.type === "CHAT") {
+                                  const newMessages = [...messages];
+                                  newMessages.push(msg);
+                                  setMessages(newMessages);
+                              }
                           }}
                           ref={clientRef}/>
-            <h3 className="text-center">
-                {username}
-            </h3>
-            <h3 className="text-center">
-                Room Id: {roomId}
-            </h3>
             <div className=" border border-danger">
-                <div className="form-group">
-                    <input className="form-control"
-                           onChange={(e) => setTypedMessage(e.target.value)}
-                           value={typedMessage}/>
-                    <button onClick={handleSendMessage}>
-                        <i className="fas fa-paper-plane"/>
-                    </button>
-                </div>
+                <form>
+                    <div className="form-group">
+                        <input className="form-control"
+                               onChange={(e) => setTypedMessage(e.target.value)}
+                               value={typedMessage}/>
+                        <button onClick={handleSendMessage}>
+                            <i className="fas fa-paper-plane"/>
+                        </button>
+                    </div>
+                </form>
                 <ChatBox messages={messages}/>
             </div>
         </div>

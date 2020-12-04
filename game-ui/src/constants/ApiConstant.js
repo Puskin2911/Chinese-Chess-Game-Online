@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:8080';
+const API_BASE_URL = 'https://127.0.0.1:8080';
 const ACCESS_TOKEN = 'accessToken';
 
 const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'

@@ -8,7 +8,9 @@ import SockJsClient from "react-stomp";
 
 function Board(props) {
 
-    const roomId = props.roomId;
+    const room = props.room;
+    const roomId = room.id;
+    const user = props.user;
     const isGameStarted = props.isGameStarted;
     const setGameStarted = props.setGameStarted;
 
@@ -22,7 +24,8 @@ function Board(props) {
     const [centerX, setCenterX] = React.useState(0);
     const [centerY, setCenterY] = React.useState(0);
 
-    const drawBlankBoard = React.useCallback((ctx) => {
+    const drawBlankBoard = (ctx) => {
+        console.log("start drawBlankBoard....");
         // Horizontal
         for (let i = 0; i < 10; i++) {
             ctx.beginPath();
@@ -59,9 +62,9 @@ function Board(props) {
         ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 9 + 1);
         ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 7 + 1);
         ctx.stroke();
-    }, [CELL_SIZE])
+    };
 
-    const drawPieces = React.useCallback((ctx) => {
+    const drawPieces = (ctx) => {
         const piecesOnBoard = boardStatus.split("_");
         for (let [key, value] of imagePieceMap) {
             for (const piece of piecesOnBoard) {
@@ -72,17 +75,17 @@ function Board(props) {
                 }
             }
         }
-    }, [CELL_SIZE, boardStatus]);
+    };
 
-    const drawBoard = React.useCallback(() => {
+    const drawBoard = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
         drawBlankBoard(ctx);
         drawPieces(ctx);
-    }, [drawPieces, canvasRef, drawBlankBoard]);
+    };
 
-    const drawMovingPiece = React.useCallback((x, y) => {
+    const drawMovingPiece = (x, y) => {
         const ctx = canvasRef.current.getContext('2d');
         ctx.beginPath();
         ctx.lineWidth = 2;
@@ -108,15 +111,15 @@ function Board(props) {
         ctx.moveTo(x + CELL_SIZE, y + CELL_SIZE);
         ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE * 3 / 4);
         ctx.stroke();
-    }, [CELL_SIZE]);
+    };
 
     const handleReady = () => {
         console.log("from handleReady in Board component!");
         const msgToSend = {
-            username: username,
-            message: typedMessage
+            username: user.username,
+            ready: true
         }
-        wsClientRef.current.sendMessage('/app/chat/' + roomId, JSON.stringify(msgToSend));
+        wsClientRef.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
 
     }
 
@@ -172,18 +175,6 @@ function Board(props) {
     console.log("Before rendering in Board...");
     return (
         <div className="col-6">
-            <div className="text-center">
-                {isGameStarted
-                    ? <button className="btn btn-secondary">Cancel...</button>
-                    : <button className="btn btn-secondary">Ready...</button>
-                }
-            </div>
-            <canvas ref={canvasRef}
-                    className="border border-success"
-                    width={BoardConstants.BOARD_WIDTH_SIZE}
-                    height={BoardConstants.BOARD_HEIGHT_SIZE}
-                    onClick={handleMove}
-            />
             <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
                           topics={['/room/' + roomId]}
                           onConnect={() => {
@@ -194,11 +185,20 @@ function Board(props) {
                           }}
                           onMessage={(msg) => {
                               console.log("receive", msg);
-                              const newMessages = [...messages];
-                              newMessages.push(msg);
-                              setMessages(newMessages);
                           }}
                           ref={wsClientRef}/>
+            <div className="text-center">
+                {isGameStarted
+                    ? <button className="btn btn-secondary" onClick={handleReady}>Cancel...</button>
+                    : <button className="btn btn-secondary" onClick={handleReady}>Ready...</button>
+                }
+            </div>
+            <canvas ref={canvasRef}
+                    className="border border-success"
+                    width={BoardConstants.BOARD_WIDTH_SIZE}
+                    height={BoardConstants.BOARD_HEIGHT_SIZE}
+                    onClick={handleMove}
+            />
         </div>
     )
 }

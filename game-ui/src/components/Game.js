@@ -55,7 +55,7 @@ export default function Game(props) {
                     }
                 </div>
             </div>
-            {room == null ? null : <Room roomId={room.id} user={props.user}/>}
+            {room == null ? null : <Room room={room} user={props.user}/>}
         </div>
     );
 
