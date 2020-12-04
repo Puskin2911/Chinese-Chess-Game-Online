@@ -21,7 +21,7 @@ export default function Chat(props) {
         setTypedMessage("");
     };
 
-    console.log("Before rendering...")
+    console.log("Before rendering in Chat...")
     return (
         <div className="col-3 border border-danger bg-white">
             <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}

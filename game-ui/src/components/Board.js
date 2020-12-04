@@ -3,19 +3,23 @@ import imagePieceMap from "../common/ImagePiece";
 import Position from "../utils/Position";
 import useDidUpdateEffect from "../common/CustomizeHook";
 import BoardConstants from "../constants/BoardConstants";
+import ApiConstants from "../constants/ApiConstant";
+import SockJsClient from "react-stomp";
 
 function Board(props) {
 
+    const roomId = props.roomId;
+    const isGameStarted = props.isGameStarted;
+    const setGameStarted = props.setGameStarted;
+
     const canvasRef = React.useRef(null);
+    const wsClientRef = React.useRef(null);
 
     const CELL_SIZE = BoardConstants.CELL_SIZE;
 
     const [boardStatus, setBoardStatus] = React.useState(BoardConstants.BOARD_DEFAULT_STATUS);
-
     const [movingPiece, setMovingPiece] = React.useState("00000");
-
     const [centerX, setCenterX] = React.useState(0);
-
     const [centerY, setCenterY] = React.useState(0);
 
     const drawBlankBoard = React.useCallback((ctx) => {
@@ -106,6 +110,16 @@ function Board(props) {
         ctx.stroke();
     }, [CELL_SIZE]);
 
+    const handleReady = () => {
+        console.log("from handleReady in Board component!");
+        const msgToSend = {
+            username: username,
+            message: typedMessage
+        }
+        wsClientRef.current.sendMessage('/app/chat/' + roomId, JSON.stringify(msgToSend));
+
+    }
+
     function handleMove(event) {
         const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
@@ -146,22 +160,45 @@ function Board(props) {
     }
 
     React.useEffect(() => {
-        drawBoard();
+        if (isGameStarted) {
+            drawBoard();
+        }
     }, [drawBoard]);
 
     useDidUpdateEffect(() => {
         drawMovingPiece(centerX, centerY);
     }, [centerX, centerY]);
 
-    console.log("Before rendering...");
+    console.log("Before rendering in Board...");
     return (
-        <div>
+        <div className="col-6">
+            <div className="text-center">
+                {isGameStarted
+                    ? <button className="btn btn-secondary">Cancel...</button>
+                    : <button className="btn btn-secondary">Ready...</button>
+                }
+            </div>
             <canvas ref={canvasRef}
                     className="border border-success"
                     width={BoardConstants.BOARD_WIDTH_SIZE}
                     height={BoardConstants.BOARD_HEIGHT_SIZE}
                     onClick={handleMove}
             />
+            <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
+                          topics={['/room/' + roomId]}
+                          onConnect={() => {
+                              console.log("connected to /room/" + roomId);
+                          }}
+                          onDisconnect={() => {
+                              console.log("Disconnected from /room/" + roomId);
+                          }}
+                          onMessage={(msg) => {
+                              console.log("receive", msg);
+                              const newMessages = [...messages];
+                              newMessages.push(msg);
+                              setMessages(newMessages);
+                          }}
+                          ref={wsClientRef}/>
         </div>
     )
 }

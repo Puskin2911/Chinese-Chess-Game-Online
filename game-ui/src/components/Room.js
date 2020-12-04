@@ -6,14 +6,12 @@ export default function Room(props) {
     const roomId = props.roomId;
     const user = props.user;
 
-    const clientRef = React.useRef(null);
+    const [isGameStarted, setGameStarted] = React.useState(false);
 
     return (
         <div className="row justify-content-center">
             <Chat username={user.username} roomId={roomId}/>
-            <div className="col-6">
-                <Board/>
-            </div>
+            <Board roomId={roomId} isGameStarted={isGameStarted} setGameStarted={setGameStarted}/>
             <div className="col-3 border border-danger">Alo</div>
         </div>
     );

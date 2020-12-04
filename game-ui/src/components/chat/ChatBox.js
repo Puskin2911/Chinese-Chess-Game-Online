@@ -4,7 +4,6 @@ export default function ChatBox(props) {
     const messages = props.messages;
 
     const handleDisplayMessage = () => {
-        console.log("fromHandleDisplayMessage: messages", messages);
         return (
             <div>
                 {messages.map((msg, index) => {
