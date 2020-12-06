@@ -1,15 +1,15 @@
 package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.config.AppProperties;
-import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.domain.User;
+import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,7 +52,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User getByUsernameOrEmail(String usernameOrEmail) {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        return userOptional.orElse(null);
     }
+
 }

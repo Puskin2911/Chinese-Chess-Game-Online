@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class AuthStrategyImpl implements AuthStrategy {
 
@@ -51,9 +53,15 @@ public class AuthStrategyImpl implements AuthStrategy {
     public UserDto validateAccessToken(String accessToken) {
         boolean isValidToken = jwtTokenProvider.validateJwtToken(accessToken);
         if (isValidToken) {
-            String username = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
-            User user = userRepository.findByUsername(username);
-            // TODO: Check user is null
+            String usernameOrEmail = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
+            Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+
+            if (userOptional.isEmpty()) {
+                // TODO: Check user is null
+                return null;
+            }
+
+            User user = userOptional.get();
 
             return UserDto.builder()
                     .username(user.getUsername())
