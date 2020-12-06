@@ -10,6 +10,7 @@ const GITHUB_AUTH_URL = API_BASE_URL + '/oauth2/authorize/github?redirect_uri=' 
 const BASE_AUTH_API_URL = '/api/auth';
 const CHECK_AUTH_URL = API_BASE_URL + BASE_AUTH_API_URL + '/validate';
 const LOGIN_URL = API_BASE_URL + BASE_AUTH_API_URL + '/login';
+const SIGNUP_URL = API_BASE_URL + BASE_AUTH_API_URL + '/signup';
 
 const BASE_ROOM_URL = '/api/rooms';
 const JOIN_ROOM_URL = API_BASE_URL + BASE_ROOM_URL + '/join';
@@ -25,6 +26,7 @@ const ApiConstants = {
     GITHUB_AUTH_URL,
     CHECK_AUTH_URL,
     LOGIN_URL,
+    SIGNUP_URL,
     JOIN_ROOM_URL,
     LEAVE_ROOM_URL,
     SOCKET_CONNECT_URL

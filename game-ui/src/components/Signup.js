@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import ApiConstants from "../constants/ApiConstant";
 
 export default function Signup() {
     document.title = "Chinese Chess | Signup";
@@ -36,7 +37,7 @@ export default function Signup() {
         if (!isCorrectPassword) return;
 
         axios.post(
-            "http://127.0.0.1:8080/api/auth/signup",
+            ApiConstants.SIGNUP_URL,
             userInfo
         ).then(res => {
             console.log(res);
@@ -48,9 +49,11 @@ export default function Signup() {
             }
         }).catch((error) => {
             console.log(error.response);
-            if (error.response.status === 409) {
-                setSuccess(false);
-                setError("Username or Email has already exists!");
+            if (error.response !== undefined) {
+                if (error.response.status === 409) {
+                    setSuccess(false);
+                    setError("Username or Email has already exists!");
+                }
             } else {
                 setSuccess(false);
                 setError("Something failed! Please Try again");
@@ -79,7 +82,7 @@ export default function Signup() {
                            onChange={event => setUsername(event.target.value)}/>
                 </div>
                 <div className='form-group'>
-                    <input className="form-control" type="text" placeholder="Email" required
+                    <input className="form-control" type="email" placeholder="Email" required
                            onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className='form-group'>
