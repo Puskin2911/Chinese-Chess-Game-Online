@@ -17,6 +17,8 @@ function Board(props) {
     const canvasRef = React.useRef(null);
     const wsClientRef = React.useRef(null);
 
+    const [isReady, setReady] = React.useState(false);
+
     const CELL_SIZE = BoardConstants.CELL_SIZE;
 
     const [boardStatus, setBoardStatus] = React.useState(BoardConstants.BOARD_DEFAULT_STATUS);
@@ -114,13 +116,21 @@ function Board(props) {
     };
 
     const handleReady = () => {
-        console.log("from handleReady in Board component!");
         const msgToSend = {
             username: user.username,
             ready: true
         }
         wsClientRef.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        setReady(true);
+    }
 
+    const handleUndoReady = () => {
+        const msgToSend = {
+            username: user.username,
+            ready: false
+        }
+        wsClientRef.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        setReady(false);
     }
 
     function handleMove(event) {
@@ -185,11 +195,15 @@ function Board(props) {
                           }}
                           onMessage={(msg) => {
                               console.log("receive", msg);
+                              if (msg.type === 'READY' && msg.data.username !== user.username) {
+                                  if (isReady === true)
+                                      setGameStarted(true);
+                              }
                           }}
                           ref={wsClientRef}/>
             <div className="text-center">
-                {isGameStarted
-                    ? <button className="btn btn-secondary" onClick={handleReady}>Cancel...</button>
+                {isReady
+                    ? <button className="btn btn-secondary" onClick={handleUndoReady}>Cancel...</button>
                     : <button className="btn btn-secondary" onClick={handleReady}>Ready...</button>
                 }
             </div>
