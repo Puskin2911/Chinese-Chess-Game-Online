@@ -34,8 +34,12 @@ export default function NormalLoginForm() {
                 localStorageHelper.setCookie("loggedIn", true, 10, true);
                 history.replace(from);
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false);
+
+                if (error.response !== undefined) {
+                    setNotification(error.response.data.details);
+                }
             });
     }
 
