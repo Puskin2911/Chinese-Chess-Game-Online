@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.security.auth;
 
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
@@ -19,9 +20,9 @@ public interface AuthStrategy {
      * Validate access token.
      *
      * @param accessToken the token need to validate.
-     * @return {@code true} if token is valid. Other wise, return {@code false}.
+     * @return {@code UserDto} if token is valid. Other wise, return {@code null}.
      */
-    boolean validateAccessToken(String accessToken);
+    UserDto validateAccessToken(String accessToken);
 
     /**
      * Signup new user.

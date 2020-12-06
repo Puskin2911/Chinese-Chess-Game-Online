@@ -37,6 +37,7 @@ public final class SecurityUtils {
                 .secure(true)
                 //                .sameSite(true)
                 .maxAge(accessTokenValidityInMilliseconds)
+                .path("/")
                 .build();
     }
 
@@ -74,8 +75,8 @@ public final class SecurityUtils {
     /**
      * Get the JWT of the request
      *
-     * @param request
-     * @return
+     * @param request the request need to get token form this.
+     * @return JWT token from the request.
      */
     public static String resolveToken(HttpServletRequest request) {
         String bearerToken = null;

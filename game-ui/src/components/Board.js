@@ -3,22 +3,31 @@ import imagePieceMap from "../common/ImagePiece";
 import Position from "../utils/Position";
 import useDidUpdateEffect from "../common/CustomizeHook";
 import BoardConstants from "../constants/BoardConstants";
+import ApiConstants from "../constants/ApiConstant";
+import SockJsClient from "react-stomp";
 
 function Board(props) {
 
+    const room = props.room;
+    const roomId = room.id;
+    const user = props.user;
+    const isGameStarted = props.isGameStarted;
+    const setGameStarted = props.setGameStarted;
+
     const canvasRef = React.useRef(null);
+    const wsClientRef = React.useRef(null);
+
+    const [isReady, setReady] = React.useState(false);
 
     const CELL_SIZE = BoardConstants.CELL_SIZE;
 
     const [boardStatus, setBoardStatus] = React.useState(BoardConstants.BOARD_DEFAULT_STATUS);
-
     const [movingPiece, setMovingPiece] = React.useState("00000");
-
     const [centerX, setCenterX] = React.useState(0);
-
     const [centerY, setCenterY] = React.useState(0);
 
-    const drawBlankBoard = React.useCallback((ctx) => {
+    const drawBlankBoard = (ctx) => {
+        console.log("start drawBlankBoard....");
         // Horizontal
         for (let i = 0; i < 10; i++) {
             ctx.beginPath();
@@ -55,9 +64,9 @@ function Board(props) {
         ctx.moveTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 3 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 9 + 1);
         ctx.lineTo(CELL_SIZE / 2 + (CELL_SIZE + 1) * 5 + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * 7 + 1);
         ctx.stroke();
-    }, [CELL_SIZE])
+    };
 
-    const drawPieces = React.useCallback((ctx) => {
+    const drawPieces = (ctx) => {
         const piecesOnBoard = boardStatus.split("_");
         for (let [key, value] of imagePieceMap) {
             for (const piece of piecesOnBoard) {
@@ -68,17 +77,17 @@ function Board(props) {
                 }
             }
         }
-    }, [CELL_SIZE, boardStatus]);
+    };
 
-    const drawBoard = React.useCallback(() => {
+    const drawBoard = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
         drawBlankBoard(ctx);
         drawPieces(ctx);
-    }, [drawPieces, canvasRef, drawBlankBoard]);
+    };
 
-    const drawMovingPiece = React.useCallback((x, y) => {
+    const drawMovingPiece = (x, y) => {
         const ctx = canvasRef.current.getContext('2d');
         ctx.beginPath();
         ctx.lineWidth = 2;
@@ -104,7 +113,25 @@ function Board(props) {
         ctx.moveTo(x + CELL_SIZE, y + CELL_SIZE);
         ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE * 3 / 4);
         ctx.stroke();
-    }, [CELL_SIZE]);
+    };
+
+    const handleReady = () => {
+        const msgToSend = {
+            username: user.username,
+            ready: true
+        }
+        wsClientRef.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        setReady(true);
+    }
+
+    const handleUndoReady = () => {
+        const msgToSend = {
+            username: user.username,
+            ready: false
+        }
+        wsClientRef.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        setReady(false);
+    }
 
     function handleMove(event) {
         const canvas = canvasRef.current;
@@ -145,24 +172,41 @@ function Board(props) {
         }
     }
 
-    const isInGame = props.isInGame;
-
-    useDidUpdateEffect(() => {
-        if (isInGame) {
+    React.useEffect(() => {
+        if (isGameStarted) {
             drawBoard();
         }
-    }, [isInGame, drawBoard]);
+    }, [drawBoard]);
 
     useDidUpdateEffect(() => {
-        if (isInGame) {
-            drawBoard();
-            drawMovingPiece(centerX, centerY);
-        }
-    }, [drawBoard, drawMovingPiece, centerX, centerY]);
+        drawMovingPiece(centerX, centerY);
+    }, [centerX, centerY]);
 
-    console.log("Before rendering...");
+    console.log("Before rendering in Board...");
     return (
-        <div>
+        <div className="col-6">
+            <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
+                          topics={['/room/' + roomId]}
+                          onConnect={() => {
+                              console.log("connected to /room/" + roomId);
+                          }}
+                          onDisconnect={() => {
+                              console.log("Disconnected from /room/" + roomId);
+                          }}
+                          onMessage={(msg) => {
+                              console.log("receive", msg);
+                              if (msg.type === 'READY' && msg.data.username !== user.username) {
+                                  if (isReady === true)
+                                      setGameStarted(true);
+                              }
+                          }}
+                          ref={wsClientRef}/>
+            <div className="text-center">
+                {isReady
+                    ? <button className="btn btn-secondary" onClick={handleUndoReady}>Cancel...</button>
+                    : <button className="btn btn-secondary" onClick={handleReady}>Ready...</button>
+                }
+            </div>
             <canvas ref={canvasRef}
                     className="border border-success"
                     width={BoardConstants.BOARD_WIDTH_SIZE}

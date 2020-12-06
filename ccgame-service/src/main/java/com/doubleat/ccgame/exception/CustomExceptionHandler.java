@@ -44,4 +44,7 @@ public class CustomExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(error);
     }
+
+    // TODO: RoomNotFoundException check
+
 }

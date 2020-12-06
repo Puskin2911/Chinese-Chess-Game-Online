@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.controller;
 
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.security.SecurityUtils;
@@ -36,11 +37,13 @@ public class AuthController {
     }
 
     @GetMapping(value = "/validate")
-    public ResponseEntity<?> validateAccessToken(@CookieValue(name = "access_token", required = false) String accessToken) {
-        boolean isValid = authStrategy.validateAccessToken(accessToken);
+    public ResponseEntity<UserDto> validateAccessToken(@CookieValue(name = "access_token", required = false) String accessToken) {
+        UserDto userDto = authStrategy.validateAccessToken(accessToken);
 
-        if (isValid) return ResponseEntity.ok().build();
-        else return ResponseEntity.badRequest().build();
+        if (userDto != null)
+            return ResponseEntity.ok(userDto);
+        else
+            return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(value = "/signup")

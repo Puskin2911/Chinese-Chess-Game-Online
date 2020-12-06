@@ -12,7 +12,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ccgame").withSockJS()
+        registry.addEndpoint("/ccgame")
+                .setAllowedOrigins("*")
+                .withSockJS()
                 .setStreamBytesLimit(512 * 1024)
                 .setHttpMessageCacheSize(1000)
                 .setDisconnectDelay(30 * 30);
@@ -24,5 +26,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/room");
         registry.setApplicationDestinationPrefixes("/app");
     }
-    
+
 }

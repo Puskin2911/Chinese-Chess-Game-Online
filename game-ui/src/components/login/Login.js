@@ -17,20 +17,21 @@ export default function Login() {
     if (from.pathname === '/' && isLoading) {
         const isLoggedIn = localStorageHelper.getCookie("loggedIn");
         if (!isLoggedIn) {
-            console.log("@@@");
             setLoading(false);
         } else {
-            authService.checkAuth.then(res => {
-                console.log("from login", res);
-                history.replace("game");
-            }).catch((error) => {
-                console.log("from login", error.response);
-                setLoading(false);
-            });
+            authService.validateUser()
+                .then(res => {
+                    console.log("from login", res);
+                    history.replace("game");
+                })
+                .catch((error) => {
+                    console.log("from login", error.response);
+                    setLoading(false);
+                });
         }
-    }
 
-    if (isLoading) return <LoadingIndicator/>;
+        return <LoadingIndicator/>;
+    }
 
     console.log("Before rendering...");
     return (

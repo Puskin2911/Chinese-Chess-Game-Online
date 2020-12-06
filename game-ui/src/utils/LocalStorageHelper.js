@@ -14,11 +14,11 @@ const getCookie = (cname) => {
     return "";
 }
 
-const setCookie = (cname, cookieValue, expiredDays) => {
+const setCookie = (cname, cookieValue, expiredDays, isSecure) => {
     const d = new Date();
     d.setTime(d.getTime() + (expiredDays * 24 * 60 * 60 * 1000));
     const expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cookieValue + ";" + expires + ";path=/";
+    document.cookie = cname + "=" + cookieValue + ";" + expires + ";path=/" + ";secure=" + isSecure;
 }
 
 const deleteCookie = (name) => {

@@ -1,9 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ccgame?serverTimezone=UTC
-    username: root
-    password:
+    url: jdbc:mysql://localhost:3306/ccgame?useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: ccgame
+    password: ccgame
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -43,6 +45,7 @@ server:
     key-store: classpath:keystore.p12
     key-store-type: PKCS12
     key-store-password: ccgame
+    trust-store-password: ccgame
 
 logging:
   level:

@@ -27,20 +27,20 @@ export default function NormalLoginForm() {
             password: password
         };
 
-        // setTimeout(() => {
         authService.login(userInfo)
             .then(res => {
                 console.log(res);
 
-                localStorageHelper.setCookie("loggedIn", true, 10);
+                localStorageHelper.setCookie("loggedIn", true, 10, true);
                 history.replace(from);
             })
             .catch((error) => {
-                console.log("Error", error.response);
                 setLoading(false);
-                setNotification(error.response.data.details);
+
+                if (error.response !== undefined) {
+                    setNotification(error.response.data.details);
+                }
             });
-        // }, 2000)
     }
 
     return (

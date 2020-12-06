@@ -7,5 +7,5 @@ public interface UserService {
 
     boolean addNew(SignupRequest signupRequest);
 
-    User getByUsername(String username);
+    User getByUsernameOrEmail(String usernameOrEmail);
 }

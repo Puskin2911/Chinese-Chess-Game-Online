@@ -13,3 +13,7 @@ code {
 .w-40 {
     width: 40%;
 }
+
+#root {
+    height: 100vh;
+}

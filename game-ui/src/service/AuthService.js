@@ -1,7 +1,7 @@
 import axios from "axios";
 import ApiConstants from "../constants/ApiConstant";
 
-const checkAuth = axios.get(
+const validateUser = () => axios.get(
     ApiConstants.CHECK_AUTH_URL,
     {
         withCredentials: true
@@ -17,7 +17,7 @@ const login = (loginInfo) => axios.post(
 );
 
 const authService = {
-    checkAuth,
+    validateUser,
     login
 }
 

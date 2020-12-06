@@ -2,6 +2,8 @@ package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.dto.common.ChatMessage;
 import com.doubleat.ccgame.dto.common.MoveMessage;
+import com.doubleat.ccgame.dto.common.ReadyMessage;
+import com.doubleat.ccgame.dto.response.MessageResponse;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -20,29 +22,44 @@ public class CommunicationController {
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/room/{roomId}")
-    public ChatMessage handleChat(@Payload ChatMessage message,
-                                  @DestinationVariable Integer roomId,
-                                  Principal principal) {
+    public MessageResponse<?> handleChat(@Payload ChatMessage message,
+                                         @DestinationVariable Integer roomId,
+                                         Principal principal) {
+
         message.setUsername(principal.getName());
-        return message;
+
+        return MessageResponse.builder()
+                .data(message)
+                .type(MessageResponse.MessageResponseType.CHAT)
+                .build();
     }
 
     @MessageMapping("/move/{roomId}")
     @SendTo("/room/{roomId}")
-    public MoveMessage handleMove(@Payload MoveMessage move,
-                                  @DestinationVariable Integer roomId,
-                                  Principal principal) {
-        return move;
+    public MessageResponse<?> handleMove(@Payload MoveMessage move,
+                                         @DestinationVariable Integer roomId,
+                                         Principal principal) {
+
+        return MessageResponse.builder()
+                .data(true)
+                .type(MessageResponse.MessageResponseType.MOVE)
+                .build();
     }
 
     @MessageMapping("/ready/{roomId}")
-    public boolean handleReady(@Payload boolean ready,
-                               @DestinationVariable Integer roomId,
-                               Principal principal) {
+    @SendTo("/room/{roomId}")
+    public MessageResponse<?> handleReady(@Payload ReadyMessage message,
+                                          @DestinationVariable Integer roomId,
+                                          Principal principal) {
 
-        roomStrategy.updatePlayerReady(principal.getName(), roomId, ready);
+        roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
 
-        return roomStrategy.startGame(roomId);
+        boolean isGameStarted = roomStrategy.startGame(roomId);
+
+        return MessageResponse.builder()
+                .type(MessageResponse.MessageResponseType.READY)
+                .data(message)
+                .build();
     }
 
 }
