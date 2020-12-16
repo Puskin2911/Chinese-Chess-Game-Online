@@ -1,8 +1,8 @@
 // const API_BASE_URL = 'https://127.0.0.1:8080';
-const API_BASE_URL = 'https://ec2-13-212-212-232.ap-southeast-1.compute.amazonaws.com:8080';
+const API_BASE_URL = 'https://ec2-13-250-5-124.ap-southeast-1.compute.amazonaws.com:8080';
 const ACCESS_TOKEN = 'accessToken';
 
-const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'
+const OAUTH2_REDIRECT_URI = 'https://localhost:3000/oauth2/redirect'
 
 const GOOGLE_AUTH_URL = API_BASE_URL + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
 const FACEBOOK_AUTH_URL = API_BASE_URL + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
