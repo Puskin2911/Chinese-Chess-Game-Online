@@ -1,5 +1,5 @@
 // const API_BASE_URL = 'https://127.0.0.1:8080';
-const API_BASE_URL = 'https://ec2-13-250-5-124.ap-southeast-1.compute.amazonaws.com:8080';
+const API_BASE_URL = 'https://ec2-54-254-252-59.ap-southeast-1.compute.amazonaws.com:8080';
 const ACCESS_TOKEN = 'accessToken';
 
 const OAUTH2_REDIRECT_URI = 'https://localhost:3000/oauth2/redirect'
@@ -17,7 +17,7 @@ const BASE_ROOM_URL = '/api/rooms';
 const JOIN_ROOM_URL = API_BASE_URL + BASE_ROOM_URL + '/join';
 const LEAVE_ROOM_URL = (roomId) => API_BASE_URL + BASE_ROOM_URL + '/' + roomId + '/leave';
 
-const SOCKET_CONNECT_URL = API_BASE_URL + '/ccgame';
+const SOCKET_CONNECT_URL = API_BASE_URL + '/stomp';
 
 const ApiConstants = {
     ACCESS_TOKEN,

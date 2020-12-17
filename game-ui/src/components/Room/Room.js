@@ -12,8 +12,8 @@ export default function Room(props) {
     const handleLeaveRoom = props.handleLeaveRoom;
 
     const stompClient = React.useRef(null);
-    const [isReady, setReady] = React.useState(false);
 
+    const [isReady, setReady] = React.useState(false);
     const [isGameStarted, setGameStarted] = React.useState(false);
 
     const handleReady = () => {
