@@ -34,10 +34,10 @@ public class User {
     @Column(name = "elo", nullable = false)
     private Integer elo;
 
-    @OneToMany(mappedBy = "winner")
+    @OneToMany(mappedBy = "winner", fetch = FetchType.EAGER)
     private Set<Game> gamesWin;
 
-    @OneToMany(mappedBy = "loser")
+    @OneToMany(mappedBy = "loser", fetch = FetchType.EAGER)
     private Set<Game> gamesLose;
 
 }
