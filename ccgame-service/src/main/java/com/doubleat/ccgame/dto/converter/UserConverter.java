@@ -15,10 +15,12 @@ public class UserConverter {
     }
 
     public UserDto toDto(User entity) {
-        UserDto dto = new UserDto(entity.getUsername(), entity.getElo());
-        dto.setNumberOfWins(entity.getGamesWin().size());
-        dto.setNumberOfLoses(entity.getGamesLose().size());
-
-        return dto;
+        return UserDto.builder()
+                .username(entity.getUsername())
+                .elo(entity.getElo())
+                .numberOfWins(entity.getGamesWin().size())
+                .numberOfLoses(entity.getGamesLose().size())
+                .build();
     }
+
 }

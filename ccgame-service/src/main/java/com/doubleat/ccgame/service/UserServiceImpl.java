@@ -2,6 +2,8 @@ package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.config.AppProperties;
 import com.doubleat.ccgame.domain.User;
+import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AppProperties appProperties;
+
+    @Autowired
+    private UserConverter userConverter;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -55,6 +60,11 @@ public class UserServiceImpl implements UserService {
     public User getByUsernameOrEmail(String usernameOrEmail) {
         Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         return userOptional.orElse(null);
+    }
+
+    @Override public UserDto getDtoByUsernameOrEmail(String usernameOrEmail) {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        return userOptional.map(user -> userConverter.toDto(user)).orElse(null);
     }
 
 }
