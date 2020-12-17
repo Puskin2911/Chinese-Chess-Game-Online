@@ -1,7 +1,7 @@
 import React from "react";
-import Board from "./Board";
-import Chat from "./Chat/Chat";
-import ApiConstants from "../constants/ApiConstant";
+import Board from "../Board";
+import Chat from "../Chat/Chat";
+import ApiConstants from "../../constants/ApiConstant";
 import SockJsClient from "react-stomp";
 import RoomInfo from "./RoomInfo";
 

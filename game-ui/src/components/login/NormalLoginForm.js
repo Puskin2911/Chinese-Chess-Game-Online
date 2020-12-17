@@ -1,7 +1,7 @@
 import React from "react";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import localStorageHelper from "../../utils/LocalStorageHelper";
-import authService from "../../service/AuthService";
+import authService from "../../services/AuthService";
 import Spinner from "../../common/Spinner";
 
 export default function NormalLoginForm() {

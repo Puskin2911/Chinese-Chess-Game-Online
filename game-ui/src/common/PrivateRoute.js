@@ -2,7 +2,7 @@ import React from "react";
 import {Redirect, Route} from "react-router-dom";
 import LoadingIndicator from "./LoadingIndicator";
 import localStorageHelper from "../utils/LocalStorageHelper";
-import authService from "../service/AuthService";
+import authService from "../services/AuthService";
 
 const PrivateRoute = ({component: Component, ...rest}) => {
 

@@ -12,7 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ccgame")
+        registry.addEndpoint("/stomp")
                 .setAllowedOrigins("*")
                 .withSockJS()
                 .setStreamBytesLimit(512 * 1024)

@@ -1,6 +1,6 @@
 import React from "react";
-import gameService from "../service/GameService";
-import Room from "./Room";
+import gameService from "../services/GameService";
+import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
 export default function Game(props) {

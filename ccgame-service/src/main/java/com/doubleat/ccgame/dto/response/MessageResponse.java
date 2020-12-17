@@ -15,6 +15,7 @@ public class MessageResponse<T> {
         CHAT,
         MOVE,
         READY,
-        UNDO_READY
+        JOIN_ROOM,
+        LEAVE_ROOM
     }
 }

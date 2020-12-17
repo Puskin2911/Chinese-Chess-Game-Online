@@ -35,7 +35,7 @@ export default function Chat(props) {
                               console.log("Disconnected from /room/" + roomId);
                           }}
                           onMessage={(msg) => {
-                              console.log("receive", msg);
+                              console.log("from Chat: receive", msg);
                               if (msg.type === "CHAT") {
                                   const newMessages = [...messages];
                                   newMessages.push(msg);
@@ -43,7 +43,7 @@ export default function Chat(props) {
                               }
                           }}
                           ref={clientRef}/>
-            <div className=" border border-danger">
+            <div className="border border-danger">
                 <form>
                     <div className="form-group">
                         <input className="form-control"
