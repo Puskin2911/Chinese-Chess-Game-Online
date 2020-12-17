@@ -5,7 +5,7 @@ import useDidUpdateEffect from "../common/CustomizeHook";
 import BoardConstants from "../constants/BoardConstants";
 import ApiConstants from "../constants/ApiConstant";
 import SockJsClient from "react-stomp";
-import canvasService from "../service/CanvasService";
+import canvasService from "../services/CanvasService";
 
 function Board(props) {
 

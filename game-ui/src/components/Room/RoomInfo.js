@@ -1,5 +1,5 @@
 import React from "react";
-import imageLoader from "../common/ImageLoader";
+import imageLoader from "../../common/ImageLoader";
 
 export default function RoomInfo(props) {
     const user = props.user;

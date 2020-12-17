@@ -4,7 +4,7 @@ import SocialLoginForm from "./SocialLoginForm";
 import {useHistory, useLocation} from "react-router-dom";
 import LoadingIndicator from "../../common/LoadingIndicator";
 import localStorageHelper from "../../utils/LocalStorageHelper";
-import authService from "../../service/AuthService";
+import authService from "../../services/AuthService";
 
 export default function Login() {
     document.title = "Chinese Chess | Login";
