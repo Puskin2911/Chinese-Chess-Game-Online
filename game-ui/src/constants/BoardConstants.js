@@ -1,7 +1,7 @@
-const CELL_SIZE = 58;
-const BOARD_WIDTH_SIZE = (CELL_SIZE + 1) * 9;
-const BOARD_HEIGHT_SIZE = (CELL_SIZE + 1) * 10;
-const BOARD_DEFAULT_STATUS = "00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch"
+export const CELL_SIZE = 58;
+export const BOARD_WIDTH_SIZE = (CELL_SIZE + 1) * 9;
+export const BOARD_HEIGHT_SIZE = (CELL_SIZE + 1) * 10;
+export const BOARD_DEFAULT_STATUS = "00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch"
     + "_10000_11000_12000_13000_14000_15000_16000_17000_18000"
     + "_20000_21bca_22000_23000_24000_25000_26000_27bca_28000"
     + "_30bso_31000_32bso_33000_34bso_35000_36bso_37000_38bso"
@@ -11,12 +11,3 @@ const BOARD_DEFAULT_STATUS = "00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08
     + "_70000_71rca_72000_73000_74000_75000_76000_77rca_78000"
     + "_80000_81000_82000_83000_84000_85000_86000_87000_88000"
     + "_90rch_91rho_92rel_93rad_94rge_95rad_96rel_97rho_98rch";
-
-const BoardConstants = {
-    CELL_SIZE,
-    BOARD_WIDTH_SIZE,
-    BOARD_HEIGHT_SIZE,
-    BOARD_DEFAULT_STATUS
-}
-
-export default BoardConstants;

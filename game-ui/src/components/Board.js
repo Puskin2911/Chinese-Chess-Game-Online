@@ -1,8 +1,7 @@
 import React from "react";
-import imagePieceMap from "../common/ImagePieceLoader";
 import Position from "../utils/Position";
 import useDidUpdateEffect from "../common/CustomizeHook";
-import BoardConstants from "../constants/BoardConstants";
+import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE} from "../constants/BoardConstants";
 import ApiConstants from "../constants/ApiConstant";
 import SockJsClient from "react-stomp";
 import canvasService from "../services/CanvasService";
@@ -16,13 +15,9 @@ function Board(props) {
     const setGameStarted = props.setGameStarted;
 
     const canvasRef = React.useRef(null);
-    const wsClientRef = React.useRef(null);
+    const stompClient = React.useRef(null);
 
-    const [isReady, setReady] = React.useState(false);
-
-    const CELL_SIZE = BoardConstants.CELL_SIZE;
-
-    const [boardStatus, setBoardStatus] = React.useState(BoardConstants.BOARD_DEFAULT_STATUS);
+    const [boardStatus, setBoardStatus] = React.useState(BOARD_DEFAULT_STATUS);
     const [movingPiece, setMovingPiece] = React.useState("00000");
     const [centerX, setCenterX] = React.useState(0);
     const [centerY, setCenterY] = React.useState(0);
@@ -98,16 +93,12 @@ function Board(props) {
                           }}
                           onMessage={(msg) => {
                               console.log("from Board: receive", msg);
-                              if (msg.type === 'READY' && msg.data.username !== user.username) {
-                                  if (isReady === true)
-                                      setGameStarted(true);
-                              }
                           }}
-                          ref={wsClientRef}/>
+                          ref={stompClient}/>
             <canvas ref={canvasRef}
                     className="border border-success"
-                    width={BoardConstants.BOARD_WIDTH_SIZE}
-                    height={BoardConstants.BOARD_HEIGHT_SIZE}
+                    width={BOARD_WIDTH_SIZE}
+                    height={BOARD_HEIGHT_SIZE}
                     onClick={handleMove}
             />
         </div>

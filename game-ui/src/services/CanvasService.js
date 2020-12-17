@@ -1,7 +1,5 @@
-import BoardConstants from "../constants/BoardConstants";
+import {CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
-
-const CELL_SIZE = BoardConstants.CELL_SIZE;
 
 const drawBlankBoard = (ctx) => {
     console.log("start drawBlankBoard....");
