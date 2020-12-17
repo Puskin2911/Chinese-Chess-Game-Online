@@ -1,8 +1,11 @@
 package com.doubleat.ccgame.dto.converter;
 
-import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.domain.User;
+import com.doubleat.ccgame.dto.common.UserDto;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class UserConverter {
@@ -15,10 +18,12 @@ public class UserConverter {
     }
 
     public UserDto toDto(User entity) {
-        UserDto dto = new UserDto(entity.getUsername(), entity.getElo());
-        dto.setNumberOfWins(entity.getGamesWin().size());
-        dto.setNumberOfLoses(entity.getGamesLose().size());
-
-        return dto;
+        return UserDto.builder()
+                .username(entity.getUsername())
+                .elo(entity.getElo())
+                .numberOfWins(Optional.of(entity.getGamesWin()).map(Set::size).orElse(0))
+                .numberOfLoses(Optional.of(entity.getGamesLose()).map(Set::size).orElse(0))
+                .build();
     }
+
 }
