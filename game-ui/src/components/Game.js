@@ -1,16 +1,9 @@
 import React from "react";
-import {useHistory} from "react-router-dom";
-import localStorageHelper from "../utils/LocalStorageHelper";
 import gameService from "../service/GameService";
 import Room from "./Room";
+import Lobby from "./Lobby";
 
 export default function Game(props) {
-    const history = useHistory();
-
-    const handleLogout = React.useCallback(() => {
-        localStorageHelper.deleteCookie("loggedIn");
-        history.replace("/login");
-    }, [history]);
 
     const [room, setRoom] = React.useState(null);
 
@@ -19,7 +12,6 @@ export default function Game(props) {
             .then(res => {
                 console.log("from handleJoinRoom", res);
 
-                console.log(res.data)
                 setRoom(res.data);
             })
             .catch(error => {
@@ -39,23 +31,11 @@ export default function Game(props) {
     }
 
     return (
-        <div className="container text-center border border-danger h-100">
-            <div className="row justify-content-center">
-                <div className="col-6">
-                    <button type="button" className="btn btn-secondary" onClick={handleLogout}>
-                        Logout
-                    </button>
-                    {room == null
-                        ? <button type="button" className="btn btn-secondary" onClick={handleJoinRoom}>
-                            Join Room Now
-                        </button>
-                        : <button type="button" className="btn btn-secondary" onClick={handleLeaveRoom}>
-                            Leave Room Now
-                        </button>
-                    }
-                </div>
-            </div>
-            {room == null ? null : <Room room={room} user={props.user}/>}
+        <div>
+            {room == null
+                ? <Lobby handleJoinRoom={handleJoinRoom}/>
+                : <Room room={room} user={props.user} handleLeaveRoom={handleLeaveRoom}/>
+            }
         </div>
     );
 
