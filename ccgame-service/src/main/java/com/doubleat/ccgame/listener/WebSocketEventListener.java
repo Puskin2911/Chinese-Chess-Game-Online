@@ -1,6 +1,8 @@
 package com.doubleat.ccgame.listener;
 
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.response.MessageResponse;
+import com.doubleat.ccgame.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,17 @@ import java.util.Objects;
 
 @Component
 public class WebSocketEventListener {
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
 
-    // Cache to query when user unSubscribe
-    private final Map<String, String> cachedDestinationPerSubscribeMap = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private UserService userService;
+
+    // Cache to query when user unSubscribe
+    private final Map<String, String> cachedDestinationPerSubscribeMap = new HashMap<>();
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -42,10 +48,13 @@ public class WebSocketEventListener {
 
         String subscriptionId = getUniqueSubscriptionId(headerAccessor);
         String destination = headerAccessor.getDestination();
+        String username = Objects.requireNonNull(event.getUser()).getName();
+
+        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
 
         cachedDestinationPerSubscribeMap.put(subscriptionId, destination);
 
-        buildAndSendMessage(MessageResponse.MessageResponseType.JOIN_ROOM, destination);
+        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.JOIN_ROOM, destination);
     }
 
     @EventListener
@@ -53,8 +62,11 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String subscriptionId = getUniqueSubscriptionId(headerAccessor);
+        String username = Objects.requireNonNull(event.getUser()).getName();
 
-        buildAndSendMessage(MessageResponse.MessageResponseType.LEAVE_ROOM,
+        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
+
+        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.LEAVE_ROOM,
                 cachedDestinationPerSubscribeMap.get(subscriptionId));
 
         // Remove subscriptionId will unSubscription
@@ -78,14 +90,22 @@ public class WebSocketEventListener {
         return headerAccessor.getDestination() + "+" + headerAccessor.getSubscriptionId();
     }
 
-    private void buildAndSendMessage(MessageResponse.MessageResponseType messageResponseType,
+    private void buildAndSendMessage(UserDto userDto,
+                                     MessageResponse.MessageResponseType messageResponseType,
                                      String destination) {
+        if (userDto == null) {
+            logger.error("User not found");
+            return;
+        }
+
         MessageResponse<?> messageResponse = MessageResponse.builder()
+                .data(userDto)
                 .type(messageResponseType)
                 .build();
 
         try {
             messagingTemplate.convertAndSend(Objects.requireNonNull(destination), messageResponse);
+            logger.info("Message was sent to {}", destination);
         } catch (NullPointerException e) {
             logger.error("destinationId must be not null!");
         } catch (MessagingException e) {

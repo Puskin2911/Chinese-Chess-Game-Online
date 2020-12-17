@@ -4,6 +4,7 @@ import Chat from "../Chat/Chat";
 import ApiConstants from "../../constants/ApiConstant";
 import SockJsClient from "react-stomp";
 import RoomInfo from "./RoomInfo";
+import {JOIN_ROOM} from "../../constants/MessageConstants";
 
 export default function Room(props) {
     const room = props.room;
@@ -53,6 +54,9 @@ export default function Room(props) {
                               }}
                               onMessage={(msg) => {
                                   console.log("from Room: receive", msg);
+                                  if (msg.type === JOIN_ROOM) {
+
+                                  }
                               }}
                               ref={stompClient}/>
             </div>
