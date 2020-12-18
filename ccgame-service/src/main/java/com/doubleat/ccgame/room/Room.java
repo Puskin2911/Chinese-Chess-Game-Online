@@ -14,6 +14,6 @@ public class Room {
     @NonNull
     private int id;
     private Set<UserDto> players = new HashSet<>(2);
-    private Set<UserDto> viewers;
+    private Set<UserDto> viewers = new HashSet<>();
     private String boardStatus;
 }

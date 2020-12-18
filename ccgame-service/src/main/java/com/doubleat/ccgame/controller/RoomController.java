@@ -51,4 +51,11 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
+    @GetMapping(value = "/available")
+    public ResponseEntity<Room> getAvailableRoom() {
+        Room room = roomStrategy.getAvailableRoom();
+
+        return ResponseEntity.ok(room);
+    }
+
 }

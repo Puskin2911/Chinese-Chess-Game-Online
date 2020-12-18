@@ -6,7 +6,6 @@ import com.doubleat.ccgame.utils.RoomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
  * @author Hop Nguyen
  */
@@ -48,6 +47,21 @@ public class RoomStrategyImpl implements RoomStrategy {
         Room room = roomCache.getRoomById(roomId);
 
         return RoomUtils.getReadyPlayers(room) == 2;
+    }
+
+    /**
+     * @return A available room.
+     */
+    @Override
+    public Room getAvailableRoom() {
+        return roomCache.getOrCreateAvailableRoom();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void kickOutPlayer(UserDto userDto) {
+        roomCache.kickOutPlayer(userDto);
     }
 
 }

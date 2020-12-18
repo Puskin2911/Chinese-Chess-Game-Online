@@ -50,4 +50,17 @@ public interface RoomStrategy {
      * @return {@code true} if all players is ready, other wise return {@code false}.
      */
     boolean startGame(int roomId);
+
+    /**
+     * @return A available room.
+     */
+    Room getAvailableRoom();
+
+    /**
+     * Kick out a specific player from all room.
+     *
+     * @param userDto Player need to kick out side room.
+     */
+    void kickOutPlayer(UserDto userDto);
+
 }

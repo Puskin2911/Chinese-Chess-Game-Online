@@ -2,6 +2,7 @@ package com.doubleat.ccgame.listener;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.response.MessageResponse;
+import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class WebSocketEventListener {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoomStrategy roomStrategy;
 
     // Cache to query when user unSubscribe
     private final Map<String, String> cachedDestinationPerSubscribeMap = new HashMap<>();
@@ -71,6 +75,8 @@ public class WebSocketEventListener {
 
         // Remove subscriptionId will unSubscription
         cachedDestinationPerSubscribeMap.remove(subscriptionId);
+
+        roomStrategy.kickOutPlayer(userDto);
     }
 
     @EventListener
