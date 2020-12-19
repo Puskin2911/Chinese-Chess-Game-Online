@@ -20,8 +20,8 @@ public class CommunicationController {
     @Autowired
     private RoomStrategy roomStrategy;
 
-    @MessageMapping("/chat/{roomId}")
-    @SendTo("/room/{roomId}")
+    @MessageMapping("/chat/room/{roomId}")
+    @SendTo("/chat/room/{roomId}")
     public MessageResponse<?> handleChat(@Payload ChatMessage message,
                                          @DestinationVariable Integer roomId,
                                          Principal principal) {
@@ -34,8 +34,8 @@ public class CommunicationController {
                 .build();
     }
 
-    @MessageMapping("/move/{roomId}")
-    @SendTo("/room/{roomId}")
+    @MessageMapping("/move/room/{roomId}")
+    @SendTo("move/room/{roomId}")
     public MessageResponse<?> handleMove(@Payload MoveMessage move,
                                          @DestinationVariable Integer roomId,
                                          Principal principal) {
@@ -46,7 +46,7 @@ public class CommunicationController {
                 .build();
     }
 
-    @MessageMapping("/ready/{roomId}")
+    @MessageMapping("/ready/room/{roomId}")
     @SendTo("/room/{roomId}")
     public MessageResponse<?> handleReady(@Payload ReadyMessage message,
                                           @DestinationVariable Integer roomId,
