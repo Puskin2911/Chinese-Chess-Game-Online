@@ -20,33 +20,29 @@ public class CommunicationController {
     @Autowired
     private RoomStrategy roomStrategy;
 
-    @MessageMapping("/chat/room/{roomId}")
-    @SendTo("/chat/room/{roomId}")
-    public MessageResponse<?> handleChat(@Payload ChatMessage message,
-                                         @DestinationVariable Integer roomId,
-                                         Principal principal) {
+    @MessageMapping("/room/{roomId}/chat")
+    @SendTo("/room/{roomId}/chat")
+    public ChatMessage handleChat(@Payload ChatMessage message,
+                                  @DestinationVariable Integer roomId,
+                                  Principal principal) {
 
         message.setUsername(principal.getName());
 
-        return MessageResponse.builder()
-                .data(message)
-                .type(MessageResponse.MessageResponseType.CHAT)
-                .build();
+        return message;
     }
 
-    @MessageMapping("/move/room/{roomId}")
-    @SendTo("move/room/{roomId}")
-    public MessageResponse<?> handleMove(@Payload MoveMessage move,
-                                         @DestinationVariable Integer roomId,
-                                         Principal principal) {
+    @MessageMapping("/room/{roomId}/move")
+    @SendTo("/room/{roomId}/move")
+    public boolean handleMove(@Payload MoveMessage move,
+                              @DestinationVariable Integer roomId,
+                              Principal principal) {
 
-        return MessageResponse.builder()
-                .data(true)
-                .type(MessageResponse.MessageResponseType.MOVE)
-                .build();
+        // TODO : handle move here
+
+        return true;
     }
 
-    @MessageMapping("/ready/room/{roomId}")
+    @MessageMapping("/room/{roomId}/ready")
     @SendTo("/room/{roomId}")
     public MessageResponse<?> handleReady(@Payload ReadyMessage message,
                                           @DestinationVariable Integer roomId,

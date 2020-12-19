@@ -1,9 +1,7 @@
 import React from "react";
 import Position from "../utils/Position";
 import useDidUpdateEffect from "../common/CustomizeHook";
-import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE} from "../constants/BoardConstants";
-import ApiConstants from "../constants/ApiConstant";
-import SockJsClient from "react-stomp";
+import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import canvasService from "../services/CanvasService";
 
 function Board(props) {
@@ -13,9 +11,9 @@ function Board(props) {
     const user = props.user;
     const isGameStarted = props.isGameStarted;
     const setGameStarted = props.setGameStarted;
+    const stompClient = props.stompClient;
 
     const canvasRef = React.useRef(null);
-    const stompClient = React.useRef(null);
 
     const [boardStatus, setBoardStatus] = React.useState(BOARD_DEFAULT_STATUS);
     const [movingPiece, setMovingPiece] = React.useState("00000");
@@ -80,21 +78,16 @@ function Board(props) {
         canvasService.drawMovingPiece(canvasRef.current.getContext("2d"), centerX, centerY);
     }, [centerX, centerY]);
 
+    React.useEffect(() => {
+        stompClient.subscribe("/move/room/" + roomId, (payload) => {
+            alert("got message with body " + payload.body);
+            console.log("receive payload from Board: " + JSON.parse(payload.body));
+        });
+    }, []);
+
     console.log("Before rendering in Board...");
     return (
         <div className="col-6">
-            <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
-                          topics={['/room/' + roomId]}
-                          onConnect={() => {
-                              console.log("connected to /room/" + roomId);
-                          }}
-                          onDisconnect={() => {
-                              console.log("Disconnected from /room/" + roomId);
-                          }}
-                          onMessage={(msg) => {
-                              console.log("from Board: receive", msg);
-                          }}
-                          ref={stompClient}/>
             <canvas ref={canvasRef}
                     className="border border-success"
                     width={BOARD_WIDTH_SIZE}

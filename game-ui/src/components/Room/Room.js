@@ -2,9 +2,10 @@ import React from "react";
 import Board from "../Board";
 import Chat from "../Chat/Chat";
 import ApiConstants from "../../constants/ApiConstant";
-import SockJsClient from "react-stomp";
 import RoomInfo from "./RoomInfo";
-import {JOIN_ROOM} from "../../constants/MessageConstants";
+import SockJs from "sockjs-client";
+import Stomp from "stompjs";
+import LoadingIndicator from "../../common/LoadingIndicator";
 
 export default function Room(props) {
     const room = props.room;
@@ -12,17 +13,34 @@ export default function Room(props) {
     const user = props.user;
     const handleLeaveRoom = props.handleLeaveRoom;
 
-    const stompClient = React.useRef(null);
-
+    const [isSocketConnected, setSocketConnected] = React.useState(false);
     const [isReady, setReady] = React.useState(false);
     const [isGameStarted, setGameStarted] = React.useState(false);
+
+    const ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
+    const [stompClient] = React.useState(Stomp.over(ws));
+
+    React.useEffect(() => {
+        stompClient.connect({}, () => {
+            setSocketConnected(true);
+            stompClient.subscribe("/room/" + roomId, (payload) => {
+                console.log("Receive payload from Room: " + payload.body);
+            });
+        });
+
+        return () => {
+            stompClient.disconnect(() => {
+                alert("You just left room");
+            });
+        };
+    }, []);
 
     const handleReady = () => {
         const msgToSend = {
             username: user.username,
             ready: true
         }
-        stompClient.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        stompClient.send("/app/room/" + roomId + "/ready", {}, JSON.stringify(msgToSend));
         setReady(true);
     }
 
@@ -31,34 +49,27 @@ export default function Room(props) {
             username: user.username,
             ready: false
         }
-        stompClient.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
+        stompClient.send("/app/room/" + roomId + "/ready", {}, JSON.stringify(msgToSend));
         setReady(false);
     }
 
     console.log("Before rendering in Room ...");
+    if (!isSocketConnected) return <LoadingIndicator/>;
+
+    console.log("WS Connected");
     return (
         <div className="container">
             <div className="row justify-content-center">
-                <RoomInfo room={room} user={user} isReady={isReady} handleLeaveRoom={handleLeaveRoom}
+                <RoomInfo room={room} user={user} isReady={isReady}
+                          stompClient={stompClient}
+                          handleLeaveRoom={handleLeaveRoom}
                           handleReady={handleReady}
                           handleUndoReady={handleUndoReady}/>
-                <Board room={room} user={user} isGameStarted={isGameStarted} setGameStarted={setGameStarted}/>
-                <Chat username={user.username} room={room}/>
-                <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
-                              topics={['/room/' + room.id]}
-                              onConnect={() => {
-                                  console.log("connected to /room/" + roomId);
-                              }}
-                              onDisconnect={() => {
-                                  console.log("Disconnected from /room/" + roomId);
-                              }}
-                              onMessage={(msg) => {
-                                  console.log("from Room: receive", msg);
-                                  if (msg.type === JOIN_ROOM) {
-
-                                  }
-                              }}
-                              ref={stompClient}/>
+                <Board room={room} user={user} isGameStarted={isGameStarted}
+                       stompClient={stompClient}
+                       setGameStarted={setGameStarted}/>
+                <Chat username={user.username} room={room}
+                      stompClient={stompClient}/>
             </div>
         </div>
     );
