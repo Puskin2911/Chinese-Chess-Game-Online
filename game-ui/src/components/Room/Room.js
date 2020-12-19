@@ -14,7 +14,6 @@ export default function Room(props) {
     const handleLeaveRoom = props.handleLeaveRoom;
 
     const [isSocketConnected, setSocketConnected] = React.useState(false);
-    const [isReady, setReady] = React.useState(false);
     const [isGameStarted, setGameStarted] = React.useState(false);
 
     const ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
@@ -23,48 +22,30 @@ export default function Room(props) {
     React.useEffect(() => {
         stompClient.connect({}, () => {
             setSocketConnected(true);
+
             stompClient.subscribe("/room/" + roomId, (payload) => {
                 console.log("Receive payload from Room: " + payload.body);
+            });
+
+            stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+                setGameStarted(true);
             });
         });
 
         return () => {
             stompClient.disconnect(() => {
-                alert("You just left room");
             });
         };
     }, []);
 
-    const handleReady = () => {
-        const msgToSend = {
-            username: user.username,
-            ready: true
-        }
-        stompClient.send("/app/room/" + roomId + "/ready", {}, JSON.stringify(msgToSend));
-        setReady(true);
-    }
-
-    const handleUndoReady = () => {
-        const msgToSend = {
-            username: user.username,
-            ready: false
-        }
-        stompClient.send("/app/room/" + roomId + "/ready", {}, JSON.stringify(msgToSend));
-        setReady(false);
-    }
-
-    console.log("Before rendering in Room ...");
     if (!isSocketConnected) return <LoadingIndicator/>;
 
-    console.log("WS Connected");
     return (
         <div className="container">
             <div className="row justify-content-center">
-                <RoomInfo room={room} user={user} isReady={isReady}
+                <RoomInfo room={room} user={user}
                           stompClient={stompClient}
-                          handleLeaveRoom={handleLeaveRoom}
-                          handleReady={handleReady}
-                          handleUndoReady={handleUndoReady}/>
+                          handleLeaveRoom={handleLeaveRoom}/>
                 <Board room={room} user={user} isGameStarted={isGameStarted}
                        stompClient={stompClient}
                        setGameStarted={setGameStarted}/>

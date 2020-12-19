@@ -28,12 +28,12 @@ export default class Board extends React.Component {
         this.handleMove = this.handleMove.bind(this);
     }
 
-    drawBoard() {
+    drawBoard = () => {
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         canvasService.clearBoard(canvas);
         canvasService.drawBlankBoard(ctx);
-        canvasService.drawPieces(ctx, this.boardStatus);
+        canvasService.drawPieces(ctx, this.state.boardStatus);
     }
 
     handleMove(event) {
@@ -81,7 +81,17 @@ export default class Board extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.isGameStarted) {
+            this.drawBoard();
+        }
+    }
+
     componentDidMount() {
+        if (this.isGameStarted) {
+            this.drawBoard();
+        }
+
         this.subscription = this.stompClient.subscribe("/move/room/" + this.roomId, (payload) => {
             alert("got message with body " + payload.body);
             console.log("receive payload from Board: " + JSON.parse(payload.body));

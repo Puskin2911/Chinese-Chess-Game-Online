@@ -1,13 +1,23 @@
 import React from "react";
 import imageLoader from "../../common/ImageLoader";
+import ApiConstants from "../../constants/ApiConstant";
 
 export default function RoomInfo(props) {
     const user = props.user;
     const room = props.room;
-    const isReady = props.isReady;
+    const roomId = room.id;
+    const [isReady, setReady] = React.useState(false);
+    const stompClient = props.stompClient;
     const handleLeaveRoom = props.handleLeaveRoom;
-    const handleReady = props.handleReady;
-    const handleUndoReady = props.handleUndoReady;
+
+    const handleReady = () => {
+        const msgToSend = {
+            username: user.username,
+            isReady: !isReady
+        }
+        stompClient.send(ApiConstants.READY_DESTINATION_SOCKET_URL(roomId), {}, JSON.stringify(msgToSend));
+        setReady(!isReady);
+    }
 
     return (
         <div className="col-3 border border-danger text-center">
@@ -24,15 +34,13 @@ export default function RoomInfo(props) {
             <button type="button" className="btn" onClick={handleLeaveRoom}>
                 <i className="fas fa-2x fa-power-off"/>
             </button>
-
-            {isReady === true
-                ? <button type="button" className="btn" onClick={handleUndoReady}>
+            <button type="button" className="btn" onClick={handleReady}>
+                {isReady ?
                     <i className="far fa-2x fa-times-circle"/>
-                </button>
-                : <button type="button" className="btn" onClick={handleReady}>
-                    <i className="fas fa-2x fa-chevron-circle-right"/>
-                </button>
-            }
+                    : <i className="fas fa-2x fa-chevron-circle-right"/>
+                }
+            </button>
         </div>
     );
+
 }

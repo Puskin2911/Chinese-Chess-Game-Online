@@ -34,14 +34,15 @@ public interface RoomStrategy {
     Room playerJoinRoom(UserDto userDto, int roomId);
 
     /**
-     * Update {@code ready} state of player in specific room.
+     * Update {@code ready} state of player in specific room and return this room is started or not.
      *
      * @param username username of player need to update {@code ready} state.
      * @param roomId   id of room, which need to update player {@code ready} state.
      * @param ready    {@code ready} state need to update.
      *                 {@code true} if player is ready or {@code false} if the player is not ready yet.
+     * @return {@code true} if game is started. Other wise, return {@code false}.
      */
-    void updatePlayerReady(String username, int roomId, boolean ready);
+    boolean updatePlayerReady(String username, int roomId, boolean ready);
 
     /**
      * Start game in one specific room.

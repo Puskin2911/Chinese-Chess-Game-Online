@@ -36,10 +36,12 @@ public class RoomStrategyImpl implements RoomStrategy {
     }
 
     @Override
-    public void updatePlayerReady(String username, int roomId, boolean ready) {
+    public boolean updatePlayerReady(String username, int roomId, boolean ready) {
         Room room = roomCache.getRoomById(roomId);
 
         RoomUtils.updateReadyPlayerInRoom(username, ready, room);
+
+        return RoomUtils.getReadyPlayers(room) == 2;
     }
 
     @Override
