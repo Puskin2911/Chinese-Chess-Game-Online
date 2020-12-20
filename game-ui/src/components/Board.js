@@ -20,13 +20,12 @@ export default class Board extends React.Component {
         this.canvasRef = React.createRef();
 
         this.state = {
-            boardStatus: BOARD_DEFAULT_STATUS,
+            boardStatus: undefined,
             movingPiece: "00000",
             centerX: 0,
-            centerY: 0
+            centerY: 0,
+            isMyTurn: false
         }
-
-        this.handleMove = this.handleMove.bind(this);
     }
 
     drawBoard = () => {
@@ -37,7 +36,7 @@ export default class Board extends React.Component {
         canvasService.drawPieces(ctx, this.state.boardStatus);
     }
 
-    handleMove(event) {
+    handleMove = (event) => {
         const canvas = this.canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -86,6 +85,8 @@ export default class Board extends React.Component {
         console.log("Starting componentDidUpdate ...");
         // Update state
         this.isGameStarted = this.props.isGameStarted;
+        this.setState({boardStatus: this.props.game.boardStatus});
+
         if (this.isGameStarted) {
             alert("Starting draw board");
             this.drawBoard();
@@ -99,8 +100,16 @@ export default class Board extends React.Component {
             this.drawBoard();
         }
 
-        this.subscription = this.stompClient.subscribe("/move/room/" + this.roomId, (payload) => {
-            console.log("receive payload from Board: " + JSON.parse(payload.body));
+        this.subscription = this.stompClient.subscribe("/room/" + this.roomId + "/move", (payload) => {
+            const gameDto = JSON.parse(payload.body);
+            console.log("receive payload from Board: " + gameDto);
+
+            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.props.user.username;
+
+            this.setState({
+                boardStatus: gameDto.boardStatus,
+                isMyTurn: isMyTurnToUpdate
+            });
         });
     }
 

@@ -3,6 +3,8 @@ package com.doubleat.ccgame.game;
 import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,8 +15,8 @@ import java.util.Stack;
  *
  * @author Hop Nguyen
  */
-@Getter
-@Setter
+@Data
+@Builder
 public class PlayingGame {
 
     private Player redPlayer;

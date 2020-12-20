@@ -12,4 +12,7 @@ public class GameDto {
     @JsonProperty("isOver")
     private boolean isOver;
 
+    @JsonProperty("nextTurnUsername")
+    private String nextTurnUsername;
+
 }
