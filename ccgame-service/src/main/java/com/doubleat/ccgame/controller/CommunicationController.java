@@ -1,9 +1,8 @@
 package com.doubleat.ccgame.controller;
 
-import com.doubleat.ccgame.dto.common.ChatMessage;
-import com.doubleat.ccgame.dto.common.MoveMessage;
-import com.doubleat.ccgame.dto.common.ReadyMessage;
-import com.doubleat.ccgame.dto.response.MessageResponse;
+import com.doubleat.ccgame.dto.message.ChatMessage;
+import com.doubleat.ccgame.dto.message.MoveMessage;
+import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

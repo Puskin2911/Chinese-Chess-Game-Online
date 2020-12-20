@@ -2,6 +2,8 @@ package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.converter.RoomConverter;
+import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.utils.RoomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +19,19 @@ public class RoomStrategyImpl implements RoomStrategy {
     private static final Logger logger = LoggerFactory.getLogger(RoomStrategyImpl.class);
 
     private final RoomCache roomCache;
+    private final RoomConverter roomConverter;
 
     @Autowired
-    public RoomStrategyImpl(RoomCache roomCache) {
+    public RoomStrategyImpl(RoomCache roomCache, RoomConverter roomConverter) {
         this.roomCache = roomCache;
+        this.roomConverter = roomConverter;
     }
 
     @Override
-    public Room playerJoinRoom(UserDto userDto) {
-        return roomCache.addPlayerToRoom(userDto);
+    public RoomDto playerJoinRoom(UserDto userDto) {
+        Room room = roomCache.addPlayerToRoom(userDto);
+
+        return roomConverter.toDto(room);
     }
 
     @Override
@@ -35,8 +41,9 @@ public class RoomStrategyImpl implements RoomStrategy {
     }
 
     @Override
-    public Room playerJoinRoom(UserDto userDto, int roomId) {
-        return roomCache.addPlayerToRoom(userDto, roomId);
+    public RoomDto playerJoinRoom(UserDto userDto, int roomId) {
+        Room room = roomCache.addPlayerToRoom(userDto, roomId);
+        return roomConverter.toDto(room);
     }
 
     @Override
@@ -63,8 +70,9 @@ public class RoomStrategyImpl implements RoomStrategy {
      * @return A available room.
      */
     @Override
-    public Room getAvailableRoom() {
-        return roomCache.getOrCreateAvailableRoom();
+    public RoomDto getAvailableRoom() {
+        Room room = roomCache.getOrCreateAvailableRoom();
+        return roomConverter.toDto(room);
     }
 
     /**

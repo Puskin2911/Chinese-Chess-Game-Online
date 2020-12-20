@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.dto.common;
+package com.doubleat.ccgame.dto.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

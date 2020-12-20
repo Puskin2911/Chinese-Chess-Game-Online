@@ -1,15 +1,18 @@
 package com.doubleat.ccgame.controller;
 
-import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.domain.User;
-import com.doubleat.ccgame.room.Room;
+import com.doubleat.ccgame.dto.converter.UserConverter;
+import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = RoomController.PREFIX_ROOM_RESOURCE_URL)
@@ -28,9 +31,9 @@ public class RoomController {
     private UserConverter userConverter;
 
     @GetMapping(value = "/join")
-    public ResponseEntity<Room> joinRoom(Authentication authentication) {
+    public ResponseEntity<RoomDto> joinRoom(Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
+        RoomDto room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
 
         return ResponseEntity.ok(room);
     }
@@ -44,16 +47,16 @@ public class RoomController {
     }
 
     @GetMapping(value = "/{roomId}/join")
-    public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
+    public ResponseEntity<RoomDto> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
+        RoomDto room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(room);
     }
 
     @GetMapping(value = "/available")
-    public ResponseEntity<Room> getAvailableRoom() {
-        Room room = roomStrategy.getAvailableRoom();
+    public ResponseEntity<RoomDto> getAvailableRoom() {
+        RoomDto room = roomStrategy.getAvailableRoom();
 
         return ResponseEntity.ok(room);
     }

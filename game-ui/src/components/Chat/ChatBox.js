@@ -10,13 +10,11 @@ export default class ChatBox extends React.Component {
 
     componentDidMount() {
         const subscription = this.props.stompClient.subscribe(ApiConstants.CHAT_SOCKET_URL(this.props.roomId), (payload) => {
-            console.log("receive payload from Chat: " + payload.body);
+            console.log("receive payload from ChatBox: " + payload.body);
             const msg = JSON.parse(payload.body);
-            if (msg.type === "CHAT") {
-                const newMessages = [...this.state.messages];
-                newMessages.push(msg.data);
-                this.setState({messages: newMessages});
-            }
+            const newMessages = [...this.state.messages];
+            newMessages.push(msg);
+            this.setState({messages: newMessages});
         });
         return () => {
             subscription.unsubscribe();

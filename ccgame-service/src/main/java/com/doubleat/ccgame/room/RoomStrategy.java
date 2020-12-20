@@ -1,6 +1,7 @@
 package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.RoomDto;
 
 /**
  * @author Hop Nguyen
@@ -11,9 +12,9 @@ public interface RoomStrategy {
      * Add player join one available room.
      *
      * @param userDto player need to add to room.
-     * @return the room which added player.
+     * @return the {@code RoomDto} object which added player.
      */
-    Room playerJoinRoom(UserDto userDto);
+    RoomDto playerJoinRoom(UserDto userDto);
 
     /**
      * Remove specific player form specific room.
@@ -31,7 +32,7 @@ public interface RoomStrategy {
      * @param roomId  id of room, which need to add player
      * @return the room which added player.
      */
-    Room playerJoinRoom(UserDto userDto, int roomId);
+    RoomDto playerJoinRoom(UserDto userDto, int roomId);
 
     /**
      * Update {@code ready} state of player in specific room and return this room is started or not.
@@ -55,7 +56,7 @@ public interface RoomStrategy {
     /**
      * @return A available room.
      */
-    Room getAvailableRoom();
+    RoomDto getAvailableRoom();
 
     /**
      * Kick out a specific player from all room.

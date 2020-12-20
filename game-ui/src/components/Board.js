@@ -8,12 +8,13 @@ export default class Board extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log("Starting constructor ...");
+
         this.room = props.room;
         this.roomId = this.room.id;
         this.user = props.user;
         this.isGameStarted = props.isGameStarted;
         this.setGameStarted = props.setGameStarted;
-        this.stompClient = props.stompClient;
         this.subscription = undefined;
 
         this.canvasRef = React.createRef();
@@ -82,18 +83,23 @@ export default class Board extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("Starting componentDidUpdate ...");
+        // Update state
+        this.isGameStarted = this.props.isGameStarted;
         if (this.isGameStarted) {
+            alert("Starting draw board");
             this.drawBoard();
         }
     }
 
     componentDidMount() {
+        console.log("Starting componentDidMount ...");
+
         if (this.isGameStarted) {
             this.drawBoard();
         }
 
         this.subscription = this.stompClient.subscribe("/move/room/" + this.roomId, (payload) => {
-            alert("got message with body " + payload.body);
             console.log("receive payload from Board: " + JSON.parse(payload.body));
         });
     }

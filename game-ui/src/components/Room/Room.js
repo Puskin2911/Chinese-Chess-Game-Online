@@ -27,7 +27,12 @@ export default function Room(props) {
                 console.log("Receive payload from Room: " + payload.body);
             });
 
+            stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
+                console.log("READYYYYYY: " + JSON.parse(payload.body).isReady);
+            });
+
             stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+                console.log("From Room receive signal start game!");
                 setGameStarted(true);
             });
         });
@@ -46,9 +51,9 @@ export default function Room(props) {
                 <RoomInfo room={room} user={user}
                           stompClient={stompClient}
                           handleLeaveRoom={handleLeaveRoom}/>
-                <Board room={room} user={user} isGameStarted={isGameStarted}
-                       stompClient={stompClient}
-                       setGameStarted={setGameStarted}/>
+                <Board room={room} user={user}
+                       isGameStarted={isGameStarted} setGameStarted={setGameStarted}
+                       stompClient={stompClient}/>
                 <Chat username={user.username} room={room}
                       stompClient={stompClient}/>
             </div>

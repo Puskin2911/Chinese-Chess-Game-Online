@@ -19,10 +19,10 @@ const LEAVE_ROOM_URL = (roomId) => API_BASE_URL + BASE_ROOM_URL + '/' + roomId +
 const GET_AVAILABLE_URL = API_BASE_URL + BASE_ROOM_URL + "/available"
 
 const SOCKET_CONNECT_URL = API_BASE_URL + '/stomp';
-const PREFIX_BOARDCAST_MESSAGE = "/app";
+const PREFIX_TRANSFER_MESSAGE = "/app";
 const CHAT_SOCKET_URL = (roomId) => "/room/" + roomId + "/chat";
 const READY_SOCKET_URL = (roomId) => "/room/" + roomId + "/ready";
-const READY_DESTINATION_SOCKET_URL = (roomId) => PREFIX_BOARDCAST_MESSAGE + READY_SOCKET_URL(roomId);
+const READY_DESTINATION_SOCKET_URL = (roomId) => PREFIX_TRANSFER_MESSAGE + READY_SOCKET_URL(roomId);
 
 const ApiConstants = {
     ACCESS_TOKEN,
