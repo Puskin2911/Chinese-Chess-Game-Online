@@ -70,7 +70,7 @@ public class PlayingGame {
         Piece current = board.getPieceByPosition(from);
 
         if (current == null || !current.isValidMove(board, from, to))
-            throw new InvalidMoveException("Invalid move");
+            return false;
 
         // Do move
         Piece[][] pieces = board.getPieces();
