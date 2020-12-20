@@ -2,6 +2,7 @@ package com.doubleat.ccgame.listener;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.response.MessageResponse;
+import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +23,18 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class WebSocketEventListener {
+public class MyWebSocketEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyWebSocketEventListener.class);
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoomStrategy roomStrategy;
 
     // Cache to query when user unSubscribe
     private final Map<String, String> cachedDestinationPerSubscribeMap = new HashMap<>();
@@ -50,11 +54,13 @@ public class WebSocketEventListener {
         String destination = headerAccessor.getDestination();
         String username = Objects.requireNonNull(event.getUser()).getName();
 
-        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
+        logger.info("Username: {} have just subscribe to {}", username, destination);
+
+        UserDto userDto = userService.getDtoByUsername(username);
 
         cachedDestinationPerSubscribeMap.put(subscriptionId, destination);
 
-        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.JOIN_ROOM, destination);
+        //        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.JOIN_ROOM, destination);
     }
 
     @EventListener
@@ -64,13 +70,15 @@ public class WebSocketEventListener {
         String subscriptionId = getUniqueSubscriptionId(headerAccessor);
         String username = Objects.requireNonNull(event.getUser()).getName();
 
-        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
+        UserDto userDto = userService.getDtoByUsername(username);
 
-        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.LEAVE_ROOM,
-                cachedDestinationPerSubscribeMap.get(subscriptionId));
+        //        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.LEAVE_ROOM,
+        //                cachedDestinationPerSubscribeMap.get(subscriptionId));
 
         // Remove subscriptionId will unSubscription
         cachedDestinationPerSubscribeMap.remove(subscriptionId);
+
+        roomStrategy.kickOutPlayer(userDto);
     }
 
     @EventListener

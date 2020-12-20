@@ -53,8 +53,8 @@ public class AuthStrategyImpl implements AuthStrategy {
     public UserDto validateAccessToken(String accessToken) {
         boolean isValidToken = jwtTokenProvider.validateJwtToken(accessToken);
         if (isValidToken) {
-            String usernameOrEmail = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
-            Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+            String username = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
+            Optional<User> userOptional = userRepository.findByUsername(username);
 
             if (userOptional.isEmpty()) {
                 // TODO: Check user is null
@@ -82,4 +82,5 @@ public class AuthStrategyImpl implements AuthStrategy {
         if (!res)
             throw new UsernameOrEmailHasAlreadyExistsException("Username or email has already exists!");
     }
+
 }

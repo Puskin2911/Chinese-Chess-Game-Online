@@ -31,7 +31,7 @@ public interface RoomCache {
      * Add specific player to room have specific id.
      *
      * @param userDto player need to add to room.
-     * @param roomId id of the room, where need to add player.
+     * @param roomId  id of the room, where need to add player.
      * @return the room just added player.
      */
     Room addPlayerToRoom(UserDto userDto, int roomId) throws RoomNotFoundException;
@@ -40,7 +40,7 @@ public interface RoomCache {
      * Remove specific player from a room have specific id.
      *
      * @param userDto player need to remove from the room.
-     * @param roomId id of the room, where need to remove player.
+     * @param roomId  id of the room, where need to remove player.
      * @throws RoomNotFoundException if have no room have {@code roomId}.
      */
     void removePlayerFromRoom(UserDto userDto, int roomId) throws RoomNotFoundException;
@@ -63,4 +63,19 @@ public interface RoomCache {
      * @throws RoomNotFoundException if have no room have {@code roomId}.
      */
     void removeViewerFromRoom(UserDto viewer, int roomId) throws RoomNotFoundException;
+
+    /**
+     * Get a available room if have. Other wise, create new room.
+     *
+     * @return A available room.
+     */
+    Room getOrCreateAvailableRoom();
+
+    /**
+     * Kick out a specific player from all room.
+     *
+     * @param userDto Player need to kick out side room.
+     */
+    void kickOutPlayer(UserDto userDto);
+
 }

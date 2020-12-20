@@ -1,15 +1,18 @@
 package com.doubleat.ccgame.controller;
 
-import com.doubleat.ccgame.dto.common.ChatMessage;
-import com.doubleat.ccgame.dto.common.MoveMessage;
-import com.doubleat.ccgame.dto.common.ReadyMessage;
-import com.doubleat.ccgame.dto.response.MessageResponse;
+import com.doubleat.ccgame.dto.message.ChatMessage;
+import com.doubleat.ccgame.dto.message.MoveMessage;
+import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.room.RoomStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
@@ -17,49 +20,57 @@ import java.security.Principal;
 @Controller
 public class CommunicationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommunicationController.class);
+
     @Autowired
     private RoomStrategy roomStrategy;
 
-    @MessageMapping("/chat/{roomId}")
-    @SendTo("/room/{roomId}")
-    public MessageResponse<?> handleChat(@Payload ChatMessage message,
-                                         @DestinationVariable Integer roomId,
-                                         Principal principal) {
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/room/{roomId}/chat")
+    @SendTo("/room/{roomId}/chat")
+    public ChatMessage handleChat(@Payload ChatMessage message,
+                                  @DestinationVariable Integer roomId,
+                                  Principal principal) {
 
         message.setUsername(principal.getName());
 
-        return MessageResponse.builder()
-                .data(message)
-                .type(MessageResponse.MessageResponseType.CHAT)
-                .build();
+        return message;
     }
 
-    @MessageMapping("/move/{roomId}")
-    @SendTo("/room/{roomId}")
-    public MessageResponse<?> handleMove(@Payload MoveMessage move,
-                                         @DestinationVariable Integer roomId,
-                                         Principal principal) {
+    @MessageMapping("/room/{roomId}/move")
+    @SendTo("/room/{roomId}/move")
+    public boolean handleMove(@Payload MoveMessage move,
+                              @DestinationVariable Integer roomId,
+                              Principal principal) {
 
-        return MessageResponse.builder()
-                .data(true)
-                .type(MessageResponse.MessageResponseType.MOVE)
-                .build();
+        // TODO : handle move here
+
+        return true;
     }
 
-    @MessageMapping("/ready/{roomId}")
-    @SendTo("/room/{roomId}")
-    public MessageResponse<?> handleReady(@Payload ReadyMessage message,
-                                          @DestinationVariable Integer roomId,
-                                          Principal principal) {
+    @MessageMapping("/room/{roomId}/ready")
+    @SendTo("/room/{roomId}/ready")
+    public ReadyMessage handleReady(@Payload ReadyMessage message,
+                                    @DestinationVariable Integer roomId,
+                                    Principal principal) {
+        logger.info("Receive a ReadyMessage from client!, {}", message.toString());
 
-        roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
+        boolean isGameStarted = roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
 
-        boolean isGameStarted = roomStrategy.startGame(roomId);
+        if (isGameStarted) {
+            try {
+                messagingTemplate.convertAndSend("/room/" + roomId + "/game/start", "START");
+                logger.info("Message was sent to start game!");
+            } catch (MessagingException e) {
+                logger.error("Can not send start message to user");
+            }
+        }
 
-        return MessageResponse.builder()
-                .type(MessageResponse.MessageResponseType.READY)
-                .data(message)
-                .build();
+        logger.info("ReadyMessage before send to user, {}", message.toString());
+
+        return message;
     }
 
 }

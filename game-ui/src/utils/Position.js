@@ -7,7 +7,6 @@ export default class Position {
     }
 
     getXY() {
-        const CELL_SIZE = CELL_SIZE;
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 9; j++) {
                 let xCoordinate = CELL_SIZE / 2 + (CELL_SIZE + 1) * j + 1;

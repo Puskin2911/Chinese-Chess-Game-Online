@@ -2,9 +2,10 @@ import React from "react";
 import Board from "../Board";
 import Chat from "../Chat/Chat";
 import ApiConstants from "../../constants/ApiConstant";
-import SockJsClient from "react-stomp";
 import RoomInfo from "./RoomInfo";
-import {JOIN_ROOM} from "../../constants/MessageConstants";
+import SockJs from "sockjs-client";
+import Stomp from "stompjs";
+import LoadingIndicator from "../../common/LoadingIndicator";
 
 export default function Room(props) {
     const room = props.room;
@@ -12,53 +13,49 @@ export default function Room(props) {
     const user = props.user;
     const handleLeaveRoom = props.handleLeaveRoom;
 
-    const stompClient = React.useRef(null);
-
-    const [isReady, setReady] = React.useState(false);
+    const [isSocketConnected, setSocketConnected] = React.useState(false);
     const [isGameStarted, setGameStarted] = React.useState(false);
 
-    const handleReady = () => {
-        const msgToSend = {
-            username: user.username,
-            ready: true
-        }
-        stompClient.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
-        setReady(true);
-    }
+    const ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
+    const [stompClient] = React.useState(Stomp.over(ws));
 
-    const handleUndoReady = () => {
-        const msgToSend = {
-            username: user.username,
-            ready: false
-        }
-        stompClient.current.sendMessage('/app/ready/' + roomId, JSON.stringify(msgToSend));
-        setReady(false);
-    }
+    React.useEffect(() => {
+        stompClient.connect({}, () => {
+            setSocketConnected(true);
 
-    console.log("Before rendering in Room ...");
+            stompClient.subscribe("/room/" + roomId, (payload) => {
+                console.log("Receive payload from Room: " + payload.body);
+            });
+
+            stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
+                console.log("READYYYYYY: " + JSON.parse(payload.body).isReady);
+            });
+
+            stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+                console.log("From Room receive signal start game!");
+                setGameStarted(true);
+            });
+        });
+
+        return () => {
+            stompClient.disconnect(() => {
+            });
+        };
+    }, []);
+
+    if (!isSocketConnected) return <LoadingIndicator/>;
+
     return (
         <div className="container">
             <div className="row justify-content-center">
-                <RoomInfo room={room} user={user} isReady={isReady} handleLeaveRoom={handleLeaveRoom}
-                          handleReady={handleReady}
-                          handleUndoReady={handleUndoReady}/>
-                <Board room={room} user={user} isGameStarted={isGameStarted} setGameStarted={setGameStarted}/>
-                <Chat username={user.username} room={room}/>
-                <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
-                              topics={['/room/' + room.id]}
-                              onConnect={() => {
-                                  console.log("connected to /room/" + roomId);
-                              }}
-                              onDisconnect={() => {
-                                  console.log("Disconnected from /room/" + roomId);
-                              }}
-                              onMessage={(msg) => {
-                                  console.log("from Room: receive", msg);
-                                  if (msg.type === JOIN_ROOM) {
-
-                                  }
-                              }}
-                              ref={stompClient}/>
+                <RoomInfo room={room} user={user}
+                          stompClient={stompClient}
+                          handleLeaveRoom={handleLeaveRoom}/>
+                <Board room={room} user={user}
+                       isGameStarted={isGameStarted} setGameStarted={setGameStarted}
+                       stompClient={stompClient}/>
+                <Chat username={user.username} room={room}
+                      stompClient={stompClient}/>
             </div>
         </div>
     );

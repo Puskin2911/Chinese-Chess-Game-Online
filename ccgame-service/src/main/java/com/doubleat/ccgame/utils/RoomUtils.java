@@ -2,11 +2,15 @@ package com.doubleat.ccgame.utils;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.room.Room;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Hop Nguyen
  */
 public final class RoomUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoomUtils.class);
 
     private RoomUtils() {
     }
@@ -22,7 +26,8 @@ public final class RoomUtils {
 
         int readyPlayers = 0;
         for (UserDto player : room.getPlayers()) {
-            if (player.isReady()) readyPlayers++;
+            if (player.isReady())
+                readyPlayers++;
         }
 
         return readyPlayers;
@@ -42,6 +47,9 @@ public final class RoomUtils {
         for (UserDto player : room.getPlayers()) {
             if (player.getUsername().equals(username)) {
                 player.setReady(isReady);
+
+                logger.info("One player in room have just update ready to {}", isReady);
+
                 return;
             }
         }

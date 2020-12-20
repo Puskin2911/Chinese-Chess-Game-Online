@@ -1,38 +1,44 @@
 import React from "react";
 import Position from "../utils/Position";
-import useDidUpdateEffect from "../common/CustomizeHook";
-import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE} from "../constants/BoardConstants";
-import ApiConstants from "../constants/ApiConstant";
-import SockJsClient from "react-stomp";
+import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import canvasService from "../services/CanvasService";
 
-function Board(props) {
+export default class Board extends React.Component {
 
-    const room = props.room;
-    const roomId = room.id;
-    const user = props.user;
-    const isGameStarted = props.isGameStarted;
-    const setGameStarted = props.setGameStarted;
+    constructor(props) {
+        super(props);
 
-    const canvasRef = React.useRef(null);
-    const stompClient = React.useRef(null);
+        console.log("Starting constructor ...");
 
-    const [boardStatus, setBoardStatus] = React.useState(BOARD_DEFAULT_STATUS);
-    const [movingPiece, setMovingPiece] = React.useState("00000");
-    const [centerX, setCenterX] = React.useState(0);
-    const [centerY, setCenterY] = React.useState(0);
+        this.room = props.room;
+        this.roomId = this.room.id;
+        this.user = props.user;
+        this.isGameStarted = props.isGameStarted;
+        this.setGameStarted = props.setGameStarted;
+        this.subscription = undefined;
 
-    const drawBoard = () => {
-        const canvas = canvasRef.current;
+        this.canvasRef = React.createRef();
+
+        this.state = {
+            boardStatus: BOARD_DEFAULT_STATUS,
+            movingPiece: "00000",
+            centerX: 0,
+            centerY: 0
+        }
+
+        this.handleMove = this.handleMove.bind(this);
+    }
+
+    drawBoard = () => {
+        const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         canvasService.clearBoard(canvas);
         canvasService.drawBlankBoard(ctx);
-        canvasService.drawPieces(ctx, boardStatus);
-    };
+        canvasService.drawPieces(ctx, this.state.boardStatus);
+    }
 
-
-    function handleMove(event) {
-        const canvas = canvasRef.current;
+    handleMove(event) {
+        const canvas = this.canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -43,18 +49,22 @@ function Board(props) {
         const xy = position.getXY();
         console.log(xy);
         if (xy !== '-1') {
+            const boardStatus = this.state.boardStatus;
+            const movingPiece = this.state.movingPiece;
+
             let index = boardStatus.indexOf(xy);
             let color = boardStatus.charAt(index + 2);
             const piece = boardStatus.slice(index, index + 5);
 
-            setCenterX(xy.slice(1) * (CELL_SIZE + 1) + 1);
-            setCenterY(xy.slice(0, 1) * (CELL_SIZE + 1) + 1);
-
+            this.setState({
+                centerX: xy.slice(1) * (CELL_SIZE + 1) + 1,
+                centerY: xy.slice(0, 1) * (CELL_SIZE + 1) + 1
+            });
             if (movingPiece === '00000') {
                 if (color !== '0') {
                     console.log("Picked " + piece);
-                    setMovingPiece(piece);
-                    console.log(centerX, centerY);
+                    this.setState({movingPiece: piece});
+                    console.log(this.centerX, this.centerY);
                 }
             } else {
                 let newBoardStatus;
@@ -62,47 +72,56 @@ function Board(props) {
                 newBoardStatus = newBoardStatus.replaceAll(piece, piece.substring(0, 2) + movingPiece.substring(2));
 
                 console.log(canvas.clientWidth, canvas.clientHeight);
-                console.log(centerX, centerY);
+                console.log(this.state.centerX, this.state.centerY);
 
-                setMovingPiece('00000');
-                setBoardStatus(newBoardStatus);
+                this.setState({
+                    movingPiece: "00000",
+                    boardStatus: newBoardStatus
+                });
             }
         }
     }
 
-    React.useEffect(() => {
-        if (isGameStarted) {
-            drawBoard();
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("Starting componentDidUpdate ...");
+        // Update state
+        this.isGameStarted = this.props.isGameStarted;
+        if (this.isGameStarted) {
+            alert("Starting draw board");
+            this.drawBoard();
         }
-    }, [drawBoard]);
+    }
 
-    useDidUpdateEffect(() => {
-        canvasService.drawMovingPiece(canvasRef.current.getContext("2d"), centerX, centerY);
-    }, [centerX, centerY]);
+    componentDidMount() {
+        console.log("Starting componentDidMount ...");
 
-    console.log("Before rendering in Board...");
-    return (
-        <div className="col-6">
-            <SockJsClient url={ApiConstants.SOCKET_CONNECT_URL}
-                          topics={['/room/' + roomId]}
-                          onConnect={() => {
-                              console.log("connected to /room/" + roomId);
-                          }}
-                          onDisconnect={() => {
-                              console.log("Disconnected from /room/" + roomId);
-                          }}
-                          onMessage={(msg) => {
-                              console.log("from Board: receive", msg);
-                          }}
-                          ref={stompClient}/>
-            <canvas ref={canvasRef}
-                    className="border border-success"
-                    width={BOARD_WIDTH_SIZE}
-                    height={BOARD_HEIGHT_SIZE}
-                    onClick={handleMove}
-            />
-        </div>
-    )
+        if (this.isGameStarted) {
+            this.drawBoard();
+        }
+
+        this.subscription = this.stompClient.subscribe("/move/room/" + this.roomId, (payload) => {
+            console.log("receive payload from Board: " + JSON.parse(payload.body));
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+    render() {
+        console.log("Before rendering in Board ...");
+        return (
+            <div className="col-6">
+                <canvas ref={this.canvasRef}
+                        className="border border-success"
+                        width={BOARD_WIDTH_SIZE}
+                        height={BOARD_HEIGHT_SIZE}
+                        onClick={this.handleMove}
+                />
+            </div>
+        );
+    }
+
 }
-
-export default Board;

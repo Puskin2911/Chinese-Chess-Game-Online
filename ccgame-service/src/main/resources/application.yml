@@ -6,7 +6,6 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
-    show-sql: true
     hibernate:
       ddl-auto: update
   security:
@@ -49,10 +48,7 @@ server:
 
 logging:
   level:
-    org.springframework:
-      web: debug
-      security: debug
-      boot.autoconfigure: info
+    org.springframework: info
 app:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC

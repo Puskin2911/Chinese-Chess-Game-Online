@@ -15,7 +15,7 @@ import java.util.Stack;
  */
 @Getter
 @Setter
-public class Game {
+public class PlayingGame {
 
     private Player redPlayer;
 
@@ -23,7 +23,7 @@ public class Game {
 
     private Board board;
 
-    private boolean redTurn;
+    private boolean isRedTurn;
 
     private boolean playing;
 
@@ -36,7 +36,7 @@ public class Game {
      * @param redPlayer   red player of game.
      * @param blackPlayer black player of game.
      */
-    public Game(Player redPlayer, Player blackPlayer) {
+    public PlayingGame(Player redPlayer, Player blackPlayer) {
         this.redPlayer = redPlayer;
         this.blackPlayer = blackPlayer;
     }
@@ -46,7 +46,7 @@ public class Game {
      */
     public void start() {
         board = new Board();
-        redTurn = true;
+        isRedTurn = true;
         playing = true;
     }
 
@@ -62,7 +62,7 @@ public class Game {
 
         if (!MoveUtils.isValidMove(move))
             throw new InvalidMoveException("Move is not valid format: [0-9][0-8]_[0-9][0-8]");
-        if (player.isRed() != redTurn)
+        if (player.isRed() != isRedTurn)
             throw new IllegalArgumentException("This turn is not for: " + player.getUsername());
 
         Position from = Position.getPositionFromString(move.substring(0, 2));
@@ -78,7 +78,7 @@ public class Game {
         pieces[from.getX()][from.getY()] = null;
         pieces[to.getX()][to.getY()] = current;
 
-        redTurn = !redTurn;
+        isRedTurn = !isRedTurn;
         moves.push(move);
     }
 
