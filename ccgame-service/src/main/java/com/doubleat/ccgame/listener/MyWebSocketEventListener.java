@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class WebSocketEventListener {
+public class MyWebSocketEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyWebSocketEventListener.class);
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -54,11 +54,13 @@ public class WebSocketEventListener {
         String destination = headerAccessor.getDestination();
         String username = Objects.requireNonNull(event.getUser()).getName();
 
-        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
+        logger.info("Username: {} have just subscribe to {}", username, destination);
+
+        UserDto userDto = userService.getDtoByUsername(username);
 
         cachedDestinationPerSubscribeMap.put(subscriptionId, destination);
 
-        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.JOIN_ROOM, destination);
+        //        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.JOIN_ROOM, destination);
     }
 
     @EventListener
@@ -68,10 +70,10 @@ public class WebSocketEventListener {
         String subscriptionId = getUniqueSubscriptionId(headerAccessor);
         String username = Objects.requireNonNull(event.getUser()).getName();
 
-        UserDto userDto = userService.getDtoByUsernameOrEmail(username);
+        UserDto userDto = userService.getDtoByUsername(username);
 
-        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.LEAVE_ROOM,
-                cachedDestinationPerSubscribeMap.get(subscriptionId));
+        //        buildAndSendMessage(userDto, MessageResponse.MessageResponseType.LEAVE_ROOM,
+        //                cachedDestinationPerSubscribeMap.get(subscriptionId));
 
         // Remove subscriptionId will unSubscription
         cachedDestinationPerSubscribeMap.remove(subscriptionId);

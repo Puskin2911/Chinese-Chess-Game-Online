@@ -9,4 +9,11 @@ public class ReadyMessage {
     private String username;
     @JsonProperty("isReady")
     private boolean isReady;
+
+    @Override public String toString() {
+        return "ReadyMessage{" +
+                "username='" + username + '\'' +
+                ", isReady=" + isReady +
+                '}';
+    }
 }

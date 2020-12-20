@@ -8,8 +8,8 @@ public interface UserService {
 
     boolean addNew(SignupRequest signupRequest);
 
-    User getByUsernameOrEmail(String usernameOrEmail);
+    UserDto getDtoByUsername(String username);
 
-    UserDto getDtoByUsernameOrEmail(String usernameOrEmail);
+    User getByUsername(String username);
 
 }

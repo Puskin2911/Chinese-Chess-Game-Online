@@ -29,7 +29,7 @@ public class RoomController {
 
     @GetMapping(value = "/join")
     public ResponseEntity<Room> joinRoom(Authentication authentication) {
-        User user = userService.getByUsernameOrEmail(authentication.getName());
+        User user = userService.getByUsername(authentication.getName());
         Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
 
         return ResponseEntity.ok(room);
@@ -37,7 +37,7 @@ public class RoomController {
 
     @GetMapping(value = "/{roomId}/leave")
     public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
-        User user = userService.getByUsernameOrEmail(authentication.getName());
+        User user = userService.getByUsername(authentication.getName());
         Boolean success = roomStrategy.playerLeaveRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(success);
@@ -45,7 +45,7 @@ public class RoomController {
 
     @GetMapping(value = "/{roomId}/join")
     public ResponseEntity<Room> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
-        User user = userService.getByUsernameOrEmail(authentication.getName());
+        User user = userService.getByUsername(authentication.getName());
         Room room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
 
         return ResponseEntity.ok(room);

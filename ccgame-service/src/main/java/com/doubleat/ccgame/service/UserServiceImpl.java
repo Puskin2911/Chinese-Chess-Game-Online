@@ -57,14 +57,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByUsernameOrEmail(String usernameOrEmail) {
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        return userOptional.orElse(null);
+    public UserDto getDtoByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(username, username);
+        return userOptional.map(user -> userConverter.toDto(user)).orElse(null);
     }
 
-    @Override public UserDto getDtoByUsernameOrEmail(String usernameOrEmail) {
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        return userOptional.map(user -> userConverter.toDto(user)).orElse(null);
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
 
 }

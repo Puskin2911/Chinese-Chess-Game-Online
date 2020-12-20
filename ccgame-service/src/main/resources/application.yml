@@ -6,7 +6,6 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
-    show-sql: true
     hibernate:
       ddl-auto: update
   security:

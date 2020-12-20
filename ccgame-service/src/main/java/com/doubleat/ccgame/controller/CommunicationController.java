@@ -56,16 +56,20 @@ public class CommunicationController {
     public ReadyMessage handleReady(@Payload ReadyMessage message,
                                     @DestinationVariable Integer roomId,
                                     Principal principal) {
+        logger.info("Receive a ReadyMessage from client!, {}", message.toString());
 
         boolean isGameStarted = roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
 
         if (isGameStarted) {
             try {
-                messagingTemplate.convertAndSend("/room/" + roomId + "/game/start");
+                messagingTemplate.convertAndSend("/room/" + roomId + "/game/start", "START");
+                logger.info("Message was sent to start game!");
             } catch (MessagingException e) {
                 logger.error("Can not send start message to user");
             }
         }
+
+        logger.info("ReadyMessage before send to user, {}", message.toString());
 
         return message;
     }

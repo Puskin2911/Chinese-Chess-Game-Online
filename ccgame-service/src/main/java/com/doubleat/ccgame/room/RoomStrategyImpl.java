@@ -3,6 +3,8 @@ package com.doubleat.ccgame.room;
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.utils.RoomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RoomStrategyImpl implements RoomStrategy {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoomStrategyImpl.class);
 
     private final RoomCache roomCache;
 
@@ -37,9 +41,13 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     @Override
     public boolean updatePlayerReady(String username, int roomId, boolean ready) {
+        logger.info("Starting update player ready..");
+
         Room room = roomCache.getRoomById(roomId);
 
         RoomUtils.updateReadyPlayerInRoom(username, ready, room);
+
+        logger.info("Just update player ready in room!");
 
         return RoomUtils.getReadyPlayers(room) == 2;
     }
