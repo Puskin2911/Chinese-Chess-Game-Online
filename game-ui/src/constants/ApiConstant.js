@@ -1,5 +1,5 @@
-// const API_BASE_URL = 'https://127.0.0.1:8080';
-const API_BASE_URL = 'https://ec2-54-254-252-59.ap-southeast-1.compute.amazonaws.com:8080';
+const API_BASE_URL = 'https://127.0.0.1:8080';
+// const API_BASE_URL = 'https://ec2-54-254-252-59.ap-southeast-1.compute.amazonaws.com:8080';
 const ACCESS_TOKEN = 'accessToken';
 
 const OAUTH2_REDIRECT_URI = 'https://localhost:3000/oauth2/redirect'

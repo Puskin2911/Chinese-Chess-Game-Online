@@ -25,12 +25,6 @@ public class CommunicationController {
     private static final Logger logger = LoggerFactory.getLogger(CommunicationController.class);
 
     @Autowired
-    private RoomStrategy roomStrategy;
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
     private StompService stompService;
 
     @MessageMapping("/room/{roomId}/chat")
@@ -45,18 +39,14 @@ public class CommunicationController {
     }
 
     @MessageMapping("/room/{roomId}/move")
-    @SendTo("/room/{roomId}/move")
-    public boolean handleMove(@Payload MoveMessage move,
-                              @DestinationVariable Integer roomId,
-                              Principal principal) {
+    public void handleMove(@Payload MoveMessage move,
+                           @DestinationVariable Integer roomId,
+                           Principal principal) {
 
-        // TODO : handle move here
-
-        return true;
+        stompService.handleMove(move, principal.getName(), roomId);
     }
 
     @MessageMapping("/room/{roomId}/ready")
-    @SendTo("/room/{roomId}/ready")
     public void handleReady(@Payload ReadyMessage message,
                             @DestinationVariable Integer roomId,
                             Principal principal) {

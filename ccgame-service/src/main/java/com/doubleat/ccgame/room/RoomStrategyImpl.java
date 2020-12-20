@@ -3,17 +3,22 @@ package com.doubleat.ccgame.room;
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.converter.RoomConverter;
+import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.response.GameDto;
 import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.game.Board;
 import com.doubleat.ccgame.game.Player;
 import com.doubleat.ccgame.game.PlayingGame;
+import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.utils.RoomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -70,21 +75,28 @@ public class RoomStrategyImpl implements RoomStrategy {
         int readyPlayers = RoomUtils.getReadyPlayers(room);
 
         if (readyPlayers == 2) {
-            PlayingGame playingGame = room.getPlayingGame();
-            UserDto[] players = (UserDto[]) room.getPlayers().toArray();
-            UserDto firstPlayer = players[0];
-            UserDto secondPlayer = players[1];
+            List<UserDto> players = new ArrayList<>(room.getPlayers());
+
+            UserDto firstPlayer = players.get(0);
+            UserDto secondPlayer = players.get(1);
 
             Player redPlayer = new Player(firstPlayer.getUsername(), true);
             Player blackPlayer = new Player(secondPlayer.getUsername(), false);
-            playingGame.setRedPlayer(redPlayer);
-            playingGame.setBlackPlayer(blackPlayer);
-            Board board = new Board();
-            playingGame.setBoard(board);
 
-            GameDto gameDto = new GameDto();
-            gameDto.setBoardStatus(board.getBoardStatus());
-            gameDto.setNextTurnUsername(redPlayer.getUsername());
+            PlayingGame playingGame = PlayingGame.builder()
+                    .redPlayer(redPlayer)
+                    .blackPlayer(blackPlayer)
+                    .build();
+
+            // Start new game to setup
+            playingGame.start();
+
+            room.setPlayingGame(playingGame);
+
+            GameDto gameDto = GameDto.builder()
+                    .boardStatus(playingGame.getBoardStatus())
+                    .nextTurnUsername(redPlayer.getUsername())
+                    .build();
 
             return Optional.of(gameDto);
         }
@@ -104,8 +116,25 @@ public class RoomStrategyImpl implements RoomStrategy {
     /**
      * {@inheritDoc}
      */
-    @Override public void kickOutPlayer(UserDto userDto) {
+    @Override
+    public void kickOutPlayer(UserDto userDto) {
         roomCache.kickOutPlayer(userDto);
+    }
+
+    @Override
+    public GameDto handleMove(MoveMessage move, String username, Integer roomId) {
+        Room room = roomCache.getRoomById(roomId);
+
+        PlayingGame playingGame = room.getPlayingGame();
+        Player playerMove = playingGame.getPlayerByUsername(username);
+
+        boolean isMoved = playingGame.doMove(playerMove, move.getMoveString());
+
+        return GameDto.builder()
+                .boardStatus(playingGame.getBoardStatus())
+                .isOver(playingGame.isOver())
+                .nextTurnUsername(playingGame.getNextTurnUsername())
+                .build();
     }
 
 }

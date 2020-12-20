@@ -1,7 +1,9 @@
 package com.doubleat.ccgame.service;
 
+import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.dto.response.GameDto;
+import com.doubleat.ccgame.room.Room;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +31,18 @@ public class StompServiceImpl implements StompService {
         Optional<GameDto> gameDtoOptional = roomStrategy.startGame(roomId);
 
         if (gameDtoOptional.isPresent()) {
-            sendMessage("/room/" + roomId + "/game/start", gameDtoOptional.get());
+            sendMessage("/room/" + roomId + "/game/start", "STARTING.......");
+            sendMessage("/room/" + roomId + "/move", gameDtoOptional.get());
         } else {
             sendMessage("/room/" + roomId + "/ready", message);
         }
+    }
+
+    @Override
+    public void handleMove(MoveMessage move, String username, Integer roomId) {
+        GameDto gameDto = roomStrategy.handleMove(move, username, roomId);
+
+        sendMessage("/room/" + roomId + "/move", gameDto);
     }
 
     private void sendMessage(String destination, Object payload) {

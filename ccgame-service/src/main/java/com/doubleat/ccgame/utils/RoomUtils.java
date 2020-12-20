@@ -1,6 +1,8 @@
 package com.doubleat.ccgame.utils;
 
 import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.game.Player;
+import com.doubleat.ccgame.game.PlayingGame;
 import com.doubleat.ccgame.room.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

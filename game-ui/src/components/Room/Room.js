@@ -15,7 +15,6 @@ export default function Room(props) {
 
     const [isSocketConnected, setSocketConnected] = React.useState(false);
     const [isGameStarted, setGameStarted] = React.useState(false);
-    const [game, setGame] = React.useState(null);
 
     const ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
     const [stompClient] = React.useState(Stomp.over(ws));
@@ -32,9 +31,8 @@ export default function Room(props) {
                 console.log("READYYYYYY: " + JSON.parse(payload.body).isReady);
             });
 
-            stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+            stompClient.subscribe("/room/" + roomId + "/game/start", () => {
                 console.log("From Room receive signal start game!");
-                setGame(JSON.parse(payload.body));
                 setGameStarted(true);
             });
         });
@@ -53,9 +51,7 @@ export default function Room(props) {
                 <RoomInfo room={room} user={user}
                           stompClient={stompClient}
                           handleLeaveRoom={handleLeaveRoom}/>
-                <Board room={room} user={user} game={game}
-                       isGameStarted={isGameStarted} setGameStarted={setGameStarted}
-                       stompClient={stompClient}/>
+                <Board room={room} user={user} stompClient={stompClient}/>
                 <Chat username={user.username} room={room}
                       stompClient={stompClient}/>
             </div>

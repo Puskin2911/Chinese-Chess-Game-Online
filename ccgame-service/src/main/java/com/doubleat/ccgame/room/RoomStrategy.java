@@ -1,6 +1,7 @@
 package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.response.GameDto;
 import com.doubleat.ccgame.dto.response.RoomDto;
 
@@ -62,8 +63,10 @@ public interface RoomStrategy {
     /**
      * Kick out a specific player from all room.
      *
-     * @param userDto Player need to kick out side room.
+     * @param userDto Player need to kick out from room.
      */
     void kickOutPlayer(UserDto userDto);
+
+    GameDto handleMove(MoveMessage move, String username, Integer roomId);
 
 }
