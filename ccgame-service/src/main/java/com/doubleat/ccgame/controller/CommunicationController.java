@@ -3,7 +3,9 @@ package com.doubleat.ccgame.controller;
 import com.doubleat.ccgame.dto.message.ChatMessage;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
+import com.doubleat.ccgame.dto.response.GameDto;
 import com.doubleat.ccgame.room.RoomStrategy;
+import com.doubleat.ccgame.service.StompService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,7 @@ public class CommunicationController {
     private static final Logger logger = LoggerFactory.getLogger(CommunicationController.class);
 
     @Autowired
-    private RoomStrategy roomStrategy;
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private StompService stompService;
 
     @MessageMapping("/room/{roomId}/chat")
     @SendTo("/room/{roomId}/chat")
@@ -40,37 +39,20 @@ public class CommunicationController {
     }
 
     @MessageMapping("/room/{roomId}/move")
-    @SendTo("/room/{roomId}/move")
-    public boolean handleMove(@Payload MoveMessage move,
-                              @DestinationVariable Integer roomId,
-                              Principal principal) {
+    public void handleMove(@Payload MoveMessage move,
+                           @DestinationVariable Integer roomId,
+                           Principal principal) {
 
-        // TODO : handle move here
-
-        return true;
+        stompService.handleMove(move, principal.getName(), roomId);
     }
 
     @MessageMapping("/room/{roomId}/ready")
-    @SendTo("/room/{roomId}/ready")
-    public ReadyMessage handleReady(@Payload ReadyMessage message,
-                                    @DestinationVariable Integer roomId,
-                                    Principal principal) {
+    public void handleReady(@Payload ReadyMessage message,
+                            @DestinationVariable Integer roomId,
+                            Principal principal) {
         logger.info("Receive a ReadyMessage from client!, {}", message.toString());
 
-        boolean isGameStarted = roomStrategy.updatePlayerReady(principal.getName(), roomId, message.isReady());
-
-        if (isGameStarted) {
-            try {
-                messagingTemplate.convertAndSend("/room/" + roomId + "/game/start", "START");
-                logger.info("Message was sent to start game!");
-            } catch (MessagingException e) {
-                logger.error("Can not send start message to user");
-            }
-        }
-
-        logger.info("ReadyMessage before send to user, {}", message.toString());
-
-        return message;
+        stompService.handlePlayerReady(message, roomId, principal.getName());
     }
 
 }

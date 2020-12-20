@@ -8,25 +8,21 @@ export default class Board extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log("Starting constructor ...");
-
         this.room = props.room;
         this.roomId = this.room.id;
         this.user = props.user;
-        this.isGameStarted = props.isGameStarted;
-        this.setGameStarted = props.setGameStarted;
+        this.stompClient = props.stompClient;
         this.subscription = undefined;
 
         this.canvasRef = React.createRef();
 
         this.state = {
-            boardStatus: BOARD_DEFAULT_STATUS,
+            boardStatus: undefined,
             movingPiece: "00000",
             centerX: 0,
-            centerY: 0
+            centerY: 0,
+            isMyTurn: false
         }
-
-        this.handleMove = this.handleMove.bind(this);
     }
 
     drawBoard = () => {
@@ -37,7 +33,7 @@ export default class Board extends React.Component {
         canvasService.drawPieces(ctx, this.state.boardStatus);
     }
 
-    handleMove(event) {
+    handleMove = (event) => {
         const canvas = this.canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -84,9 +80,8 @@ export default class Board extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         console.log("Starting componentDidUpdate ...");
-        // Update state
-        this.isGameStarted = this.props.isGameStarted;
-        if (this.isGameStarted) {
+
+        if (this.state.boardStatus !== undefined) {
             alert("Starting draw board");
             this.drawBoard();
         }
@@ -95,12 +90,16 @@ export default class Board extends React.Component {
     componentDidMount() {
         console.log("Starting componentDidMount ...");
 
-        if (this.isGameStarted) {
-            this.drawBoard();
-        }
+        this.subscription = this.stompClient.subscribe("/room/" + this.roomId + "/move", (payload) => {
+            const gameDto = JSON.parse(payload.body);
+            console.log("receive payload from Board: " + gameDto);
 
-        this.subscription = this.stompClient.subscribe("/move/room/" + this.roomId, (payload) => {
-            console.log("receive payload from Board: " + JSON.parse(payload.body));
+            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.props.user.username;
+
+            this.setState({
+                boardStatus: gameDto.boardStatus,
+                isMyTurn: isMyTurnToUpdate
+            });
         });
     }
 

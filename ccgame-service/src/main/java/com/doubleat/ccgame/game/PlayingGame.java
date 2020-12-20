@@ -3,8 +3,7 @@ package com.doubleat.ccgame.game;
 import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Stack;
 
@@ -13,19 +12,21 @@ import java.util.Stack;
  *
  * @author Hop Nguyen
  */
-@Getter
-@Setter
+@Data
+@Builder
 public class PlayingGame {
 
+    @NonNull
     private Player redPlayer;
 
+    @NonNull
     private Player blackPlayer;
 
     private Board board;
 
     private boolean isRedTurn;
 
-    private boolean playing;
+    private boolean isOver;
 
     /**
      * Save all moves.
@@ -33,12 +34,19 @@ public class PlayingGame {
     private Stack<String> moves;
 
     /**
-     * @param redPlayer   red player of game.
-     * @param blackPlayer black player of game.
+     * Get player in game.
+     *
+     * @param username username of player need to get
+     * @return Player
      */
-    public PlayingGame(Player redPlayer, Player blackPlayer) {
-        this.redPlayer = redPlayer;
-        this.blackPlayer = blackPlayer;
+    public Player getPlayerByUsername(String username) {
+        if (redPlayer.getUsername().equals(username)) {
+            return redPlayer;
+        } else if (blackPlayer.getUsername().equals(username)) {
+            return blackPlayer;
+        }
+
+        return null;
     }
 
     /**
@@ -47,23 +55,14 @@ public class PlayingGame {
     public void start() {
         board = new Board();
         isRedTurn = true;
-        playing = true;
+        isOver = false;
     }
 
-    /**
-     * @return game is over or not.
-     */
-    public boolean isOver() {
-        return false;
-    }
-
-    public void doMove(Player player, String move) {
+    public boolean doMove(Player player, String move) {
         assert player != null;
 
-        if (!MoveUtils.isValidMove(move))
-            throw new InvalidMoveException("Move is not valid format: [0-9][0-8]_[0-9][0-8]");
-        if (player.isRed() != isRedTurn)
-            throw new IllegalArgumentException("This turn is not for: " + player.getUsername());
+        if (!MoveUtils.isValidMove(move) || player.isRed() != isRedTurn)
+            return false;
 
         Position from = Position.getPositionFromString(move.substring(0, 2));
         Position to = Position.getPositionFromString(move.substring(3));
@@ -71,7 +70,7 @@ public class PlayingGame {
         Piece current = board.getPieceByPosition(from);
 
         if (current == null || !current.isValidMove(board, from, to))
-            throw new InvalidMoveException("Invalid move");
+            return false;
 
         // Do move
         Piece[][] pieces = board.getPieces();
@@ -80,6 +79,25 @@ public class PlayingGame {
 
         isRedTurn = !isRedTurn;
         moves.push(move);
+
+        return true;
+    }
+
+    /**
+     * @return Status of board in this game.
+     */
+    public String getBoardStatus() {
+        return this.board.getBoardStatus();
+    }
+
+    /**
+     * @return Username have next turn.
+     */
+    public String getNextTurnUsername() {
+        if (redPlayer.isRed() == isRedTurn)
+            return redPlayer.getUsername();
+        else
+            return blackPlayer.getUsername();
     }
 
 }

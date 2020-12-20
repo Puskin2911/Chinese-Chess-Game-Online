@@ -10,6 +10,6 @@ public class Chariot extends Piece {
 
     @Override
     public boolean isValidMove(Board board, Position from, Position to) {
-        return false;
+        return true;
     }
 }

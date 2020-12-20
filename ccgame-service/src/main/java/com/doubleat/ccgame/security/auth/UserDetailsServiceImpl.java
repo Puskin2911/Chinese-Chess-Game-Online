@@ -32,4 +32,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userOptional.get().getPassHashed(),
                 Collections.emptyList());
     }
+
 }

@@ -1,12 +1,17 @@
 package com.doubleat.ccgame.game;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class Player {
+
+    @NonNull
     private String username;
 
-    private boolean red;
+    @NonNull
+    private boolean isRed;
+
 }
