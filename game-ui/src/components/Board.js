@@ -1,6 +1,6 @@
 import React from "react";
 import Position from "../utils/Position";
-import {BOARD_DEFAULT_STATUS, BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
+import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import canvasService from "../services/CanvasService";
 
 export default class Board extends React.Component {
@@ -19,8 +19,7 @@ export default class Board extends React.Component {
         this.state = {
             boardStatus: undefined,
             movingPiece: "00000",
-            centerX: 0,
-            centerY: 0,
+            clickingPosition: undefined,
             isMyTurn: false
         }
     }
@@ -34,6 +33,8 @@ export default class Board extends React.Component {
     }
 
     handleMove = (event) => {
+        if (!this.state.isMyTurn) return;
+
         const canvas = this.canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -44,46 +45,58 @@ export default class Board extends React.Component {
         const position = new Position(x, y);
         const xy = position.getXY();
         console.log(xy);
-        if (xy !== '-1') {
-            const boardStatus = this.state.boardStatus;
-            const movingPiece = this.state.movingPiece;
 
-            let index = boardStatus.indexOf(xy);
-            let color = boardStatus.charAt(index + 2);
-            const piece = boardStatus.slice(index, index + 5);
+        if (xy === '-1') return;
 
-            this.setState({
-                centerX: xy.slice(1) * (CELL_SIZE + 1) + 1,
-                centerY: xy.slice(0, 1) * (CELL_SIZE + 1) + 1
-            });
-            if (movingPiece === '00000') {
-                if (color !== '0') {
-                    console.log("Picked " + piece);
-                    this.setState({movingPiece: piece});
-                    console.log(this.centerX, this.centerY);
-                }
-            } else {
-                let newBoardStatus;
-                newBoardStatus = boardStatus.replaceAll(movingPiece, movingPiece.substring(0, 2) + '000');
-                newBoardStatus = newBoardStatus.replaceAll(piece, piece.substring(0, 2) + movingPiece.substring(2));
+        const boardStatus = this.state.boardStatus;
+        const movingPiece = this.state.movingPiece;
 
-                console.log(canvas.clientWidth, canvas.clientHeight);
-                console.log(this.state.centerX, this.state.centerY);
+        // Find piece when user click on board
+        let index = boardStatus.indexOf(xy);
+        let color = boardStatus.charAt(index + 2);
+        const piece = boardStatus.slice(index, index + 5);
 
+        const clickingPosition = {
+            centerX: xy.slice(1) * (CELL_SIZE + 1) + 1,
+            centerY: xy.slice(0, 1) * (CELL_SIZE + 1) + 1
+        }
+
+        if (movingPiece === '00000') {
+            if (color !== '0') {
                 this.setState({
-                    movingPiece: "00000",
-                    boardStatus: newBoardStatus
+                    movingPiece: piece,
+                    clickingPosition: clickingPosition
                 });
             }
+        } else {
+            let newBoardStatus;
+            newBoardStatus = boardStatus.replaceAll(movingPiece, movingPiece.substring(0, 2) + '000');
+            newBoardStatus = newBoardStatus.replaceAll(piece, piece.substring(0, 2) + movingPiece.substring(2));
+
+            // TODO: Handle asynchronous display
+
+            const move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
+            // Send message to server.
+            this.stompClient.send("/app/room/" + this.roomId + "/move", {}, JSON.stringify({
+                roomId: this.roomId,
+                move: move
+            }));
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         console.log("Starting componentDidUpdate ...");
+        const canvas = this.canvasRef.current;
+        const ctx = canvas.getContext('2d');
 
         if (this.state.boardStatus !== undefined) {
-            alert("Starting draw board");
+            console.log("DRAW BOARD!!!!");
             this.drawBoard();
+        }
+
+        const clickingPosition = this.state.clickingPosition
+        if (this.state.clickingPosition !== undefined) {
+            canvasService.drawMovingPiece(ctx, clickingPosition.centerX, clickingPosition.centerY);
         }
     }
 
@@ -94,11 +107,12 @@ export default class Board extends React.Component {
             const gameDto = JSON.parse(payload.body);
             console.log("receive payload from Board: " + gameDto);
 
-            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.props.user.username;
+            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
 
             this.setState({
                 boardStatus: gameDto.boardStatus,
-                isMyTurn: isMyTurnToUpdate
+                isMyTurn: isMyTurnToUpdate,
+                movingPiece: '00000'
             });
         });
     }

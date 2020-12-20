@@ -2,7 +2,6 @@ import {CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
 
 const drawBlankBoard = (ctx) => {
-    console.log("start drawBlankBoard....");
     // Horizontal
     for (let i = 0; i < 10; i++) {
         ctx.beginPath();
