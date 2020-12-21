@@ -25,8 +25,21 @@ const resolveBoardStatus = (boardStatus, isRedPlayer) => {
     return res;
 }
 
+const resolveMove = (move, isRedPlayer) => {
+    if (isRedPlayer) return move;
+
+    const xFrom = move.charAt(0);
+    const yForm = move.charAt(1);
+    const xTo = move.charAt(3);
+    const yTo = move.charAt(4);
+
+    return "" + (Board.ROW - 1 - xFrom) + (Board.COLUMN - 1 - yForm)
+        + "_" + (Board.ROW - 1 - xTo) + (Board.COLUMN - 1 - yTo);
+}
+
 const gameService = {
-    resolveBoardStatus
+    resolveBoardStatus,
+    resolveMove
 }
 
 export default gameService;
