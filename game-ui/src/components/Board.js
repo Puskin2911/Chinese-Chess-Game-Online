@@ -2,6 +2,7 @@ import React from "react";
 import Position from "../utils/Position";
 import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import canvasService from "../services/CanvasService";
+import gameService from "../services/GameService";
 
 export default class Board extends React.Component {
 
@@ -109,8 +110,10 @@ export default class Board extends React.Component {
 
             const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
 
+            const boardStatusToUpdate = gameService.resolveBoardStatus(gameDto.boardStatus, this.props.isRedPlayer);
+
             this.setState({
-                boardStatus: gameDto.boardStatus,
+                boardStatus: boardStatusToUpdate,
                 isMyTurn: isMyTurnToUpdate,
                 movingPiece: '00000'
             });

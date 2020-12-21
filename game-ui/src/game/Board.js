@@ -1,4 +1,12 @@
-class Board {
+import Advisor from "./piece/Advisor";
+import Cannon from "./piece/Cannon";
+import Chariot from "./piece/Chariot";
+import Elephant from "./piece/Elephant";
+import General from "./piece/General";
+import Horse from "./piece/Horse";
+import Solider from "./piece/Solider";
+
+export default class Board {
     static COLUMN = 9;
     static ROW = 10;
 
