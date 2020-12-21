@@ -18,7 +18,7 @@ const setCookie = (cname, cookieValue, expiredDays, isSecure) => {
     const d = new Date();
     d.setTime(d.getTime() + (expiredDays * 24 * 60 * 60 * 1000));
     const expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cookieValue + ";" + expires + ";path=/" + ";secure=" + isSecure;
+    document.cookie = cname + "=" + cookieValue + ";" + expires + ";path=/" + (isSecure ? ";secure" : "");
 }
 
 const deleteCookie = (name) => {
