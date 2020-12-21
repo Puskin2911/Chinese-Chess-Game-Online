@@ -1,4 +1,6 @@
-class Solider extends Piece {
+import Piece from "./Piece";
+
+export default class Chariot extends Piece {
     constructor(shortName, isRed) {
         super(shortName, isRed);
     }

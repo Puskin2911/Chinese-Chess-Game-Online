@@ -1,4 +1,6 @@
-class Elephant extends Piece {
+import Piece from "./Piece";
+
+export default class Solider extends Piece {
     constructor(shortName, isRed) {
         super(shortName, isRed);
     }
