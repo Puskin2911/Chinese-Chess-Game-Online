@@ -69,10 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requiresChannel()
-                .anyRequest()
-                .requiresSecure();
-
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors().and()
                 .formLogin(AbstractHttpConfigurer::disable)
