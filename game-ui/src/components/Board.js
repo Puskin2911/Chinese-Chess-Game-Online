@@ -76,7 +76,9 @@ export default class Board extends React.Component {
 
             // TODO: Handle asynchronous display
 
-            const move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
+            let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
+            move = gameService.resolveMove(move, this.props.isRedPlayer);
+
             // Send message to server.
             this.stompClient.send("/app/room/" + this.roomId + "/move", {}, JSON.stringify({
                 roomId: this.roomId,
