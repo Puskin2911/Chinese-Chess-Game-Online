@@ -31,7 +31,7 @@ export default function NormalLoginForm() {
             .then(res => {
                 console.log(res);
 
-                localStorageHelper.setCookie("loggedIn", true, 10, true);
+                localStorageHelper.setCookie("loggedIn", true, 10, false);
                 history.replace(from);
             })
             .catch((error) => {

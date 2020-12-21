@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
-    private String[] allowedOrigins = { "https://localhost:3000",
+    private final String[] allowedOrigins = { "https://localhost:3000",
             "http://localhost:3000",
             "https://v1-0-dev.daslc0bv0s0j5.amplifyapp.com",
             "http://v1-0-dev.daslc0bv0s0j5.amplifyapp.com" };
