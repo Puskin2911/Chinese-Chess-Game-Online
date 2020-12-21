@@ -3,7 +3,6 @@ package com.doubleat.ccgame.service;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.dto.response.GameDto;
-import com.doubleat.ccgame.dto.response.StartGameResponse;
 import com.doubleat.ccgame.room.Room;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
@@ -32,9 +31,8 @@ public class StompServiceImpl implements StompService {
         Optional<GameDto> gameDtoOptional = roomStrategy.startGame(roomId);
 
         if (gameDtoOptional.isPresent()) {
-            GameDto gameDto = gameDtoOptional.get();
-            sendMessage("/room/" + roomId + "/game/start", new StartGameResponse(gameDto.getRedPlayerUsername()));
-            sendMessage("/room/" + roomId + "/move", gameDto);
+            sendMessage("/room/" + roomId + "/game/start", "STARTING.......");
+            sendMessage("/room/" + roomId + "/move", gameDtoOptional.get());
         } else {
             sendMessage("/room/" + roomId + "/ready", message);
         }

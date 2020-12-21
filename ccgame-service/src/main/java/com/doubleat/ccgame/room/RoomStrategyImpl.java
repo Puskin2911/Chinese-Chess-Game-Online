@@ -96,7 +96,6 @@ public class RoomStrategyImpl implements RoomStrategy {
             GameDto gameDto = GameDto.builder()
                     .boardStatus(playingGame.getBoardStatus())
                     .nextTurnUsername(redPlayer.getUsername())
-                    .redPlayerUsername(playingGame.getRedPlayer().getUsername())
                     .build();
 
             return Optional.of(gameDto);

@@ -1,12 +1,9 @@
 package com.doubleat.ccgame.game;
 
+import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.*;
 
 import java.util.Stack;
 
@@ -18,8 +15,6 @@ import java.util.Stack;
 @Data
 @Builder
 public class PlayingGame {
-
-    private static final Logger logger = LoggerFactory.getLogger(PlayingGame.class);
 
     @NonNull
     private Player redPlayer;
@@ -61,29 +56,21 @@ public class PlayingGame {
         board = new Board();
         isRedTurn = true;
         isOver = false;
-        moves = new Stack<>();
     }
 
     public boolean doMove(Player player, String move) {
         assert player != null;
 
-        if (!MoveUtils.isValidMove(move)) {
-            logger.error("Invalid move format!");
+        if (!MoveUtils.isValidMove(move) || player.isRed() != isRedTurn)
             return false;
-        } else if (player.isRed() != isRedTurn) {
-            logger.error("Invalid turn!");
-            return false;
-        }
 
         Position from = Position.getPositionFromString(move.substring(0, 2));
         Position to = Position.getPositionFromString(move.substring(3));
 
         Piece current = board.getPieceByPosition(from);
 
-        if (current == null || !current.isValidMove(board, from, to)) {
-            logger.error("Invalid move!");
+        if (current == null || !current.isValidMove(board, from, to))
             return false;
-        }
 
         // Do move
         Piece[][] pieces = board.getPieces();

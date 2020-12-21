@@ -3,14 +3,18 @@ package com.doubleat.ccgame.controller;
 import com.doubleat.ccgame.dto.message.ChatMessage;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
+import com.doubleat.ccgame.dto.response.GameDto;
+import com.doubleat.ccgame.room.RoomStrategy;
 import com.doubleat.ccgame.service.StompService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
@@ -38,7 +42,6 @@ public class CommunicationController {
     public void handleMove(@Payload MoveMessage move,
                            @DestinationVariable Integer roomId,
                            Principal principal) {
-        logger.info("Receive a MoveMessage from client!, {}", move.toString());
 
         stompService.handleMove(move, principal.getName(), roomId);
     }

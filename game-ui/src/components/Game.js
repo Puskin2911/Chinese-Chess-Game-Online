@@ -1,5 +1,5 @@
 import React from "react";
-import gameApiService from "../services/GameApiService";
+import gameService from "../services/GameService";
 import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
@@ -8,7 +8,7 @@ export default function Game(props) {
     const [room, setRoom] = React.useState(null);
 
     const handleJoinRoom = () => {
-        gameApiService.joinRoom()
+        gameService.joinRoom()
             .then(res => {
                 console.log("from handleJoinRoom", res);
 
@@ -20,7 +20,7 @@ export default function Game(props) {
     }
 
     const handleLeaveRoom = () => {
-        gameApiService.leaveRoom(room.id)
+        gameService.leaveRoom(room.id)
             .then(() => {
                     setRoom(null);
                 }

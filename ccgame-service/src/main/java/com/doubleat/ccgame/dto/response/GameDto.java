@@ -17,7 +17,4 @@ public class GameDto {
     @JsonProperty("nextTurnUsername")
     private String nextTurnUsername;
 
-    @JsonProperty("redPlayerUsername")
-    private String redPlayerUsername;
-
 }

@@ -15,9 +15,9 @@ const leaveRoom = (roomId) => axios.get(
     }
 )
 
-const gameApiService = {
+const gameService = {
     joinRoom,
     leaveRoom
 }
 
-export default gameApiService;
+export default gameService;
