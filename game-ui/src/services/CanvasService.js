@@ -1,4 +1,4 @@
-import {CELL_SIZE} from "../constants/BoardConstants";
+import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
 
 const drawBlankBoard = (ctx) => {
@@ -40,7 +40,13 @@ const drawBlankBoard = (ctx) => {
     ctx.stroke();
 };
 
-const drawPieces = (ctx, boardStatus) => {
+const drawPieces = (ctx, boardStatus, isRedPlayer) => {
+    ctx.save();
+    if (!isRedPlayer) {
+        ctx.translate(BOARD_WIDTH_SIZE, BOARD_HEIGHT_SIZE);
+        ctx.rotate((Math.PI / 180) * 180);
+    }
+
     const piecesOnBoard = boardStatus.split("_");
     for (let [key, value] of imagePieceMap) {
         for (const piece of piecesOnBoard) {
@@ -51,6 +57,7 @@ const drawPieces = (ctx, boardStatus) => {
             }
         }
     }
+    ctx.restore();
 };
 
 const clearBoard = canvas => {
