@@ -4,7 +4,7 @@ import Chariot from "./piece/Chariot";
 import Elephant from "./piece/Elephant";
 import General from "./piece/General";
 import Horse from "./piece/Horse";
-import Solider from "./piece/Solider";
+import Soldier from "./piece/Soldier";
 
 export default class Board {
     static COLUMN = 9;
@@ -91,7 +91,7 @@ export default class Board {
                 return new Cannon(shortName, isRed);
             }
             case "so": {
-                return new Solider(shortName, isRed);
+                return new Soldier(shortName, isRed);
             }
         }
     }

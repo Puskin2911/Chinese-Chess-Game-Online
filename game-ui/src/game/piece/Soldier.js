@@ -1,6 +1,6 @@
 import Piece from "./Piece";
 
-export default class Solider extends Piece {
+export default class Soldier extends Piece {
     constructor(shortName, isRed) {
         super(shortName, isRed);
     }
