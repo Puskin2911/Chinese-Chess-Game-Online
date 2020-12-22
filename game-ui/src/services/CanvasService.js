@@ -58,7 +58,10 @@ const clearBoard = canvas => {
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 };
 
-const drawMovingPiece = (ctx, x, y) => {
+const drawMovingPiece = (ctx, clickingPosition) => {
+    if (clickingPosition === null) return;
+    const y = clickingPosition.centerX * (CELL_SIZE + 1) + 1;
+    const x = clickingPosition.centerY * (CELL_SIZE + 1) + 1;
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'green';
