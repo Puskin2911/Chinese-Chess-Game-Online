@@ -1,6 +1,7 @@
 package com.doubleat.ccgame.game;
 
 import com.doubleat.ccgame.game.piece.*;
+import com.doubleat.ccgame.game.utils.PieceUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,7 +50,7 @@ public class Board {
                 String shortName = pieceText.substring(3);
                 boolean isRed = (color == 'r');
 
-                Piece piece = getInstancePieceFromShortName(shortName);
+                Piece piece = PieceUtils.getInstancePieceFromShortName(shortName);
                 piece.setRed(isRed);
 
                 pieces[x][y] = piece;
@@ -84,34 +85,6 @@ public class Board {
         return res.toString();
     }
 
-    private static Piece getInstancePieceFromShortName(String shortName) {
-        switch (shortName) {
-        case "ch": {
-            return new Chariot(shortName);
-        }
-        case "ho": {
-            return new Horse(shortName);
-        }
-        case "el": {
-            return new Elephant(shortName);
-        }
-        case "ad": {
-            return new Advisor(shortName);
-        }
-        case "ge": {
-            return new General(shortName);
-        }
-        case "ca": {
-            return new Cannon(shortName);
-        }
-        case "so": {
-            return new Solider(shortName);
-        }
-        default:
-            throw new IllegalArgumentException("Unexpected value: " + shortName);
-        }
-    }
-
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
@@ -130,4 +103,5 @@ public class Board {
         }
         return res.toString();
     }
+
 }

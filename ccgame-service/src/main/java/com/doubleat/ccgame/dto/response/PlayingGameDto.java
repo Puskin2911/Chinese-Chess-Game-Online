@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GameDto {
+public class PlayingGameDto {
 
     @JsonProperty("boardStatus")
     private String boardStatus;
