@@ -71,8 +71,6 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
             }
             if (pieceObject.isValidMove(pieces, from, to)) {
                 const position = {
-                    // centerX: isRedPlayer ? i : Board.ROW - 1 - i,
-                    // centerY: isRedPlayer ? j : Board.COLUMN - 1 - j
                     centerX: i,
                     centerY: j
                 }

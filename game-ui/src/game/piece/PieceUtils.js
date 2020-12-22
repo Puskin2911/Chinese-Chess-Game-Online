@@ -8,7 +8,7 @@ const getPieceBetweenVertical = (pieces, xStart, xEnd, y) => {
 
     let numberOfPiece = 0;
 
-    for (let x = xStart + 1; x < xEnd; x++) {
+    for (let x = xStart - 1 + 2; x < xEnd; x++) {
         if (pieces[x][y] != null) numberOfPiece++;
     }
 
@@ -25,7 +25,7 @@ const getPieceBetweenHorizontal = (pieces, x, yStart, yEnd) => {
 
     let numberOfPiece = 0;
 
-    for (let y = yStart + 1; y < yEnd; y++) {
+    for (let y = yStart - 1 + 2; y < yEnd; y++) {
         if (pieces[x][y] != null) numberOfPiece++;
     }
 
