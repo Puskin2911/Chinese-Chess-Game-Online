@@ -2,6 +2,7 @@ package com.doubleat.ccgame.game;
 
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
+import com.doubleat.ccgame.game.utils.PieceUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -32,6 +33,8 @@ public class PlayingGame {
     private boolean isRedTurn;
 
     private boolean isOver;
+
+    private boolean isRedWin;
 
     /**
      * Save all moves.
@@ -64,6 +67,16 @@ public class PlayingGame {
         moves = new Stack<>();
     }
 
+    /**
+     * End this game.
+     *
+     * @param isRedWin {@code true}  if red player is win and vice versa.
+     */
+    public void endGame(boolean isRedWin) {
+        this.setOver(true);
+        this.setRedWin(isRedWin);
+    }
+
     public boolean doMove(Player player, String move) {
         assert player != null;
 
@@ -85,8 +98,16 @@ public class PlayingGame {
             return false;
         }
 
-        // Do move
         Piece[][] pieces = board.getPieces();
+
+        // Check game isOver
+        Piece toPiece = pieces[to.getX()][to.getY()];
+        if (PieceUtils.isGeneral(toPiece)) {
+            boolean isRedWin = !toPiece.isRed();
+            this.endGame(isRedWin);
+        }
+
+        // Do move
         pieces[from.getX()][from.getY()] = null;
         pieces[to.getX()][to.getY()] = current;
 

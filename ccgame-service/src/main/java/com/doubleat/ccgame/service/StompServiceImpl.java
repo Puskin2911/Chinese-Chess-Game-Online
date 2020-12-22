@@ -2,9 +2,9 @@ package com.doubleat.ccgame.service;
 
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
-import com.doubleat.ccgame.dto.response.GameDto;
-import com.doubleat.ccgame.dto.response.StartGameResponse;
-import com.doubleat.ccgame.room.Room;
+import com.doubleat.ccgame.dto.response.PlayingGameDto;
+import com.doubleat.ccgame.dto.response.GameStartResponse;
+import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +29,13 @@ public class StompServiceImpl implements StompService {
     @Override
     public void handlePlayerReady(ReadyMessage message, Integer roomId, String name) {
         roomStrategy.updatePlayerReady(name, roomId, message.isReady());
-        Optional<GameDto> gameDtoOptional = roomStrategy.startGame(roomId);
+        Optional<PlayingGameDto> gameDtoOptional = roomStrategy.startGame(roomId);
 
         if (gameDtoOptional.isPresent()) {
-            GameDto gameDto = gameDtoOptional.get();
-            sendMessage("/room/" + roomId + "/game/start", new StartGameResponse(gameDto.getRedPlayerUsername()));
-            sendMessage("/room/" + roomId + "/move", gameDto);
+            PlayingGameDto playingGameDto = gameDtoOptional.get();
+            sendMessage("/room/" + roomId + "/game/start",
+                    new GameStartResponse(playingGameDto.getRedPlayerUsername()));
+            sendMessage("/room/" + roomId + "/move", playingGameDto);
         } else {
             sendMessage("/room/" + roomId + "/ready", message);
         }
@@ -42,9 +43,13 @@ public class StompServiceImpl implements StompService {
 
     @Override
     public void handleMove(MoveMessage move, String username, Integer roomId) {
-        GameDto gameDto = roomStrategy.handleMove(move, username, roomId);
+        PlayingGameDto playingGameDto = roomStrategy.handleMove(move, username, roomId);
+        sendMessage("/room/" + roomId + "/move", playingGameDto);
 
-        sendMessage("/room/" + roomId + "/move", gameDto);
+        Optional<GameStopResponse> gameStopResponseOptional = roomStrategy.isGameOver(roomId);
+
+        gameStopResponseOptional
+                .ifPresent(gameStopResponse -> sendMessage("/room/" + roomId + "/game/start", gameStopResponse));
     }
 
     private void sendMessage(String destination, Object payload) {

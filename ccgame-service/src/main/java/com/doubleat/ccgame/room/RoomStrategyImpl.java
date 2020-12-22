@@ -4,12 +4,11 @@ import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.converter.RoomConverter;
 import com.doubleat.ccgame.dto.message.MoveMessage;
-import com.doubleat.ccgame.dto.response.GameDto;
+import com.doubleat.ccgame.dto.response.PlayingGameDto;
+import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.RoomDto;
-import com.doubleat.ccgame.game.Board;
 import com.doubleat.ccgame.game.Player;
 import com.doubleat.ccgame.game.PlayingGame;
-import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.utils.RoomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +67,7 @@ public class RoomStrategyImpl implements RoomStrategy {
     }
 
     @Override
-    public Optional<GameDto> startGame(int roomId) {
+    public Optional<PlayingGameDto> startGame(int roomId) {
         Room room = roomCache.getRoomById(roomId);
 
         int readyPlayers = RoomUtils.getReadyPlayers(room);
@@ -93,13 +91,13 @@ public class RoomStrategyImpl implements RoomStrategy {
 
             room.setPlayingGame(playingGame);
 
-            GameDto gameDto = GameDto.builder()
+            PlayingGameDto playingGameDto = PlayingGameDto.builder()
                     .boardStatus(playingGame.getBoardStatus())
                     .nextTurnUsername(redPlayer.getUsername())
                     .redPlayerUsername(playingGame.getRedPlayer().getUsername())
                     .build();
 
-            return Optional.of(gameDto);
+            return Optional.of(playingGameDto);
         }
 
         return Optional.empty();
@@ -123,7 +121,7 @@ public class RoomStrategyImpl implements RoomStrategy {
     }
 
     @Override
-    public GameDto handleMove(MoveMessage move, String username, Integer roomId) {
+    public PlayingGameDto handleMove(MoveMessage move, String username, Integer roomId) {
         Room room = roomCache.getRoomById(roomId);
 
         PlayingGame playingGame = room.getPlayingGame();
@@ -131,11 +129,23 @@ public class RoomStrategyImpl implements RoomStrategy {
 
         boolean isMoved = playingGame.doMove(playerMove, move.getMoveString());
 
-        return GameDto.builder()
+        return PlayingGameDto.builder()
                 .boardStatus(playingGame.getBoardStatus())
                 .isOver(playingGame.isOver())
                 .nextTurnUsername(playingGame.getNextTurnUsername())
                 .build();
+    }
+
+    @Override
+    public Optional<GameStopResponse> isGameOver(Integer roomId) {
+        Room room = roomCache.getRoomById(roomId);
+
+        if (room.isGameOver()) {
+            GameStopResponse gameStopResponse = new GameStopResponse();
+            gameStopResponse.setRedWin(room.isRedWin());
+            return Optional.of(gameStopResponse);
+        } else
+            return Optional.empty();
     }
 
 }

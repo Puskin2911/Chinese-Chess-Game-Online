@@ -2,7 +2,8 @@ package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.message.MoveMessage;
-import com.doubleat.ccgame.dto.response.GameDto;
+import com.doubleat.ccgame.dto.response.PlayingGameDto;
+import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.RoomDto;
 
 import java.util.Optional;
@@ -53,7 +54,7 @@ public interface RoomStrategy {
      *
      * @param roomId id of room, which need to start game.
      */
-    Optional<GameDto> startGame(int roomId);
+    Optional<PlayingGameDto> startGame(int roomId);
 
     /**
      * @return A available room.
@@ -67,6 +68,14 @@ public interface RoomStrategy {
      */
     void kickOutPlayer(UserDto userDto);
 
-    GameDto handleMove(MoveMessage move, String username, Integer roomId);
+    PlayingGameDto handleMove(MoveMessage move, String username, Integer roomId);
+
+    /**
+     * Check if game in a specific room is over or not.
+     *
+     * @param roomId id of room need to check.
+     * @return {@code Optional<GameStopResponse>} if game is over. Other wise, return {@code Optional.empty()}
+     */
+    Optional<GameStopResponse> isGameOver(Integer roomId);
 
 }

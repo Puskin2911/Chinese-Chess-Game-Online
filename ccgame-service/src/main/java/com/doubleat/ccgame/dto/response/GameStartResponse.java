@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @AllArgsConstructor
-public class StartGameResponse {
+public class GameStartResponse {
 
     @JsonProperty("redPlayerUsername")
     private String redPlayerUsername;

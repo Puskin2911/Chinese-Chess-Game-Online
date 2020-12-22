@@ -21,4 +21,12 @@ public class Room {
 
     private PlayingGame playingGame;
 
+    public boolean isGameOver() {
+        return playingGame.isOver();
+    }
+
+    public boolean isRedWin() {
+        return playingGame.isRedWin();
+    }
+
 }
