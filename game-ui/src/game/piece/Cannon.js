@@ -6,7 +6,7 @@ export default class Cannon extends Piece {
     }
 
     isValidMove(board, from, to) {
-        super.isValidMove(board, from, to);
+        return true;
     }
 
 }

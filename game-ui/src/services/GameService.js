@@ -3,7 +3,7 @@ import Board from "../game/Board";
 const resolveBoardStatus = (boardStatus, isRedPlayer) => {
     if (isRedPlayer) return boardStatus;
 
-    console.log("input resolveBoardStatus: " + boardStatus);
+    // console.log("input resolveBoardStatus: " + boardStatus);
     let res = "";
     const pieces = boardStatus.split("_");
 
@@ -20,7 +20,7 @@ const resolveBoardStatus = (boardStatus, isRedPlayer) => {
         if (i !== length - 1) res += "_";
     }
 
-    console.log("output resolveBoardStatus: " + res);
+    // console.log("output resolveBoardStatus: " + res);
 
     return res;
 }
@@ -37,9 +37,46 @@ const resolveMove = (move, isRedPlayer) => {
         + "_" + (Board.ROW - 1 - xTo) + (Board.COLUMN - 1 - yTo);
 }
 
+const isMyPiece = (color, isRedPlayer) => {
+    if (isRedPlayer) {
+        if (color === 'r') return true;
+    } else {
+        if (color === 'b') return true;
+    }
+
+    return false;
+}
+
+const getAvailableMovePosition = (pieceString, boardStatus) => {
+    const availableMovePosition = [];
+    const pieceObject = Board.convertPieceStringToObject(pieceString);
+
+    console.log("Piece Object:" + JSON.stringify(pieceObject));
+
+    const pieces = Board.convertToMatrix(boardStatus);
+
+    for (let i = 0; i < Board.ROW; i++) {
+        for (let j = 0; j < Board.COLUMN; j++) {
+            if (pieceObject.isValidMove(pieces, "", "")) {
+                const position = {
+                    centerX: i,
+                    centerY: j
+                }
+                availableMovePosition.push(position);
+                console.log("have new available position!");
+            }
+        }
+    }
+
+    console.log("Available before return: " + JSON.stringify(availableMovePosition));
+    return availableMovePosition;
+}
+
 const gameService = {
     resolveBoardStatus,
-    resolveMove
+    resolveMove,
+    isMyPiece,
+    getAvailableMovePosition
 }
 
 export default gameService;

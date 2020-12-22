@@ -21,6 +21,7 @@ export default class Board extends React.Component {
             boardStatus: undefined,
             movingPiece: "00000",
             clickingPosition: undefined,
+            availableMovePositions: [],
             isMyTurn: false
         }
     }
@@ -31,6 +32,7 @@ export default class Board extends React.Component {
         canvasService.clearBoard(canvas);
         canvasService.drawBlankBoard(ctx);
         canvasService.drawPieces(ctx, this.state.boardStatus);
+        canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
     }
 
     handleMove = (event) => {
@@ -63,10 +65,19 @@ export default class Board extends React.Component {
         }
 
         if (movingPiece === '00000') {
-            if (color !== '0') {
+            if (color !== '0' && gameService.isMyPiece(color, this.props.isRedPlayer)) {
+                // TODO : get available move position here;
+
+                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatus);
+
+                for (let i = 0; i < availableMovePositionToSave.length; i++) {
+                    console.log("available: " + JSON.stringify(availableMovePositionToSave[i]) + "\n");
+                }
+
                 this.setState({
                     movingPiece: piece,
-                    clickingPosition: clickingPosition
+                    clickingPosition: clickingPosition,
+                    availableMovePositions: availableMovePositionToSave
                 });
             }
         } else {
@@ -117,7 +128,8 @@ export default class Board extends React.Component {
             this.setState({
                 boardStatus: boardStatusToUpdate,
                 isMyTurn: isMyTurnToUpdate,
-                movingPiece: '00000'
+                movingPiece: '00000',
+                availableMovePositions: []
             });
         });
     }

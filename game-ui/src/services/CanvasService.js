@@ -85,11 +85,27 @@ const drawMovingPiece = (ctx, x, y) => {
     ctx.stroke();
 };
 
+const drawAvailableMovePosition = (ctx, availableMovePositions) => {
+    for (let i = 0; i < availableMovePositions.length; i++) {
+        const position = availableMovePositions[i];
+        const x = position.centerX;
+        const y = position.centerY;
+
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'red';
+
+        ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 3, 0, Math.PI * 2, true);
+        ctx.stroke();
+    }
+};
+
 const canvasService = {
     drawBlankBoard,
     drawPieces,
     clearBoard,
-    drawMovingPiece
+    drawMovingPiece,
+    drawAvailableMovePosition
 };
 
 export default canvasService;

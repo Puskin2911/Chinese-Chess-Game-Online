@@ -63,6 +63,13 @@ export default class Board {
         return boardStatus;
     }
 
+    static convertPieceStringToObject(piece) {
+        const isRed = piece.charAt(2) === "r";
+        const shortName = piece.slice(3, 5);
+
+        return this.getInstanceFromShortName(shortName, isRed);
+    }
+
     static getInstanceFromShortName(shortName, isRed) {
         switch (shortName) {
             case "ch": {
