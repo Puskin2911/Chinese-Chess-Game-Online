@@ -27,8 +27,8 @@ export default class Board {
         const piecesString = boardStatus.split("_");
 
         for (let i = 0; i < piecesString.length; i++) {
-            const x = piecesString[i].slice(0, 1);
-            const y = piecesString[i].slice(1, 2);
+            const x = piecesString[i].charAt(0);
+            const y = piecesString[i].charAt(1);
             const color = piecesString[i].slice(2, 3);
 
             if (color === '0') {

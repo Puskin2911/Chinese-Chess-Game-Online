@@ -71,7 +71,11 @@ export default class Board extends React.Component {
             if (color !== '0' && gameService.isMyPiece(color, this.props.isRedPlayer)) {
                 // TODO : get available move position here;
 
-                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatus);
+                let boardStatusToCheck = boardStatus;
+                if(!this.props.isRedPlayer){
+                    boardStatusToCheck = gameService.resolveBoardStatus(boardStatus, this.props.isRedPlayer);
+                }
+                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatusToCheck);
 
                 this.setState({
                     movingPiece: piece,
@@ -80,12 +84,11 @@ export default class Board extends React.Component {
                 });
             }
         } else {
-            let newBoardStatus;
-            newBoardStatus = boardStatus.replaceAll(movingPiece, movingPiece.substring(0, 2) + '000');
-            newBoardStatus = newBoardStatus.replaceAll(piece, piece.substring(0, 2) + movingPiece.substring(2));
+            if (!gameService.isValidMove(boardStatus, movingPiece, {x: xy.charAt(0), y: xy.charAt(1)})) {
+                return;
+            }
 
             // TODO: Handle asynchronous display
-
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
             move = gameService.resolveMove(move, this.props.isRedPlayer);
 
