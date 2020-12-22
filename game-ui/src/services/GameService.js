@@ -53,8 +53,6 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
         boardStatus = boardStatus.replaceAll("t", "b");
         pieceString = pieceString.replaceAll("b", "r");
     }
-    console.log(boardStatus);
-    console.log("pieceString", pieceString)
     const pieces = Board.convertToMatrix(boardStatus);
     const pieceObject = Board.convertPieceStringToObject(pieceString);
 
@@ -71,13 +69,10 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
             }
             if (pieceObject.isValidMove(pieces, from, to)) {
                 const position = {
-                    // centerX: isRedPlayer ? i : Board.ROW - 1 - i,
-                    // centerY: isRedPlayer ? j : Board.COLUMN - 1 - j
                     centerX: i,
                     centerY: j
                 }
                 availableMovePosition.push(position);
-                console.log("Have new available position: ", JSON.stringify(position));
             }
         }
     }

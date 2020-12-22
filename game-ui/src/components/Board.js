@@ -84,7 +84,8 @@ export default class Board extends React.Component {
         const movingPiece = this.state.movingPiece;
 
         // Find piece when user click on board
-        let index = boardStatus.indexOf(xy);
+        let index = boardStatus.indexOf("_" + xy);
+        index++;
         let color = boardStatus.charAt(index + 2);
         const piece = boardStatus.slice(index, index + 5);
 
@@ -94,6 +95,10 @@ export default class Board extends React.Component {
         }
 
         if (movingPiece == null) {
+            console.log(index);
+            console.log(boardStatus);
+            console.log(piece);
+            console.log("color:  ", color);
             if (color !== '0' && gameService.isMyPiece(color, isRedPlayer)) {
 
                 const availableMovePositionToSave = gameService
