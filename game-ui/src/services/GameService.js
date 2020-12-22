@@ -55,9 +55,18 @@ const getAvailableMovePosition = (pieceString, boardStatus) => {
 
     const pieces = Board.convertToMatrix(boardStatus);
 
+    const from = {
+        x: pieceString.charAt(0),
+        y: pieceString.charAt(1)
+    }
+
     for (let i = 0; i < Board.ROW; i++) {
         for (let j = 0; j < Board.COLUMN; j++) {
-            if (pieceObject.isValidMove(pieces, "", "")) {
+            const to = {
+                x: i + "",
+                y: j + ""
+            }
+            if (pieceObject.isValidMove(pieces, from, to)) {
                 const position = {
                     centerX: i,
                     centerY: j
@@ -84,12 +93,27 @@ const resolvePosition = (position, isRedPlayer) => {
     }
 }
 
+const isValidMove = (boardStatus, movingPiece, to) => {
+    const from = {
+        x: movingPiece.charAt(0),
+        y: movingPiece.charAt(1)
+    }
+
+    console.log(JSON.stringify(from));
+    console.log(JSON.stringify(to));
+
+    const pieceObject = Board.convertPieceStringToObject(movingPiece);
+
+    return pieceObject.isValidMove(Board.convertToMatrix(boardStatus), from, to);
+}
+
 const gameService = {
     resolveBoardStatus,
     resolveMove,
     resolvePosition,
     isMyPiece,
-    getAvailableMovePosition
+    getAvailableMovePosition,
+    isValidMove
 }
 
 export default gameService;
