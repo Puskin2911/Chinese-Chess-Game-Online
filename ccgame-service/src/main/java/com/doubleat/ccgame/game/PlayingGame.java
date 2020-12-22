@@ -102,7 +102,7 @@ public class PlayingGame {
 
         // Check game isOver
         Piece toPiece = pieces[to.getX()][to.getY()];
-        if (PieceUtils.isGeneral(toPiece)) {
+        if (toPiece != null && PieceUtils.isGeneral(toPiece)) {
             boolean isRedWin = !toPiece.isRed();
             this.endGame(isRedWin);
         }

@@ -22,6 +22,18 @@ const resolveBoardStatus = (boardStatus, isRedPlayer) => {
     return res;
 }
 
+const resolveMove = (move, isRedPlayer) => {
+    if (isRedPlayer) return move;
+
+    const xFrom = move.charAt(0);
+    const yForm = move.charAt(1);
+    const xTo = move.charAt(3);
+    const yTo = move.charAt(4);
+
+    return "" + (Board.ROW - 1 - xFrom) + (Board.COLUMN - 1 - yForm)
+        + "_" + (Board.ROW - 1 - xTo) + (Board.COLUMN - 1 - yTo);
+}
+
 const isMyPiece = (color, isRedPlayer) => {
     if (isRedPlayer) {
         if (color === 'r') return true;
@@ -32,11 +44,19 @@ const isMyPiece = (color, isRedPlayer) => {
     return false;
 }
 
-const getAvailableMovePosition = (pieceString, boardStatus) => {
+const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
     const availableMovePosition = [];
-    const pieceObject = Board.convertPieceStringToObject(pieceString);
 
+    if (!isRedPlayer) {
+        boardStatus = boardStatus.replaceAll("r", "t");
+        boardStatus = boardStatus.replaceAll("b", "r");
+        boardStatus = boardStatus.replaceAll("t", "b");
+        pieceString = pieceString.replaceAll("b", "r");
+    }
+    console.log(boardStatus);
+    console.log("pieceString", pieceString)
     const pieces = Board.convertToMatrix(boardStatus);
+    const pieceObject = Board.convertPieceStringToObject(pieceString);
 
     const from = {
         x: pieceString.charAt(0),
@@ -51,27 +71,32 @@ const getAvailableMovePosition = (pieceString, boardStatus) => {
             }
             if (pieceObject.isValidMove(pieces, from, to)) {
                 const position = {
+                    // centerX: isRedPlayer ? i : Board.ROW - 1 - i,
+                    // centerY: isRedPlayer ? j : Board.COLUMN - 1 - j
                     centerX: i,
                     centerY: j
                 }
                 availableMovePosition.push(position);
-                console.log("have new available position!");
+                console.log("Have new available position: ", JSON.stringify(position));
             }
         }
     }
 
-    console.log("Available before return: " + JSON.stringify(availableMovePosition));
     return availableMovePosition;
 }
 
-const isValidMove = (boardStatus, movingPiece, to) => {
+const isValidMove = (boardStatus, movingPiece, to, isRedPlayer) => {
     const from = {
         x: movingPiece.charAt(0),
         y: movingPiece.charAt(1)
     }
 
-    console.log(JSON.stringify(from));
-    console.log(JSON.stringify(to));
+    if (!isRedPlayer) {
+        boardStatus = boardStatus.replaceAll("r", "t");
+        boardStatus = boardStatus.replaceAll("b", "r");
+        boardStatus = boardStatus.replaceAll("t", "b");
+        movingPiece = movingPiece.replaceAll("b", "r");
+    }
 
     const pieceObject = Board.convertPieceStringToObject(movingPiece);
 
@@ -80,6 +105,7 @@ const isValidMove = (boardStatus, movingPiece, to) => {
 
 const gameService = {
     isMyPiece,
+    resolveMove,
     getAvailableMovePosition,
     resolveBoardStatus,
     isValidMove

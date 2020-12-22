@@ -1,6 +1,6 @@
 import React from "react";
 import Position from "../utils/Position";
-import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
+import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE} from "../constants/BoardConstants";
 import canvasService from "../services/CanvasService";
 import gameService from "../services/GameService";
 
@@ -19,21 +19,48 @@ export default class Board extends React.Component {
 
         this.state = {
             boardStatus: null,
-            movingPiece: "00000",
-            clickingPosition: null,
+            movingPiece: null,
+            clickingPiece: null,
+            fromPiece: null,
+            toPiece: null,
             availableMovePositions: [],
             isMyTurn: false
         }
     }
 
     drawBoard = () => {
+        const isRedPlayer = this.props.isRedPlayer;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         canvasService.clearBoard(canvas);
         canvasService.drawBlankBoard(ctx);
-        canvasService.drawPieces(ctx, this.state.boardStatus, this.props.isRedPlayer);
+        canvasService.drawPieces(ctx, this.state.boardStatus, isRedPlayer);
         canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
-        canvasService.drawMovingPiece(ctx, this.state.clickingPosition);
+        canvasService.drawPieceBorder(ctx, this.state.clickingPiece, true);
+        canvasService.drawPieceBorder(ctx, this.state.toPiece, isRedPlayer);
+        canvasService.drawFromPiece(ctx, this.state.fromPiece, isRedPlayer);
+    }
+
+    handleCancelMove = () => {
+        this.setState({
+            movingPiece: null,
+            clickingPiece: null,
+            availableMovePositions: []
+        });
+    }
+
+    handleCacheFromAndToPiece = (moved) => {
+        if (moved == null) return;
+        this.setState({
+            fromPiece: {
+                centerX: moved.charAt(0),
+                centerY: moved.charAt(1)
+            },
+            toPiece: {
+                centerX: moved.charAt(3),
+                centerY: moved.charAt(4)
+            }
+        });
     }
 
     handleMove = (event) => {
@@ -52,7 +79,8 @@ export default class Board extends React.Component {
 
         if (xy === '-1') return;
 
-        const boardStatus = this.state.boardStatus;
+        const isRedPlayer = this.props.isRedPlayer;
+        const boardStatus = gameService.resolveBoardStatus(this.state.boardStatus, isRedPlayer);
         const movingPiece = this.state.movingPiece;
 
         // Find piece when user click on board
@@ -60,29 +88,40 @@ export default class Board extends React.Component {
         let color = boardStatus.charAt(index + 2);
         const piece = boardStatus.slice(index, index + 5);
 
-        const clickingPosition = {
+        const clickingPiece = {
             centerX: xy.charAt(0),
             centerY: xy.charAt(1)
         }
 
-        if (movingPiece === '00000') {
-            if (color !== '0' && gameService.isMyPiece(color, this.props.isRedPlayer)) {
-                // TODO : get available move position here;
-                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatus);
+        if (movingPiece == null) {
+            if (color !== '0' && gameService.isMyPiece(color, isRedPlayer)) {
+
+                const availableMovePositionToSave = gameService
+                    .getAvailableMovePosition(piece, boardStatus, isRedPlayer);
 
                 this.setState({
                     movingPiece: piece,
-                    clickingPosition: clickingPosition,
+                    clickingPiece: clickingPiece,
+                    fromPiece: null,
+                    toPiece: null,
                     availableMovePositions: availableMovePositionToSave
                 });
             }
         } else {
-            if (!gameService.isValidMove(boardStatus, movingPiece, {x: xy.charAt(0), y: xy.charAt(1)})) {
+            if (piece === movingPiece) {
+                this.handleCancelMove();
+                return;
+            }
+
+            if (!gameService.isValidMove(boardStatus, movingPiece, {x: xy.charAt(0), y: xy.charAt(1)}, isRedPlayer)) {
                 return;
             }
 
             // TODO: Handle asynchronous display
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
+
+
+            move = gameService.resolveMove(move, isRedPlayer);
 
             // Send message to server.
             this.stompClient.send("/app/room/" + this.roomId + "/move", {}, JSON.stringify({
@@ -93,10 +132,6 @@ export default class Board extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log("Starting componentDidUpdate ...");
-        const canvas = this.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-
         if (this.state.boardStatus !== null) {
             console.log("DRAW BOARD!!!!");
             this.drawBoard();
@@ -104,23 +139,16 @@ export default class Board extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Starting componentDidMount ...");
-
         this.subscription = this.stompClient.subscribe("/room/" + this.roomId + "/move", (payload) => {
             const gameDto = JSON.parse(payload.body);
-            console.log("receive payload from Board: " + gameDto);
-
             const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
-            let clickingPositionToUpdate = {
-                centerX: this.state.movingPiece.charAt(0),
-                centerY: this.state.movingPiece.charAt(1)
-            }
+            this.handleCacheFromAndToPiece(gameDto.moved);
 
             this.setState({
                 boardStatus: gameDto.boardStatus,
                 isMyTurn: isMyTurnToUpdate,
-                clickingPosition: clickingPositionToUpdate,
-                movingPiece: '00000',
+                clickingPiece: null,
+                movingPiece: null,
                 availableMovePositions: []
             });
         });
@@ -133,7 +161,6 @@ export default class Board extends React.Component {
     }
 
     render() {
-        console.log("Before rendering in Board ...");
         return (
             <div className="col-6">
                 <canvas ref={this.canvasRef}

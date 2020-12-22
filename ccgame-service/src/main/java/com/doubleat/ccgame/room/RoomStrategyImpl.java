@@ -131,8 +131,8 @@ public class RoomStrategyImpl implements RoomStrategy {
 
         return PlayingGameDto.builder()
                 .boardStatus(playingGame.getBoardStatus())
-                .isOver(playingGame.isOver())
                 .nextTurnUsername(playingGame.getNextTurnUsername())
+                .redPlayerUsername(playingGame.getRedPlayer().getUsername())
                 .build();
     }
 

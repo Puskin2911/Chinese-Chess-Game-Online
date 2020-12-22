@@ -44,12 +44,13 @@ public class StompServiceImpl implements StompService {
     @Override
     public void handleMove(MoveMessage move, String username, Integer roomId) {
         PlayingGameDto playingGameDto = roomStrategy.handleMove(move, username, roomId);
+        playingGameDto.setMoved(move.getMoveString());
         sendMessage("/room/" + roomId + "/move", playingGameDto);
 
         Optional<GameStopResponse> gameStopResponseOptional = roomStrategy.isGameOver(roomId);
 
         gameStopResponseOptional
-                .ifPresent(gameStopResponse -> sendMessage("/room/" + roomId + "/game/start", gameStopResponse));
+                .ifPresent(gameStopResponse -> sendMessage("/room/" + roomId + "/game/stop", gameStopResponse));
     }
 
     private void sendMessage(String destination, Object payload) {

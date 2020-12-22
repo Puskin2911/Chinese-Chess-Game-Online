@@ -11,13 +11,13 @@ public class PlayingGameDto {
     @JsonProperty("boardStatus")
     private String boardStatus;
 
-    @JsonProperty("isOver")
-    private boolean isOver;
-
     @JsonProperty("nextTurnUsername")
     private String nextTurnUsername;
 
     @JsonProperty("redPlayerUsername")
     private String redPlayerUsername;
+
+    @JsonProperty("moved")
+    private String moved;
 
 }

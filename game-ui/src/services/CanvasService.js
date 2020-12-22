@@ -1,6 +1,7 @@
-import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
+import {CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
 import gameService from "./GameService";
+import Board from "../game/Board";
 
 const drawBlankBoard = (ctx) => {
     // Horizontal
@@ -64,10 +65,12 @@ const clearBoard = canvas => {
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 };
 
-const drawMovingPiece = (ctx, clickingPosition) => {
-    if (clickingPosition === null) return;
-    const y = clickingPosition.centerX * (CELL_SIZE + 1) + 1;
-    const x = clickingPosition.centerY * (CELL_SIZE + 1) + 1;
+const drawPieceBorder = (ctx, clickingPosition, isRedPlayer) => {
+    if (clickingPosition == null) return;
+    const centerX = isRedPlayer ? clickingPosition.centerX : Board.ROW - 1 - clickingPosition.centerX;
+    const centerY = isRedPlayer ? clickingPosition.centerY : Board.COLUMN - 1 - clickingPosition.centerY;
+    const y = centerX * (CELL_SIZE + 1) + 1;
+    const x = centerY * (CELL_SIZE + 1) + 1;
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'green';
@@ -101,19 +104,34 @@ const drawAvailableMovePosition = (ctx, availableMovePositions) => {
         const y = position.centerY;
 
         ctx.beginPath();
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 4;
         ctx.strokeStyle = 'red';
 
-        ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 3, 0, Math.PI * 2, true);
+        ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 5, 0, Math.PI * 2, true);
         ctx.stroke();
     }
 };
+
+const drawFromPiece = (ctx, fromPosition, isRedPlayer) => {
+    if (fromPosition == null) return;
+
+    const x = isRedPlayer ? fromPosition.centerX : Board.ROW - 1 - fromPosition.centerX;
+    const y = isRedPlayer ? fromPosition.centerY : Board.COLUMN - 1 - fromPosition.centerY;
+
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'red';
+
+    ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 10, 0, Math.PI * 2, true);
+    ctx.stroke();
+}
 
 const canvasService = {
     drawBlankBoard,
     drawPieces,
     clearBoard,
-    drawMovingPiece,
+    drawPieceBorder,
+    drawFromPiece,
     drawAvailableMovePosition
 };
 
