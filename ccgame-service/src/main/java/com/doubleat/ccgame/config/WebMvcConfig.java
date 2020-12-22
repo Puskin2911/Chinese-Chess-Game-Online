@@ -12,7 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final String[] allowedOrigins = { "https://localhost:3000",
             "http://localhost:3000",
             "https://v1-0-dev.daslc0bv0s0j5.amplifyapp.com",
-            "http://v1-0-dev.daslc0bv0s0j5.amplifyapp.com" };
+            "http://v1-0-dev.daslc0bv0s0j5.amplifyapp.com",
+            "https://10.10.1.105:3000"};
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
