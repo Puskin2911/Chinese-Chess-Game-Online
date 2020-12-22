@@ -1,8 +1,6 @@
 package com.doubleat.ccgame.controller;
 
-import com.doubleat.ccgame.dto.message.ChatMessage;
-import com.doubleat.ccgame.dto.message.MoveMessage;
-import com.doubleat.ccgame.dto.message.ReadyMessage;
+import com.doubleat.ccgame.dto.message.*;
 import com.doubleat.ccgame.service.StompService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +48,15 @@ public class CommunicateController {
         logger.info("Receive a ReadyMessage from client!, {}", message.toString());
 
         stompService.handlePlayerReady(message, roomId, principal.getName());
+    }
+
+    @MessageMapping("/room/{roomId}/game/draw/request")
+    @SendTo("/room/{roomId}/game/draw/request")
+    public DrawRequest handleDrawRequest(Principal principal) {
+        DrawRequest drawRequest = new DrawRequest();
+        drawRequest.setUsername(principal.getName());
+
+        return drawRequest;
     }
 
 }
