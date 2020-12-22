@@ -72,9 +72,22 @@ const getAvailableMovePosition = (pieceString, boardStatus) => {
     return availableMovePosition;
 }
 
+const resolvePosition = (position, isRedPlayer) => {
+    if (isRedPlayer) return position;
+
+    const newX = Board.ROW - 1 - position.centerX;
+    const newY = Board.COLUMN - 1 - position.centerY;
+
+    return {
+        centerX: newX,
+        centerY: newY
+    }
+}
+
 const gameService = {
     resolveBoardStatus,
     resolveMove,
+    resolvePosition,
     isMyPiece,
     getAvailableMovePosition
 }

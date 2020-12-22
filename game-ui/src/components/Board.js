@@ -13,14 +13,14 @@ export default class Board extends React.Component {
         this.roomId = this.room.id;
         this.user = props.user;
         this.stompClient = props.stompClient;
-        this.subscription = undefined;
+        this.subscription = null;
 
         this.canvasRef = React.createRef();
 
         this.state = {
-            boardStatus: undefined,
+            boardStatus: null,
             movingPiece: "00000",
-            clickingPosition: undefined,
+            clickingPosition: null,
             availableMovePositions: [],
             isMyTurn: false
         }
@@ -33,6 +33,7 @@ export default class Board extends React.Component {
         canvasService.drawBlankBoard(ctx);
         canvasService.drawPieces(ctx, this.state.boardStatus);
         canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
+        canvasService.drawMovingPiece(ctx, this.state.clickingPosition);
     }
 
     handleMove = (event) => {
@@ -60,19 +61,17 @@ export default class Board extends React.Component {
         const piece = boardStatus.slice(index, index + 5);
 
         const clickingPosition = {
-            centerX: xy.slice(1) * (CELL_SIZE + 1) + 1,
-            centerY: xy.slice(0, 1) * (CELL_SIZE + 1) + 1
+            centerX: xy.charAt(0),
+            centerY: xy.charAt(1)
         }
+
+        console.log(JSON.stringify(clickingPosition));
 
         if (movingPiece === '00000') {
             if (color !== '0' && gameService.isMyPiece(color, this.props.isRedPlayer)) {
                 // TODO : get available move position here;
 
                 const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatus);
-
-                for (let i = 0; i < availableMovePositionToSave.length; i++) {
-                    console.log("available: " + JSON.stringify(availableMovePositionToSave[i]) + "\n");
-                }
 
                 this.setState({
                     movingPiece: piece,
@@ -103,14 +102,9 @@ export default class Board extends React.Component {
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
 
-        if (this.state.boardStatus !== undefined) {
+        if (this.state.boardStatus !== null) {
             console.log("DRAW BOARD!!!!");
             this.drawBoard();
-        }
-
-        const clickingPosition = this.state.clickingPosition
-        if (this.state.clickingPosition !== undefined) {
-            canvasService.drawMovingPiece(ctx, clickingPosition.centerX, clickingPosition.centerY);
         }
     }
 
@@ -122,12 +116,17 @@ export default class Board extends React.Component {
             console.log("receive payload from Board: " + gameDto);
 
             const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
-
             const boardStatusToUpdate = gameService.resolveBoardStatus(gameDto.boardStatus, this.props.isRedPlayer);
+            let clickingPositionToUpdate = {
+                centerX: this.state.movingPiece.charAt(0),
+                centerY: this.state.movingPiece.charAt(1)
+            }
+            // clickingPositionToUpdate = gameService.resolvePosition(clickingPositionToUpdate, this.props.isRedPlayer);
 
             this.setState({
                 boardStatus: boardStatusToUpdate,
                 isMyTurn: isMyTurnToUpdate,
+                clickingPosition: clickingPositionToUpdate,
                 movingPiece: '00000',
                 availableMovePositions: []
             });
