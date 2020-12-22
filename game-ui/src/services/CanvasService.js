@@ -1,5 +1,6 @@
-import {CELL_SIZE} from "../constants/BoardConstants";
+import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
+import gameService from "./GameService";
 
 const drawBlankBoard = (ctx) => {
     // Horizontal
@@ -40,8 +41,13 @@ const drawBlankBoard = (ctx) => {
     ctx.stroke();
 };
 
-const drawPieces = (ctx, boardStatus) => {
-    const piecesOnBoard = boardStatus.split("_");
+const drawPieces = (ctx, boardStatus, isRedPlayer) => {
+    let resolvedBoardStatus = boardStatus;
+    if (!isRedPlayer) {
+        resolvedBoardStatus = gameService.resolveBoardStatus(boardStatus, isRedPlayer);
+    }
+
+    const piecesOnBoard = resolvedBoardStatus.split("_");
     for (let [key, value] of imagePieceMap) {
         for (const piece of piecesOnBoard) {
             if (key === piece.slice(2)) {

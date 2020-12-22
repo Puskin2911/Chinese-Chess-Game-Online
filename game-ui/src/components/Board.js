@@ -31,7 +31,7 @@ export default class Board extends React.Component {
         const ctx = canvas.getContext('2d');
         canvasService.clearBoard(canvas);
         canvasService.drawBlankBoard(ctx);
-        canvasService.drawPieces(ctx, this.state.boardStatus);
+        canvasService.drawPieces(ctx, this.state.boardStatus, this.props.isRedPlayer);
         canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
         canvasService.drawMovingPiece(ctx, this.state.clickingPosition);
     }
@@ -65,17 +65,10 @@ export default class Board extends React.Component {
             centerY: xy.charAt(1)
         }
 
-        console.log(JSON.stringify(clickingPosition));
-
         if (movingPiece === '00000') {
             if (color !== '0' && gameService.isMyPiece(color, this.props.isRedPlayer)) {
                 // TODO : get available move position here;
-
-                let boardStatusToCheck = boardStatus;
-                if(!this.props.isRedPlayer){
-                    boardStatusToCheck = gameService.resolveBoardStatus(boardStatus, this.props.isRedPlayer);
-                }
-                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatusToCheck);
+                const availableMovePositionToSave = gameService.getAvailableMovePosition(piece, boardStatus);
 
                 this.setState({
                     movingPiece: piece,
@@ -90,7 +83,6 @@ export default class Board extends React.Component {
 
             // TODO: Handle asynchronous display
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
-            move = gameService.resolveMove(move, this.props.isRedPlayer);
 
             // Send message to server.
             this.stompClient.send("/app/room/" + this.roomId + "/move", {}, JSON.stringify({
@@ -119,15 +111,13 @@ export default class Board extends React.Component {
             console.log("receive payload from Board: " + gameDto);
 
             const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
-            const boardStatusToUpdate = gameService.resolveBoardStatus(gameDto.boardStatus, this.props.isRedPlayer);
             let clickingPositionToUpdate = {
                 centerX: this.state.movingPiece.charAt(0),
                 centerY: this.state.movingPiece.charAt(1)
             }
-            // clickingPositionToUpdate = gameService.resolvePosition(clickingPositionToUpdate, this.props.isRedPlayer);
 
             this.setState({
-                boardStatus: boardStatusToUpdate,
+                boardStatus: gameDto.boardStatus,
                 isMyTurn: isMyTurnToUpdate,
                 clickingPosition: clickingPositionToUpdate,
                 movingPiece: '00000',
