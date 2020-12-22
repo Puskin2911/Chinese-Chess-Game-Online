@@ -1,5 +1,6 @@
 import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../common/ImagePieceLoader";
+import gameService from "./GameService";
 
 const drawBlankBoard = (ctx) => {
     // Horizontal
@@ -41,13 +42,12 @@ const drawBlankBoard = (ctx) => {
 };
 
 const drawPieces = (ctx, boardStatus, isRedPlayer) => {
-    ctx.save();
+    let resolvedBoardStatus = boardStatus;
     if (!isRedPlayer) {
-        ctx.translate(BOARD_WIDTH_SIZE, BOARD_HEIGHT_SIZE);
-        ctx.rotate((Math.PI / 180) * 180);
+        resolvedBoardStatus = gameService.resolveBoardStatus(boardStatus, isRedPlayer);
     }
 
-    const piecesOnBoard = boardStatus.split("_");
+    const piecesOnBoard = resolvedBoardStatus.split("_");
     for (let [key, value] of imagePieceMap) {
         for (const piece of piecesOnBoard) {
             if (key === piece.slice(2)) {
@@ -57,7 +57,6 @@ const drawPieces = (ctx, boardStatus, isRedPlayer) => {
             }
         }
     }
-    ctx.restore();
 };
 
 const clearBoard = canvas => {
