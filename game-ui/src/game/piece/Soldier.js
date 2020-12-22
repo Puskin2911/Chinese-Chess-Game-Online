@@ -6,29 +6,35 @@ export default class Soldier extends Piece {
     }
 
     isValidMove(board, from, to) {
-        const xFrom = from.x;
-        const yFrom = from.y;
-        const xTo = to.x;
-        const yTo = to.y;
+        const xFrom = from.x + "";
+        const yFrom = from.y + "";
+        const xTo = to.x + "";
+        const yTo = to.y + "";
+
+        const pieceAtTo = board[xTo][yTo];
 
         if (this.isRed) {
-            // In home (not pass river)
-            if (xFrom >= 5) {
-                return (yFrom == yTo && xFrom - xTo === 1);
+            // Go straight
+            if (yFrom === yTo && xFrom - xTo === 1) {
+                // Just move
+                if (pieceAtTo == null) return true;
+                // Fight (eat piece).
+                return pieceAtTo.isRed !== this.isRed;
             }
-            // Pass river
-            else {
-                return (yFrom == yTo && xFrom - xTo === 1) || (xFrom == xTo && Math.abs(yFrom - yTo) === 1);
-            }
+
+            // Pass river and go side
+            return xFrom === xTo && Math.abs(yFrom - yTo) === 1 && xFrom <= 4;
         } else {
-            // In home
-            if (xFrom <= 4) {
-                return (yFrom == yTo && xFrom - xTo === -1);
+            // Go straight
+            if (yFrom === yTo && xFrom - xTo === -1) {
+                // Just move
+                if (pieceAtTo == null) return true;
+                // Fight (eat piece).
+                return pieceAtTo.isRed !== this.isRed;
             }
-            // Not pass river
-            else {
-                return (yFrom == yTo && xFrom - xTo === -1) || (xFrom === xTo && Math.abs(yFrom - yTo) === 1);
-            }
+
+            // Pass river and go side
+            return xFrom === xTo && Math.abs(yFrom - yTo) === 1 && xFrom >= 5;
         }
     }
 
