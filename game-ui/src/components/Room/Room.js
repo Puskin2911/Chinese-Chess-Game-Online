@@ -1,65 +1,83 @@
 import React from "react";
 import Board from "../Board";
-import Chat from "../Chat/Chat";
+import RightBoard from "../Chat/RightBoard";
 import ApiConstants from "../../constants/ApiConstant";
-import RoomInfo from "./RoomInfo";
+import LeftBoard from "./LeftBoard";
 import SockJs from "sockjs-client";
 import Stomp from "stompjs";
 import LoadingIndicator from "../../common/LoadingIndicator";
 
-export default function Room(props) {
-    const room = props.room;
-    const roomId = room.id;
-    const user = props.user;
-    const handleLeaveRoom = props.handleLeaveRoom;
+export default class Room extends React.Component {
+    constructor(props) {
+        super(props);
 
-    const [isSocketConnected, setSocketConnected] = React.useState(false);
-    const [isGameStarted, setGameStarted] = React.useState(false);
-    const [isRedPlayer, setRedPlayer] = React.useState(false);
+        this.handleLeaveRoom = props.handleLeaveRoom;
+        this.ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
+        this.stompClient = Stomp.over(this.ws);
 
-    const ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
-    const [stompClient] = React.useState(Stomp.over(ws));
+        this.state = {
+            isSocketConnected: false,
+            isGameStarted: false,
+            isRedPlayer: false,
+        }
+    }
 
-    React.useEffect(() => {
+    componentDidMount() {
+        document.title = "Chinese Chess Game | Room";
+
+        const roomId = this.props.room.id;
+        const user = this.props.user;
+        const stompClient = this.stompClient;
         stompClient.connect({}, () => {
-            setSocketConnected(true);
+            this.setState({
+                isSocketConnected: true
+            });
 
             stompClient.subscribe("/room/" + roomId, (payload) => {
                 console.log("Receive payload from Room: " + payload.body);
             });
 
             stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
-                console.log("READYYYYYY: " + JSON.parse(payload.body).isReady);
+                console.log("READY: " + JSON.parse(payload.body));
             });
 
             stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
                 console.log("From Room receive signal start game!");
                 const gameStart = JSON.parse(payload.body);
-                setGameStarted(true);
-                setRedPlayer(gameStart.redPlayerUsername === user.username);
+
+                this.setState({
+                    isGameStarted: true,
+                    isRedPlayer: gameStart.redPlayerUsername === user.username
+                });
             });
         });
+    }
 
-        return () => {
-            stompClient.disconnect(() => {
-            });
-        };
-    }, []);
+    componentWillUnmount() {
+        this.stompClient.disconnect(() => {
 
-    if (!isSocketConnected) return <LoadingIndicator/>;
+        });
+    }
 
-    return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <RoomInfo room={room} user={user}
-                          stompClient={stompClient}
-                          handleLeaveRoom={handleLeaveRoom}/>
-                <Board room={room} user={user} stompClient={stompClient}
-                       isRedPlayer={isRedPlayer}/>
-                <Chat username={user.username} room={room}
-                      stompClient={stompClient}/>
+
+    render() {
+        if (!this.state.isSocketConnected) return <LoadingIndicator/>;
+
+        const room = this.props.room;
+        const user = this.props.user;
+        return (
+            <div className="container-fluid vh-100">
+                <div className="row justify-content-center">
+                    <LeftBoard room={room} user={user} isGameStarted={this.state.isGameStarted}
+                               stompClient={this.stompClient}
+                               handleLeaveRoom={this.handleLeaveRoom}/>
+                    <Board room={room} user={user} stompClient={this.stompClient}
+                           isRedPlayer={this.state.isRedPlayer}/>
+                    <RightBoard user={user} room={room}
+                                stompClient={this.stompClient}/>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 
 }

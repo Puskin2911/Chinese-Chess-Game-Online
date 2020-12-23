@@ -4,7 +4,6 @@ import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
 export default function Game(props) {
-
     const [room, setRoom] = React.useState(null);
 
     const handleJoinRoom = () => {
@@ -33,7 +32,7 @@ export default function Game(props) {
     return (
         <div>
             {room == null
-                ? <Lobby handleJoinRoom={handleJoinRoom}/>
+                ? <Lobby user={props.user} handleJoinRoom={handleJoinRoom}/>
                 : <Room room={room} user={props.user} handleLeaveRoom={handleLeaveRoom}/>
             }
         </div>

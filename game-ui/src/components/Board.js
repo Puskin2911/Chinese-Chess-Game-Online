@@ -167,7 +167,7 @@ export default class Board extends React.Component {
 
     render() {
         return (
-            <div className="col-6">
+            <div className="col-md-8 col-lg-5 mt-4 text-center">
                 <canvas ref={this.canvasRef}
                         className="border border-success"
                         width={BOARD_WIDTH_SIZE}

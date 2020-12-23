@@ -1,6 +1,5 @@
-body {
-    background-image: url("https://image.winudf.com/v2/image/Y29tLkxpdmVXYWxscGFwZXJzVUEuYXBwMDUwMl9zY3JlZW5fMV9mODB5YnJvOA/screen-1.jpg?fakeurl=1&type=.jpg");
-    background-position: center top;
+#root {
+    background-image: url("assets/images/peach-bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -9,6 +8,10 @@ body {
     width: 40%;
 }
 
-#root {
-    height: 100vh;
+.mh-200px {
+    max-height: 200px;
+}
+
+.h-200px {
+    height: 200px;
 }
