@@ -71,8 +71,6 @@ export default class Board extends React.Component {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        console.log('x: ' + x + '\ny: ' + y);
-
         const position = new Position(x, y);
         const xy = position.getXY();
         console.log(xy);
