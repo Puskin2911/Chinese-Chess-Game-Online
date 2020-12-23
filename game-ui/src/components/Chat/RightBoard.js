@@ -10,7 +10,7 @@ export default function Chat(props) {
 
     console.log("Before rendering in Chat...")
     return (
-        <div className="col-3 border border-danger bg-white">
+        <div className="col-2 mt-4 border border-danger bg-white">
             <SendMessage room={room} username={username} stompClient={stompClient}/>
             <ChatBox roomId={roomId} stompClient={stompClient}/>
         </div>
