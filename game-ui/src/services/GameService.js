@@ -75,21 +75,7 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
                 mockBoardStatus = gameService.resolveBoardStatus(mockBoardStatus, false);
                 const myGeneral = findMyGeneral(mockBoardStatus, isRedPlayer);
 
-                for (let k = 0; k < Board.ROW; k++) {
-                    for (let h = 0; h < Board.COLUMN; h++) {
-                        const mockFrom = {
-                            x: k + "",
-                            y: h + ""
-                        }
-                        if (mockPieces[k][h] != null && mockPieces[k][h].isValidMove(mockPieces, mockFrom, mockTo)) {
-                            isAvailable = false;
-                            break;
-                        }
-                    }
-                    if (isAvailable === false) break;
-                }
-
-                if (isAvailable) {
+                if (!isAbleDead(myGeneral, mockBoardStatus, isRedPlayer)) {
                     const position = {
                         centerX: i,
                         centerY: j
