@@ -71,8 +71,6 @@ export default class Board extends React.Component {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        console.log('x: ' + x + '\ny: ' + y);
-
         const position = new Position(x, y);
         const xy = position.getXY();
         console.log(xy);
@@ -95,10 +93,6 @@ export default class Board extends React.Component {
         }
 
         if (movingPiece == null) {
-            console.log(index);
-            console.log(boardStatus);
-            console.log(piece);
-            console.log("color:  ", color);
             if (color !== '0' && gameService.isMyPiece(color, isRedPlayer)) {
 
                 const availableMovePositionToSave = gameService
@@ -118,9 +112,16 @@ export default class Board extends React.Component {
                 return;
             }
 
-            if (!gameService.isValidMove(boardStatus, movingPiece, {x: xy.charAt(0), y: xy.charAt(1)}, isRedPlayer)) {
-                return;
+            let isAbleMove = false;
+            const ableMoves = this.state.availableMovePositions;
+            for (let i = 0; i < ableMoves.length; i++) {
+                const ableMove = ableMoves[i];
+                if (ableMove.centerX + "" + ableMove.centerY === "" + xy) {
+                    isAbleMove = true;
+                    break;
+                }
             }
+            if (!isAbleMove) return;
 
             // TODO: Handle asynchronous display
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
@@ -138,7 +139,6 @@ export default class Board extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.boardStatus !== null) {
-            console.log("DRAW BOARD!!!!");
             this.drawBoard();
         }
     }
