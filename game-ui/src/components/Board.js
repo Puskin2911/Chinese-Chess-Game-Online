@@ -112,9 +112,16 @@ export default class Board extends React.Component {
                 return;
             }
 
-            if (!gameService.isValidMove(boardStatus, movingPiece, {x: xy.charAt(0), y: xy.charAt(1)}, isRedPlayer)) {
-                return;
+            let isAbleMove = false;
+            const ableMoves = this.state.availableMovePositions;
+            for (let i = 0; i < ableMoves.length; i++) {
+                const ableMove = ableMoves[i];
+                if (ableMove.centerX + "" + ableMove.centerY === "" + xy) {
+                    isAbleMove = true;
+                    break;
+                }
             }
+            if (!isAbleMove) return;
 
             // TODO: Handle asynchronous display
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
