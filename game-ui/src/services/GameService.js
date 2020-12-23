@@ -47,18 +47,21 @@ const isMyPiece = (color, isRedPlayer) => {
 const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
     const availableMovePosition = [];
 
+    let resolveBoardStatus = boardStatus;
+    let resolvePieceString = pieceString;
+
     if (!isRedPlayer) {
-        boardStatus = boardStatus.replaceAll("r", "t");
-        boardStatus = boardStatus.replaceAll("b", "r");
-        boardStatus = boardStatus.replaceAll("t", "b");
-        pieceString = pieceString.replaceAll("b", "r");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("r", "t");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("b", "r");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("t", "b");
+        resolvePieceString = resolvePieceString.replaceAll("b", "r");
     }
-    const pieces = Board.convertToMatrix(boardStatus);
-    const pieceObject = Board.convertPieceStringToObject(pieceString);
+    const resolvePieces = Board.convertToMatrix(resolveBoardStatus);
+    const resolvePieceObject = Board.convertPieceStringToObject(resolvePieceString);
 
     const from = {
-        x: pieceString.charAt(0),
-        y: pieceString.charAt(1)
+        x: resolvePieceString.charAt(0),
+        y: resolvePieceString.charAt(1)
     }
 
     for (let i = 0; i < Board.ROW; i++) {
@@ -67,17 +70,62 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
                 x: i + "",
                 y: j + ""
             }
-            if (pieceObject.isValidMove(pieces, from, to)) {
-                const position = {
-                    centerX: i,
-                    centerY: j
+            if (resolvePieceObject.isValidMove(resolvePieces, from, to)) {
+                let mockBoardStatus = doMove(boardStatus, from, to);
+                mockBoardStatus = gameService.resolveBoardStatus(mockBoardStatus, false);
+                const myGeneral = findMyGeneral(mockBoardStatus, isRedPlayer);
+
+                if (!isAbleDead(myGeneral, mockBoardStatus, isRedPlayer)) {
+                    const position = {
+                        centerX: i,
+                        centerY: j
+                    }
+                    availableMovePosition.push(position);
                 }
-                availableMovePosition.push(position);
             }
         }
     }
 
     return availableMovePosition;
+}
+
+const doMove = (boardStatus, from, to) => {
+    const indexFrom = boardStatus.indexOf("_" + from.x + "" + from.y) + 1;
+    const indexTo = boardStatus.indexOf("_" + to.x + "" + to.y) + 1;
+    const fromPiece = boardStatus.slice(indexFrom, indexFrom + 5);
+    const toPiece = boardStatus.slice(indexTo, indexTo + 5);
+    boardStatus = boardStatus.replace(fromPiece, from.x + "" + from.y + "000");
+    boardStatus = boardStatus.replace(toPiece, to.x + "" + to.y + fromPiece.slice(2));
+
+    return boardStatus;
+}
+
+const isAbleDead = (pieceString, boardStatus) => {
+    const pieces = Board.convertToMatrix(boardStatus);
+
+    const to = {
+        x: pieceString.charAt(0),
+        y: pieceString.charAt(1)
+    }
+
+    for (let i = 0; i < Board.ROW; i++) {
+        for (let j = 0; j < Board.COLUMN; j++) {
+            const from = {
+                x: i + "",
+                y: j + ""
+            }
+            if (pieces[i][j] != null && pieces[i][j].isValidMove(pieces, from, to)) return true;
+        }
+    }
+
+    return false;
+}
+
+const findMyGeneral = (boardStatus, isRedPlayer) => {
+    const color = isRedPlayer ? "r" : "b";
+    const index = boardStatus.indexOf(color + "ge");
+
+    return boardStatus.slice(index - 2, index) + color + "ge";
 }
 
 const isValidMove = (boardStatus, movingPiece, to, isRedPlayer) => {
