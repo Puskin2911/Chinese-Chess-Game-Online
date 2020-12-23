@@ -46,6 +46,7 @@ const isMyPiece = (color, isRedPlayer) => {
 
 const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
     const availableMovePosition = [];
+    const cachedBoardStatus = boardStatus;
 
     if (!isRedPlayer) {
         boardStatus = boardStatus.replaceAll("r", "t");
@@ -68,16 +69,49 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
                 y: j + ""
             }
             if (pieceObject.isValidMove(pieces, from, to)) {
-                const position = {
-                    centerX: i,
-                    centerY: j
+                let isAvailable = true;
+                const mockPieces = pieces;
+                mockPieces[i][j] = pieceObject;
+                mockPieces[pieceString.charAt(0)][pieceString.charAt(1)] = null;
+                const myGeneral = findMyGeneral(cachedBoardStatus, isRedPlayer);
+                const mockTo = {
+                    x: myGeneral.charAt(0),
+                    y: myGeneral.charAt(1)
                 }
-                availableMovePosition.push(position);
+
+                for (let k = 0; k < Board.ROW; k++) {
+                    for (let h = 0; h < Board.COLUMN; h++) {
+                        const mockFrom = {
+                            x: k + "",
+                            y: h + ""
+                        }
+                        if (mockPieces[k][h] != null && mockPieces[k][h].isValidMove(mockPieces, mockFrom, mockTo)) {
+                            isAvailable = false;
+                            break;
+                        }
+                    }
+                    if (isAvailable === false) break;
+                }
+
+                if (isAvailable) {
+                    const position = {
+                        centerX: i,
+                        centerY: j
+                    }
+                    availableMovePosition.push(position);
+                }
             }
         }
     }
 
     return availableMovePosition;
+}
+
+const findMyGeneral = (boardStatus, isRedPlayer) => {
+    const color = isRedPlayer ? "r" : "b";
+    const index = boardStatus.indexOf(color + "ge");
+
+    return boardStatus.slice(index - 2, index) + color + "ge";
 }
 
 const isValidMove = (boardStatus, movingPiece, to, isRedPlayer) => {
