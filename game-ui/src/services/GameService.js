@@ -46,7 +46,9 @@ const isMyPiece = (color, isRedPlayer) => {
 
 const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
     const availableMovePosition = [];
-    const cachedBoardStatus = boardStatus;
+
+    let resolveBoardStatus = boardStatus;
+    let resolvePieceString = pieceString;
 
     if (!isRedPlayer) {
         boardStatus = boardStatus.replaceAll("r", "t");
