@@ -1,8 +1,8 @@
 import React from "react";
 import Board from "../Board";
-import Chat from "../Chat/Chat";
+import RightBoard from "../Chat/RightBoard";
 import ApiConstants from "../../constants/ApiConstant";
-import RoomInfo from "./RoomInfo";
+import LeftBoard from "./LeftBoard";
 import SockJs from "sockjs-client";
 import Stomp from "stompjs";
 import LoadingIndicator from "../../common/LoadingIndicator";
@@ -66,15 +66,15 @@ export default class Room extends React.Component {
         const room = this.props.room;
         const user = this.props.user;
         return (
-            <div className="container">
+            <div className="container-fluid vh-100">
                 <div className="row justify-content-center">
-                    <RoomInfo room={room} user={user}
-                              stompClient={this.stompClient}
-                              handleLeaveRoom={this.handleLeaveRoom}/>
+                    <LeftBoard room={room} user={user} isGameStarted={this.state.isGameStarted}
+                               stompClient={this.stompClient}
+                               handleLeaveRoom={this.handleLeaveRoom}/>
                     <Board room={room} user={user} stompClient={this.stompClient}
                            isRedPlayer={this.state.isRedPlayer}/>
-                    <Chat username={user.username} room={room}
-                          stompClient={this.stompClient}/>
+                    <RightBoard user={user} room={room}
+                                stompClient={this.stompClient}/>
                 </div>
             </div>
         );
