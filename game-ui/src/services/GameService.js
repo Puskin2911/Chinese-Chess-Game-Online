@@ -70,16 +70,10 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
                 x: i + "",
                 y: j + ""
             }
-            if (pieceObject.isValidMove(pieces, from, to)) {
-                let isAvailable = true;
-                const mockPieces = pieces;
-                mockPieces[i][j] = pieceObject;
-                mockPieces[pieceString.charAt(0)][pieceString.charAt(1)] = null;
-                const myGeneral = findMyGeneral(cachedBoardStatus, isRedPlayer);
-                const mockTo = {
-                    x: myGeneral.charAt(0),
-                    y: myGeneral.charAt(1)
-                }
+            if (resolvePieceObject.isValidMove(resolvePieces, from, to)) {
+                let mockBoardStatus = doMove(boardStatus, from, to);
+                mockBoardStatus = gameService.resolveBoardStatus(mockBoardStatus, false);
+                const myGeneral = findMyGeneral(mockBoardStatus, isRedPlayer);
 
                 for (let k = 0; k < Board.ROW; k++) {
                     for (let h = 0; h < Board.COLUMN; h++) {
