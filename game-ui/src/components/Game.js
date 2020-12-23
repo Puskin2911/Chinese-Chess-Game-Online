@@ -4,8 +4,6 @@ import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
 export default function Game(props) {
-    document.title = "Chinese Chess Game | Game";
-
     const [room, setRoom] = React.useState(null);
 
     const handleJoinRoom = () => {
