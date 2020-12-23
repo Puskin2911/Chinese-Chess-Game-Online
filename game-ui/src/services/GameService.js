@@ -51,17 +51,17 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
     let resolvePieceString = pieceString;
 
     if (!isRedPlayer) {
-        boardStatus = boardStatus.replaceAll("r", "t");
-        boardStatus = boardStatus.replaceAll("b", "r");
-        boardStatus = boardStatus.replaceAll("t", "b");
-        pieceString = pieceString.replaceAll("b", "r");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("r", "t");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("b", "r");
+        resolveBoardStatus = resolveBoardStatus.replaceAll("t", "b");
+        resolvePieceString = resolvePieceString.replaceAll("b", "r");
     }
-    const pieces = Board.convertToMatrix(boardStatus);
-    const pieceObject = Board.convertPieceStringToObject(pieceString);
+    const resolvePieces = Board.convertToMatrix(resolveBoardStatus);
+    const resolvePieceObject = Board.convertPieceStringToObject(resolvePieceString);
 
     const from = {
-        x: pieceString.charAt(0),
-        y: pieceString.charAt(1)
+        x: resolvePieceString.charAt(0),
+        y: resolvePieceString.charAt(1)
     }
 
     for (let i = 0; i < Board.ROW; i++) {
