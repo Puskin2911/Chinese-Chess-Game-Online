@@ -73,7 +73,7 @@ export default function Signup() {
     }
 
     return (
-        <div className="container  vh-100">
+        <div className="container vh-100">
             <div className="row justify-content-center">
                 <div className="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6 bg-white rounded w-40 p-3 mt-5">
                     <h2 className="text-center">Sign up</h2>

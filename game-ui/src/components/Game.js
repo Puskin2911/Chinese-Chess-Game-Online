@@ -32,7 +32,7 @@ export default function Game(props) {
     return (
         <div>
             {room == null
-                ? <Lobby handleJoinRoom={handleJoinRoom}/>
+                ? <Lobby user={props.user} handleJoinRoom={handleJoinRoom}/>
                 : <Room room={room} user={props.user} handleLeaveRoom={handleLeaveRoom}/>
             }
         </div>
