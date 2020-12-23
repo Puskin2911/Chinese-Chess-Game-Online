@@ -93,10 +93,6 @@ export default class Board extends React.Component {
         }
 
         if (movingPiece == null) {
-            console.log(index);
-            console.log(boardStatus);
-            console.log(piece);
-            console.log("color:  ", color);
             if (color !== '0' && gameService.isMyPiece(color, isRedPlayer)) {
 
                 const availableMovePositionToSave = gameService
@@ -136,7 +132,6 @@ export default class Board extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.boardStatus !== null) {
-            console.log("DRAW BOARD!!!!");
             this.drawBoard();
         }
     }

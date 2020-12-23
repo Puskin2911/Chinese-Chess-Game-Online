@@ -12,7 +12,6 @@ export default class Elephant extends Piece {
         const yTo = to.y + "";
 
         const pieceAtTo = board[xTo][yTo];
-        console.log(xFrom * 1 + xTo * 1);
 
         if (Math.abs(xFrom - xTo) === 2 && Math.abs(yFrom - yTo) === 2
             && board[(xFrom * 1 + xTo * 1) / 2][(yFrom * 1 + yTo * 1) / 2] == null) {
