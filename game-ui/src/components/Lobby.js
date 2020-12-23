@@ -3,6 +3,7 @@ import localStorageHelper from "../utils/LocalStorageHelper";
 import {useHistory} from "react-router-dom";
 
 export default function Lobby(props) {
+    document.title = "Chinese Chess Game | Lobby";
 
     const history = useHistory();
 
@@ -16,7 +17,7 @@ export default function Lobby(props) {
     }, [history]);
 
     return (
-        <div className="container border">
+        <div className="container border vh-100">
             <div className="row justify-content-around">
                 <div className="col-4 text-left bg-white">
                     User Info here

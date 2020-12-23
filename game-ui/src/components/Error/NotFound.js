@@ -5,11 +5,11 @@ function NotFound() {
     let location = useLocation();
 
     return (
-        <div>
-            <h3>
-                No match for <code>{location.pathname}</code>.
-                Go to <Link to="/">Home</Link>
+        <div className="container mt-5 p-5 bg-white rounded">
+            <h3 className="text-center">
+                Hey hey! Where do you want to go ? You will find nothing in <code>{location.pathname}</code>.
             </h3>
+            <h4 className="text-center">Go <Link to="/">Home</Link> now.</h4>
         </div>
     );
 }
