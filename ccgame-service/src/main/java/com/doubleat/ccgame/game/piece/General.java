@@ -34,14 +34,16 @@ public class General extends Piece {
             // Just move
             if (pieceAtTo == null) return true;
             // Fight (eat piece).
+            return pieceAtTo.isRed != this.isRed;
         }
         // Go to vertical
         else if (yFrom == yTo && Math.abs(xFrom - xTo) == 1) {
             // Just move
             if (pieceAtTo == null) return true;
             // Fight (eat piece).
+            return pieceAtTo.isRed != this.isRed;
         }
-        return pieceAtTo.isRed != this.isRed;
+        return false;
 
     }
 }
