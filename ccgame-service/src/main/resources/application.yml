@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/ccgame?useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
-    password: uchihaitachi
+    username: ccgame
+    password: ccgame
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
