@@ -2,6 +2,8 @@ package com.doubleat.ccgame.game.piece;
 
 import com.doubleat.ccgame.game.Board;
 import com.doubleat.ccgame.game.Position;
+import com.doubleat.ccgame.game.utils.PieceUtils;
+
 
 public class Cannon extends Piece {
     public Cannon(String shortName) {

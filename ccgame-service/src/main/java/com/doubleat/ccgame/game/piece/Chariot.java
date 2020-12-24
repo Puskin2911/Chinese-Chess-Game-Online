@@ -2,6 +2,7 @@ package com.doubleat.ccgame.game.piece;
 
 import com.doubleat.ccgame.game.Board;
 import com.doubleat.ccgame.game.Position;
+import com.doubleat.ccgame.game.utils.PieceUtils;
 
 public class Chariot extends Piece {
     public Chariot(String shortName) {
