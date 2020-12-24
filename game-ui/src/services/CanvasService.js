@@ -105,9 +105,9 @@ const drawAvailableMovePosition = (ctx, availableMovePositions) => {
 
         ctx.beginPath();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'yellow';
 
-        ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 5, 0, Math.PI * 2, true);
+        ctx.arc(CELL_SIZE / 2 + (CELL_SIZE + 1) * y + 1, CELL_SIZE / 2 + (CELL_SIZE + 1) * x + 1, 4, 0, Math.PI * 2, true);
         ctx.stroke();
     }
 };
