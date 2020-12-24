@@ -16,8 +16,6 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -34,8 +32,7 @@ public class MyWebSocketEventListener {
     @Autowired
     private RoomStrategy roomStrategy;
 
-    // Cache to query when user unSubscribe
-    private final Map<String, String> cachedDestinationPerSubscribeMap = new HashMap<>();
+    private static final String REGEX_IN_ROOM = "^/room/[0-9]+$";
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -48,31 +45,28 @@ public class MyWebSocketEventListener {
     public void handleSubscribe(SessionSubscribeEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        String subscriptionId = getUniqueSubscriptionId(headerAccessor);
         String destination = headerAccessor.getDestination();
         String username = Objects.requireNonNull(event.getUser()).getName();
 
         logger.info("Username: {} have just subscribe to {}", username, destination);
 
-        UserDto userDto = userService.getDtoByUsername(username);
-
-        cachedDestinationPerSubscribeMap.put(subscriptionId, destination);
-
+        // Send noti to user to know have another player join room.
+        if (destination != null && destination.matches(REGEX_IN_ROOM)) {
+            UserDto userDto = userService.getDtoByUsername(username);
+            messagingTemplate.convertAndSend(destination, userDto);
+        }
     }
 
     @EventListener
     public void handleUnSubscribe(SessionUnsubscribeEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String destination = headerAccessor.getDestination();
 
-        String subscriptionId = getUniqueSubscriptionId(headerAccessor);
-        String username = Objects.requireNonNull(event.getUser()).getName();
-
-        UserDto userDto = userService.getDtoByUsername(username);
-
-        // Remove subscriptionId will unSubscription
-        cachedDestinationPerSubscribeMap.remove(subscriptionId);
-
-        roomStrategy.kickOutPlayer(userDto);
+        if (destination != null && destination.matches(REGEX_IN_ROOM)) {
+            String username = Objects.requireNonNull(event.getUser()).getName();
+            UserDto userDto = userService.getDtoByUsername(username);
+            roomStrategy.kickOutPlayer(userDto);
+        }
     }
 
     @EventListener
@@ -80,16 +74,6 @@ public class MyWebSocketEventListener {
         Principal userPrincipal = event.getUser();
         assert userPrincipal != null;
         logger.info("UserId {} had disconnected!", userPrincipal.getName());
-    }
-
-    /**
-     * Get unique subscriptionId from sessionId and subscriptionId.
-     *
-     * @param headerAccessor {@code StompHeaderAccessor} object to access stomp header.
-     * @return Unique subscriptionId.
-     */
-    private String getUniqueSubscriptionId(StompHeaderAccessor headerAccessor) {
-        return headerAccessor.getDestination() + "+" + headerAccessor.getSubscriptionId();
     }
 
 }
