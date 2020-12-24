@@ -100,12 +100,6 @@ public class PlayingGame {
 
         Piece[][] pieces = board.getPieces();
 
-        // Check game isOver
-        Piece toPiece = pieces[to.getX()][to.getY()];
-        if (toPiece != null && PieceUtils.isGeneral(toPiece)) {
-            boolean isRedWin = !toPiece.isRed();
-            this.endGame(isRedWin);
-        }
 
         // Do move
         pieces[from.getX()][from.getY()] = null;
@@ -113,6 +107,10 @@ public class PlayingGame {
 
         isRedTurn = !isRedTurn;
         moves.push(move);
+
+        // Check game isOver
+
+
 
         return true;
     }

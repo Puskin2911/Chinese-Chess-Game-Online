@@ -7,8 +7,16 @@ public final class PieceUtils {
     private PieceUtils() {
     }
 
-    public static boolean isGeneral(Piece piece) {
-        return piece.getShortName().equals("ge");
+    public static Piece getEnermyGeneral(boolean isRedTurn) {
+        if (isRedTurn){
+            General general = new General("ge");
+            general.setRed(false);
+            return general;
+        } else {
+            General general = new General("ge");
+            general.setRed(true);
+            return general;
+        }
     }
 
     public static Piece getInstancePieceFromShortName(String shortName) {

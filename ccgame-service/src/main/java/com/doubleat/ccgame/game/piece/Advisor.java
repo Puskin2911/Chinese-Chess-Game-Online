@@ -33,6 +33,6 @@ public class Advisor extends Piece {
                 }
             }
         }
-        return super.isValidMove(board, from, to);
+        return false;
     }
 }
