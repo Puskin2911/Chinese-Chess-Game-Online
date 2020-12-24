@@ -1,6 +1,6 @@
 import React from "react";
 import Board from "../Board";
-import RightBoard from "../Chat/RightBoard";
+import RightBoard from "./RightBoard";
 import ApiConstants from "../../constants/ApiConstant";
 import LeftBoard from "./LeftBoard";
 import SockJs from "sockjs-client";
@@ -19,6 +19,7 @@ export default class Room extends React.Component {
             isSocketConnected: false,
             isGameStarted: false,
             isRedPlayer: false,
+            competitor: null
         }
     }
 
@@ -35,6 +36,9 @@ export default class Room extends React.Component {
 
             stompClient.subscribe("/room/" + roomId, (payload) => {
                 console.log("Receive payload from Room: " + payload.body);
+                this.setState({
+                    competitor: JSON.parse(payload.body)
+                });
             });
 
             stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
@@ -73,7 +77,8 @@ export default class Room extends React.Component {
                                handleLeaveRoom={this.handleLeaveRoom}/>
                     <Board room={room} user={user} stompClient={this.stompClient}
                            isRedPlayer={this.state.isRedPlayer}/>
-                    <RightBoard user={user} room={room} isGameStarted={this.state.isGameStarted}
+                    <RightBoard user={user} competitor={this.state.competitor} room={room}
+                                isGameStarted={this.state.isGameStarted}
                                 stompClient={this.stompClient}/>
                 </div>
             </div>
