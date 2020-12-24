@@ -73,7 +73,7 @@ export default class Room extends React.Component {
                                handleLeaveRoom={this.handleLeaveRoom}/>
                     <Board room={room} user={user} stompClient={this.stompClient}
                            isRedPlayer={this.state.isRedPlayer}/>
-                    <RightBoard user={user} room={room}
+                    <RightBoard user={user} room={room} isGameStarted={this.state.isGameStarted}
                                 stompClient={this.stompClient}/>
                 </div>
             </div>
