@@ -1,7 +1,7 @@
 import React from "react";
-import imageLoader from "../../common/ImageLoader";
 import ApiConstants from "../../constants/ApiConstant";
 import ConfirmModal from "../../common/ConfirmModal";
+import UserProfile from "../../common/UserProfile";
 
 export default function LeftBoard(props) {
     const user = props.user;
@@ -23,17 +23,7 @@ export default function LeftBoard(props) {
 
     return (
         <div className="col-2 mt-4 border border-danger text-center rounded">
-            <button type="button" className="btn">
-                <img src={imageLoader.userAvatar} width="80px" className="rounded-circle"
-                     alt="User Avatar"/>
-            </button>
-            <div className="text-center mt-2 mb-5 mx-4">
-                <h5 className="rounded bg-white p-1">{user.username}</h5>
-                <h5 className="rounded bg-white p-1">
-                    <i className="fas fa-trophy"/>
-                    <code className="p-2">{user.elo}</code>
-                </h5>
-            </div>
+            <UserProfile user={user}/>
             <div className="text-center my-5">
                 {isGameStarted
                     ? <div>
