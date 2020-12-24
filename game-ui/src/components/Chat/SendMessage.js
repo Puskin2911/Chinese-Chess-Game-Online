@@ -21,25 +21,26 @@ export default function SendMessage(props) {
     };
 
     return (
-        <div className="mt-0">
+        <div className="">
             <form>
                 <div className="input-group">
                     <input type="text" className="form-control"
                            onChange={(e) => setTypedMessage(e.target.value)}
                            value={typedMessage}/>
                     <div className="input-group-append">
-                        <select className="custom-select" id="inputGroupSelect01">
-                            <option selected>...</option>
-                            <option value="1">Nước đó rất cao!</option>
-                            <option value="2">Làm ván nữa nhé!</option>
-                            <option value="3">Các hạ quá khen!</option>
-                        </select>
                         <span className="input-group-text">
                             <button type="submit" className="btn border-0 p-0"
                                     onClick={handleSendMessage}>
                                 <i className="fas fa-paper-plane"/>
                                 </button>
                         </span>
+                    </div>
+                    <div className="input-group">
+                        <select className="custom-select" id="preparedChat">
+                            <option value="1">Nước đó rất cao!</option>
+                            <option value="2">Làm ván nữa nhé!</option>
+                            <option value="3">Các hạ quá khen!</option>
+                        </select>
                     </div>
                 </div>
             </form>
