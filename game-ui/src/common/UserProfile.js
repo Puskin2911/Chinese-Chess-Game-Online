@@ -21,7 +21,7 @@ export default function UserProfile(props) {
                     <i className="fas fa-trophy"/>
                     <code className="p-2">
                         {user != null
-                            ? <span>{user.username}</span>
+                            ? <span>{user.elo}</span>
                             : "...."
                         }
                     </code>

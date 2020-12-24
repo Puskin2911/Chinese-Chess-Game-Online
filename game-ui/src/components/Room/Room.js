@@ -15,11 +15,18 @@ export default class Room extends React.Component {
         this.ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
         this.stompClient = Stomp.over(this.ws);
 
+        const players = props.room.players;
+        let competitor = null;
+        if (players.length === 2) {
+            if (players[0].username === props.user.username) competitor = players[1];
+            else competitor = players[0];
+        }
+
         this.state = {
             isSocketConnected: false,
             isGameStarted: false,
             isRedPlayer: false,
-            competitor: null
+            competitor: competitor
         }
     }
 
@@ -35,10 +42,21 @@ export default class Room extends React.Component {
             });
 
             stompClient.subscribe("/room/" + roomId, (payload) => {
-                console.log("Receive payload from Room: " + payload.body);
-                this.setState({
-                    competitor: JSON.parse(payload.body)
-                });
+                const userDto = JSON.parse(payload.body);
+                if (userDto.username !== user.username) {
+                    this.setState({
+                        competitor: userDto
+                    });
+                }
+            });
+
+            stompClient.subscribe("/room/" + roomId + "/leave", (payload) => {
+                const userDto = JSON.parse(payload.body);
+                if (userDto.username !== user.username) {
+                    this.setState({
+                        competitor: null
+                    });
+                }
             });
 
             stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
