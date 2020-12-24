@@ -10,7 +10,6 @@ export default class ChatBox extends React.Component {
 
     componentDidMount() {
         const subscription = this.props.stompClient.subscribe(ApiConstants.CHAT_SOCKET_URL(this.props.roomId), (payload) => {
-            console.log("receive payload from ChatBox: " + payload.body);
             const msg = JSON.parse(payload.body);
             const newMessages = [...this.state.messages];
             newMessages.push(msg);
@@ -24,7 +23,7 @@ export default class ChatBox extends React.Component {
     showMessage() {
         return this.state.messages.map((message, index) => {
             const displayMessage = "- " + message.username + ": " + message.message;
-            return (<p key={index}>{displayMessage}</p>);
+            return (<p key={index} className="my-1">{displayMessage}</p>);
         });
     }
 
