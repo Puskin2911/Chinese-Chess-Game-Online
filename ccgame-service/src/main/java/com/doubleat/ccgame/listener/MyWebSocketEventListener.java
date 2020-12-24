@@ -29,9 +29,6 @@ public class MyWebSocketEventListener {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoomStrategy roomStrategy;
-
     private static final String REGEX_IN_ROOM = "^/room/[0-9]+$";
 
     @EventListener
@@ -59,14 +56,6 @@ public class MyWebSocketEventListener {
 
     @EventListener
     public void handleUnSubscribe(SessionUnsubscribeEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String destination = headerAccessor.getDestination();
-
-        if (destination != null && destination.matches(REGEX_IN_ROOM)) {
-            String username = Objects.requireNonNull(event.getUser()).getName();
-            UserDto userDto = userService.getDtoByUsername(username);
-            roomStrategy.kickOutPlayer(userDto);
-        }
     }
 
     @EventListener
