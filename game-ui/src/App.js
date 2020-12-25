@@ -2,7 +2,7 @@ import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
 import NotFound from "./components/Error/NotFound";
 import Login from "./components/login/Login";
-import Game from "./components/Game";
+import Home from "./components/Home";
 import PrivateRoute from "./common/PrivateRoute";
 import Signup from "./components/Signup";
 import OAuth2RedirectHandler from "./common/OAuth2RedirectHandler";
@@ -20,7 +20,7 @@ export default function App() {
 
             <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}/>
 
-            <PrivateRoute path="/game" component={Game}/>
+            <PrivateRoute path="/game" component={Home}/>
 
             <Route path="/">
                 <NotFound/>

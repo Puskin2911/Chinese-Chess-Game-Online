@@ -29,6 +29,10 @@ export default class LeftBoard extends React.Component {
         })
     }
 
+    handleRequestLose = () => {
+        this.stompClient.send("/room/" + this.room.id + "/request-lose", {}, {});
+    }
+
     render() {
         return (
             <div className="col-2 mt-4 border border-danger text-center rounded">
@@ -49,7 +53,7 @@ export default class LeftBoard extends React.Component {
                                         className="btn border-danger bg-white ml-1">Xin thua
                                 </button>
                                 <ConfirmModal id="confirmLoseModal" title="Bạn có chắc muốn xin thua không ?"
-                                              cancel="Thôi" ok="Thua đê" handleOk=""/>
+                                              cancel="Thôi" ok="Thua đê" handleOk={this.handleRequestLose}/>
                             </div>
                         </div>
                         : <button type="button" className="btn" onClick={this.handleReady}>
