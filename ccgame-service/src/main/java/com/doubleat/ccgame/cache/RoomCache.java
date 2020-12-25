@@ -41,9 +41,10 @@ public interface RoomCache {
      *
      * @param userDto player need to remove from the room.
      * @param roomId  id of the room, where need to remove player.
+     * @return {@code true} if leave room when game is not over.
      * @throws RoomNotFoundException if have no room have {@code roomId}.
      */
-    void removePlayerFromRoom(UserDto userDto, int roomId) throws RoomNotFoundException;
+    boolean removePlayerFromRoom(UserDto userDto, int roomId) throws RoomNotFoundException;
 
     /**
      * Add specific viewer to room which have specific id.

@@ -1,9 +1,12 @@
 package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.domain.User;
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.converter.UserConverter;
+import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.room.RoomStrategy;
+import com.doubleat.ccgame.service.StompService;
 import com.doubleat.ccgame.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +33,16 @@ public class RoomController {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private StompService stompService;
+
     @GetMapping(value = "/join")
     public ResponseEntity<RoomDto> joinRoom(Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        RoomDto room = roomStrategy.playerJoinRoom(userConverter.toDto(user));
+        UserDto userDto = userConverter.toDto(user);
+
+        RoomDto room = roomStrategy.playerJoinRoom(userDto);
+        stompService.notifyPlayerJoinRoom(room.getId(), userDto);
 
         return ResponseEntity.ok(room);
     }
@@ -41,15 +50,27 @@ public class RoomController {
     @GetMapping(value = "/{roomId}/leave")
     public ResponseEntity<Boolean> leaveRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        Boolean success = roomStrategy.playerLeaveRoom(userConverter.toDto(user), roomId);
+        UserDto userDto = userConverter.toDto(user);
 
-        return ResponseEntity.ok(success);
+        boolean isForceLeave = roomStrategy.playerLeaveRoom(userDto, roomId);
+
+        if (isForceLeave) {
+            GameStopResponse gameStopResponse = roomStrategy.handleStopGame(roomId, null, userDto.getUsername());
+            stompService.notifyStopGame(roomId, gameStopResponse);
+        }
+
+        stompService.notifyPlayerLeaveRoom(roomId, userDto);
+
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping(value = "/{roomId}/join")
     public ResponseEntity<RoomDto> joinSpecificRoom(@PathVariable int roomId, Authentication authentication) {
         User user = userService.getByUsername(authentication.getName());
-        RoomDto room = roomStrategy.playerJoinRoom(userConverter.toDto(user), roomId);
+        UserDto userDto = userConverter.toDto(user);
+        RoomDto room = roomStrategy.playerJoinRoom(userDto, roomId);
+
+        stompService.notifyPlayerJoinRoom(roomId, userDto);
 
         return ResponseEntity.ok(room);
     }
