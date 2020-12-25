@@ -3,25 +3,36 @@ import gameApiService from "../services/GameApiService";
 import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
-export default function Home(props) {
-    const [room, setRoom] = React.useState(null);
+export default class Home extends React.Component {
 
-    const handleJoinRoom = () => {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            room: null
+        }
+    }
+
+    handleJoinRoom = () => {
         gameApiService.joinRoom()
             .then(res => {
                 console.log("from handleJoinRoom", res);
 
-                setRoom(res.data);
+                this.setState({
+                    room: res.data
+                });
             })
             .catch(error => {
                 console.log("from handleJoinRoom", error.response);
             });
     }
 
-    const handleLeaveRoom = () => {
-        gameApiService.leaveRoom(room.id)
+    handleLeaveRoom = () => {
+        gameApiService.leaveRoom(this.state.room.id)
             .then(() => {
-                    setRoom(null);
+                    this.setState({
+                        room: null
+                    });
                 }
             )
             .catch(error => {
@@ -29,13 +40,15 @@ export default function Home(props) {
             });
     }
 
-    return (
-        <div>
-            {room == null
-                ? <Lobby user={props.user} handleJoinRoom={handleJoinRoom}/>
-                : <Room room={room} user={props.user} handleLeaveRoom={handleLeaveRoom}/>
-            }
-        </div>
-    );
+    render() {
+        return (
+            <div>
+                {this.state.room == null
+                    ? <Lobby user={this.props.user} handleJoinRoom={this.handleJoinRoom}/>
+                    : <Room room={this.state.room} user={this.props.user} handleLeaveRoom={this.handleLeaveRoom}/>
+                }
+            </div>
+        );
+    }
 
 }
