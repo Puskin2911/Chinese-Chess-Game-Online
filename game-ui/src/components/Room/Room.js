@@ -72,6 +72,19 @@ export default class Room extends React.Component {
                     isRedPlayer: gameStart.redPlayerUsername === user.username
                 });
             });
+
+            stompClient.subscribe("/room/" + roomId + "/game/stop", (payload) => {
+                console.log("From Room receive signal stop game!");
+                const gameStop = JSON.parse(payload.body);
+
+                // TODO : handle display winner and loser
+
+                this.setState({
+                    isGameStarted: false,
+                    isRedPlayer: false
+                });
+                // this.updateRoom(gameStop.room);
+            });
         });
     }
 

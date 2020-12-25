@@ -76,7 +76,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public void removePlayerFromRoom(UserDto userDto, int roomId) {
+    public boolean removePlayerFromRoom(UserDto userDto, int roomId) {
         assert userDto != null;
 
         synchronized (roomMap) {
@@ -86,6 +86,8 @@ public class RoomCacheImpl implements RoomCache {
 
             Set<UserDto> players = room.getPlayers();
             players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
+
+            return !room.isGameOver();
         }
     }
 

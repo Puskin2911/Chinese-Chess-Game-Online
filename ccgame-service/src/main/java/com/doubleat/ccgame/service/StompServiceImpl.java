@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.service;
 
+import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.dto.response.PlayingGameDto;
@@ -51,6 +52,21 @@ public class StompServiceImpl implements StompService {
 
         gameStopResponseOptional
                 .ifPresent(gameStopResponse -> sendMessage("/room/" + roomId + "/game/stop", gameStopResponse));
+    }
+
+    @Override
+    public void notifyPlayerLeaveRoom(int roomId, UserDto userDto) {
+        sendMessage("/room/" + roomId + "/leave", userDto);
+    }
+
+    @Override
+    public void notifyPlayerJoinRoom(int roomId, UserDto userDto) {
+        sendMessage("/room/" + roomId, userDto);
+    }
+
+    @Override
+    public void notifyStopGame(int roomId, GameStopResponse gameStopResponse) {
+        sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
     }
 
     private void sendMessage(String destination, Object payload) {

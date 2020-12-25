@@ -1,14 +1,19 @@
 package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.cache.RoomCache;
+import com.doubleat.ccgame.domain.Game;
+import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.dto.common.UserDto;
 import com.doubleat.ccgame.dto.converter.RoomConverter;
+import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.dto.message.MoveMessage;
-import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
+import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.game.Player;
 import com.doubleat.ccgame.game.PlayingGame;
+import com.doubleat.ccgame.repository.GameRepository;
+import com.doubleat.ccgame.repository.UserRepository;
 import com.doubleat.ccgame.utils.RoomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Hop Nguyen
@@ -27,14 +34,20 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(RoomStrategyImpl.class);
 
-    private final RoomCache roomCache;
-    private final RoomConverter roomConverter;
+    @Autowired
+    private RoomCache roomCache;
 
     @Autowired
-    public RoomStrategyImpl(RoomCache roomCache, RoomConverter roomConverter) {
-        this.roomCache = roomCache;
-        this.roomConverter = roomConverter;
-    }
+    private RoomConverter roomConverter;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserConverter userConverter;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     @Override
     public RoomDto playerJoinRoom(UserDto userDto) {
@@ -45,8 +58,7 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     @Override
     public boolean playerLeaveRoom(UserDto userDto, int roomId) {
-        roomCache.removePlayerFromRoom(userDto, roomId);
-        return true;
+        return roomCache.removePlayerFromRoom(userDto, roomId);
     }
 
     @Override
@@ -57,13 +69,9 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     @Override
     public void updatePlayerReady(String username, int roomId, boolean ready) {
-        logger.info("Starting update player ready..");
-
         Room room = roomCache.getRoomById(roomId);
 
         RoomUtils.updateReadyPlayerInRoom(username, ready, room);
-
-        logger.info("Just update player ready in room!");
     }
 
     @Override
@@ -141,11 +149,62 @@ public class RoomStrategyImpl implements RoomStrategy {
         Room room = roomCache.getRoomById(roomId);
 
         if (room.isGameOver()) {
-            GameStopResponse gameStopResponse = new GameStopResponse();
-            gameStopResponse.setRedWin(room.isRedWin());
+            GameStopResponse gameStopResponse = GameStopResponse.builder()
+                    .build();
             return Optional.of(gameStopResponse);
         } else
             return Optional.empty();
+    }
+
+    @Override
+    public GameStopResponse handleStopGame(Integer roomId, String winner, String loser) {
+
+        // TODO : re-handle this method
+
+        Room room = roomCache.getRoomById(roomId);
+        UserDto winnerDto = null;
+        UserDto loserDto = null;
+
+        if (winner == null) {
+            winner = room.getPlayers()
+                    .stream()
+                    .map(UserDto::getUsername)
+                    .collect(Collectors.toList())
+                    .get(0);
+        }
+
+        Optional<User> winnerOptional = userRepository.findByUsername(winner);
+        Optional<User> loserOptional = userRepository.findByUsername(loser);
+
+        if (winnerOptional.isPresent() && loserOptional.isPresent()) {
+            User winnerUser = winnerOptional.get();
+            winnerUser.setElo(winnerUser.getElo() + 12);
+            User loserUser = loserOptional.get();
+            loserUser.setElo(loserUser.getElo() - 12);
+
+            winnerDto = userConverter.toDto(winnerUser);
+            loserDto = userConverter.toDto(loserUser);
+
+            Game game = new Game();
+            game.setLoser(loserUser);
+            game.setWinner(winnerUser);
+            gameRepository.save(game);
+        }
+
+        assert winnerDto != null;
+        room.setPlayers(Set.of(winnerDto, loserDto));
+
+        RoomDto roomDto = RoomDto.builder()
+                .id(roomId)
+                .players(room.getPlayers())
+                .viewers(room.getViewers())
+                .build();
+
+        return GameStopResponse.builder()
+                .winner(winnerDto)
+                .loser(loserDto)
+                .roomDto(roomDto)
+                .build();
     }
 
 }

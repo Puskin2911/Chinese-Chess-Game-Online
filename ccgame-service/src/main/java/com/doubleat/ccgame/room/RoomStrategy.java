@@ -78,4 +78,6 @@ public interface RoomStrategy {
      */
     Optional<GameStopResponse> isGameOver(Integer roomId);
 
+    GameStopResponse handleStopGame(Integer roomId, String winner, String loser);
+
 }

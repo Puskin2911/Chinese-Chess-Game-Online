@@ -40,6 +40,8 @@ export default class General extends Piece {
             // Fight (eat piece).
             return pieceAtTo.isRed !== this.isRed;
         }
+
+        return false;
     }
 
 }

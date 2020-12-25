@@ -3,7 +3,7 @@ import gameApiService from "../services/GameApiService";
 import Room from "./Room/Room";
 import Lobby from "./Lobby";
 
-export default function Game(props) {
+export default function Home(props) {
     const [room, setRoom] = React.useState(null);
 
     const handleJoinRoom = () => {
