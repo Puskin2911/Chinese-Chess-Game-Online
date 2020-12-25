@@ -22,6 +22,8 @@ public class Room {
     private PlayingGame playingGame;
 
     public boolean isGameOver() {
+        if (playingGame == null)
+            return true;
         return playingGame.isOver();
     }
 

@@ -87,7 +87,7 @@ public class RoomCacheImpl implements RoomCache {
             Set<UserDto> players = room.getPlayers();
             players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
 
-            return room.isGameOver();
+            return !room.isGameOver();
         }
     }
 
