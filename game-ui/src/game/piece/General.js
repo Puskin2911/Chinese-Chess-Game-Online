@@ -1,4 +1,5 @@
 import Piece from "./Piece";
+import pieceUtils from "./PieceUtils";
 
 export default class General extends Piece {
     constructor(shortName, isRed) {
@@ -19,6 +20,12 @@ export default class General extends Piece {
             }
             if (!this.isRed && xFrom >= 0 && xFrom <= 2 && xTo >= 0 && xTo <= 2) {
                 if (this.checkMove(xFrom, xTo, yFrom, yTo, pieceAtTo)) return true;
+            }
+
+            // King check king
+            if (yFrom === yTo && xFrom !== xTo && pieceAtTo != null && pieceAtTo.shortName === "ge"
+                && pieceUtils.getPieceBetweenVertical(board, xFrom, xTo, yTo) === 0) {
+                return true;
             }
         }
 
