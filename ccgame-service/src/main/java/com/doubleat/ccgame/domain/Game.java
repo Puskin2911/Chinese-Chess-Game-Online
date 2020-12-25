@@ -1,12 +1,14 @@
 package com.doubleat.ccgame.domain;
 
-import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "game")
-@Data
+@Getter
+@Setter
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

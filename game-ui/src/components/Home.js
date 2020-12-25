@@ -13,6 +13,12 @@ export default class Home extends React.Component {
         }
     }
 
+    updateRoom = (room) => {
+        this.setState({
+            room: room
+        });
+    }
+
     handleJoinRoom = () => {
         gameApiService.joinRoom()
             .then(res => {
@@ -45,7 +51,8 @@ export default class Home extends React.Component {
             <div>
                 {this.state.room == null
                     ? <Lobby user={this.props.user} handleJoinRoom={this.handleJoinRoom}/>
-                    : <Room room={this.state.room} user={this.props.user} handleLeaveRoom={this.handleLeaveRoom}/>
+                    : <Room room={this.state.room} user={this.props.user} updateRoom={this.updateRoom}
+                            handleLeaveRoom={this.handleLeaveRoom}/>
                 }
             </div>
         );

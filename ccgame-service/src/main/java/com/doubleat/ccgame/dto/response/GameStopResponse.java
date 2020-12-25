@@ -1,6 +1,5 @@
 package com.doubleat.ccgame.dto.response;
 
-import com.doubleat.ccgame.dto.common.UserDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

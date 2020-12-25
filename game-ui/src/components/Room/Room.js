@@ -83,7 +83,7 @@ export default class Room extends React.Component {
                     isGameStarted: false,
                     isRedPlayer: false
                 });
-                // this.updateRoom(gameStop.room);
+                this.props.updateRoom(gameStop.room);
             });
         });
     }

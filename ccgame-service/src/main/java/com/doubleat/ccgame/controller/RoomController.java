@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.controller;
 
 import com.doubleat.ccgame.domain.User;
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.RoomDto;

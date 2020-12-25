@@ -5,8 +5,6 @@ import UserProfile from "../../common/UserProfile";
 
 export default function RightBoard(props) {
     const user = props.user;
-    const room = props.room;
-    const roomId = room.id;
     const competitor = props.competitor;
     const stompClient = props.stompClient;
     const isGameStarted = props.isGameStarted;
@@ -20,8 +18,8 @@ export default function RightBoard(props) {
                 </div>
                 : ""
             }
-            <ChatBox roomId={roomId} stompClient={stompClient}/>
-            <SendMessage room={room} username={user.username} stompClient={stompClient}/>
+            <ChatBox roomId={props.room.id} stompClient={stompClient}/>
+            <SendMessage room={props.room} username={user.username} stompClient={stompClient}/>
         </div>
     );
 }
