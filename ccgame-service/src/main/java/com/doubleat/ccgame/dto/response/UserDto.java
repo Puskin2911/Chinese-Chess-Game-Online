@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.dto.common;
+package com.doubleat.ccgame.dto.response;
 
 import lombok.*;
 
@@ -17,11 +17,4 @@ public class UserDto {
     private int numberOfLoses;
     private boolean ready;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof UserDto)
-            return this.username.equals(((UserDto) obj).getUsername());
-
-        return false;
-    }
 }

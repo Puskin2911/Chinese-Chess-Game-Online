@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.room;
 
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.GameStopResponse;

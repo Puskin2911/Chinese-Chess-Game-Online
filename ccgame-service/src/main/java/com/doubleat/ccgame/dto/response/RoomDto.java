@@ -1,6 +1,5 @@
 package com.doubleat.ccgame.dto.response;
 
-import com.doubleat.ccgame.dto.common.UserDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;

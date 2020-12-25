@@ -3,7 +3,7 @@ package com.doubleat.ccgame.room;
 import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.domain.Game;
 import com.doubleat.ccgame.domain.User;
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.dto.converter.RoomConverter;
 import com.doubleat.ccgame.dto.converter.UserConverter;
 import com.doubleat.ccgame.dto.message.MoveMessage;
@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -79,6 +76,8 @@ public class RoomStrategyImpl implements RoomStrategy {
         Room room = roomCache.getRoomById(roomId);
 
         int readyPlayers = RoomUtils.getReadyPlayers(room);
+
+        logger.info("Player ready in room: " + readyPlayers);
 
         if (readyPlayers == 2) {
             List<UserDto> players = new ArrayList<>(room.getPlayers());
@@ -192,7 +191,7 @@ public class RoomStrategyImpl implements RoomStrategy {
         }
 
         assert winnerDto != null;
-        room.setPlayers(Set.of(winnerDto, loserDto));
+        room.setPlayers(new HashSet<>(Arrays.asList(winnerDto, loserDto)));
 
         RoomDto roomDto = RoomDto.builder()
                 .id(roomId)

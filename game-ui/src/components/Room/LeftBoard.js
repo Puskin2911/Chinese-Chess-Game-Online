@@ -9,7 +9,6 @@ export default class LeftBoard extends React.Component {
 
         this.handleLeaveRoom = props.handleLeaveRoom;
         this.stompClient = props.stompClient;
-        this.room = props.room;
         this.user = props.user;
 
         this.state = {
@@ -22,7 +21,7 @@ export default class LeftBoard extends React.Component {
             username: this.props.user.username,
             isReady: !this.state.isReady
         }
-        this.stompClient.send(ApiConstants.READY_DESTINATION_SOCKET_URL(this.room.id), {}, JSON.stringify(msgToSend));
+        this.stompClient.send(ApiConstants.READY_DESTINATION_SOCKET_URL(this.props.room.id), {}, JSON.stringify(msgToSend));
 
         this.setState({
             isReady: !this.state.isReady
@@ -30,7 +29,7 @@ export default class LeftBoard extends React.Component {
     }
 
     handleRequestLose = () => {
-        this.stompClient.send("/room/" + this.room.id + "/request-lose", {}, {});
+        this.stompClient.send("/room/" + this.props.room.id + "/request-lose", {}, {});
     }
 
     render() {
@@ -79,7 +78,7 @@ export default class LeftBoard extends React.Component {
                         </button>
                     }
                     <h5 className="text-center rounded bg-white mx-4 py-1">
-                        room: <code> {this.room.id}</code>
+                        room: <code> {this.props.room.id}</code>
                     </h5>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.dto.converter;
 
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.domain.User;
 import org.springframework.stereotype.Component;
 

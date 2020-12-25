@@ -1,7 +1,7 @@
 package com.doubleat.ccgame.security.auth;
 
 import com.doubleat.ccgame.domain.User;
-import com.doubleat.ccgame.dto.common.UserDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.dto.request.LoginRequest;
 import com.doubleat.ccgame.dto.request.SignupRequest;
 import com.doubleat.ccgame.exception.UsernameOrEmailHasAlreadyExistsException;
