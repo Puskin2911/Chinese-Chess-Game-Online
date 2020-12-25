@@ -1,25 +1,25 @@
 package com.doubleat.ccgame.game.utils;
 
 import com.doubleat.ccgame.game.Board;
+import com.doubleat.ccgame.game.Position;
 import com.doubleat.ccgame.game.piece.*;
 
 public final class PieceUtils {
     private PieceUtils() {
     }
 
-    public static Piece getEnermyGeneral(boolean isRedTurn) {
-        if (isRedTurn){
-            General general = new General("ge");
-            general.setRed(false);
-            return general;
-        } else {
-            General general = new General("ge");
-            general.setRed(true);
-            return general;
+    public static Position findMyGeneralPosition(Board board, boolean isRedTurn) {
+        for (int i = 0; i < Board.ROW; i++) {
+            for (int j = 0; j < Board.COLUMN; j++) {
+                Piece piece = board.getPieces()[i][j];
+                if (piece != null && piece.getShortName().equals("ge") && piece.isRed() == isRedTurn)
+                    return new Position(i, j);
+            }
         }
+        return null;
     }
 
-    public static Piece getInstancePieceFromShortName(String shortName) {
+    public static Piece getPieceInstanceFromShortName(String shortName) {
         switch (shortName) {
         case "ch": {
             return new Chariot(shortName);
@@ -46,7 +46,8 @@ public final class PieceUtils {
             throw new IllegalArgumentException("Unexpected value: " + shortName);
         }
     }
-    public static int getPieceBetweenVertical(Board board, int xStart, int xEnd, int y){
+
+    public static int getPieceBetweenVertical(Board board, int xStart, int xEnd, int y) {
         int numberOfPiece = 0;
         if (xStart > xEnd) {
             int temp = xStart;
@@ -54,12 +55,13 @@ public final class PieceUtils {
             xEnd = temp;
         }
         for (int x = xStart - 1 + 2; x < xEnd; x++) {
-            if (board.getPieces()[x][y] != null) numberOfPiece++;
+            if (board.getPieces()[x][y] != null)
+                numberOfPiece++;
         }
         return numberOfPiece;
     }
 
-    public static int getPieceBetweenHorizontal(Board board,int x, int yStart, int yEnd){
+    public static int getPieceBetweenHorizontal(Board board, int x, int yStart, int yEnd) {
         if (yStart > yEnd) {
             int temp = yStart;
             yStart = yEnd;
@@ -69,7 +71,8 @@ public final class PieceUtils {
         int numberOfPiece = 0;
 
         for (int y = yStart - 1 + 2; y < yEnd; y++) {
-            if (board.getPieces()[x][y] != null) numberOfPiece++;
+            if (board.getPieces()[x][y] != null)
+                numberOfPiece++;
         }
 
         return numberOfPiece;
