@@ -50,7 +50,7 @@ public class Board {
                 String shortName = pieceText.substring(3);
                 boolean isRed = (color == 'r');
 
-                Piece piece = PieceUtils.getInstancePieceFromShortName(shortName);
+                Piece piece = PieceUtils.getPieceInstanceFromShortName(shortName);
                 piece.setRed(isRed);
 
                 pieces[x][y] = piece;
@@ -86,6 +86,26 @@ public class Board {
     }
 
     @Override
+    public Board clone() {
+        Piece[][] pieces = new Piece[Board.ROW][Board.COLUMN];
+
+        for (int i = 0; i < Board.ROW; i++) {
+            for (int j = 0; j < Board.COLUMN; j++) {
+                Piece piece = this.getPieces()[i][j];
+                Piece clonedPiece = null;
+                if (piece != null) {
+                    clonedPiece = piece.clone();
+                }
+                pieces[i][j] = clonedPiece;
+            }
+        }
+
+        Board clonedBoard = new Board();
+        clonedBoard.setPieces(pieces);
+        return clonedBoard;
+    }
+
+    @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < Board.ROW; i++) {
@@ -94,13 +114,15 @@ public class Board {
             for (int j = 0; j < Board.COLUMN; j++) {
                 Piece piece = pieces[i][j];
                 if (piece == null) {
-                    res.append("00 ");
+                    res.append("000 ");
                 } else {
-                    res.append(piece.getShortName()).append(" ");
+                    String pieceColor = piece.isRed() ? "r" : "b";
+                    res.append(pieceColor).append(piece.getShortName()).append(" ");
                 }
             }
             res.append("\n");
         }
+
         return res.toString();
     }
 

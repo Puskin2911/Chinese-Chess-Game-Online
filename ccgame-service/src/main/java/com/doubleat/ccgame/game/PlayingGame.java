@@ -100,7 +100,6 @@ public class PlayingGame {
 
         Piece[][] pieces = board.getPieces();
 
-
         // Do move
         pieces[from.getX()][from.getY()] = null;
         pieces[to.getX()][to.getY()] = current;
@@ -109,8 +108,28 @@ public class PlayingGame {
         moves.push(move);
 
         // Check game isOver
+        boolean mockIsOver = true;
 
+        logger.info("current board status\n" + board);
 
+        Board clonedBoard = this.board.clone();
+        for (int i = 0; i < Board.ROW; i++) {
+            for (int j = 0; j < Board.COLUMN; j++) {
+                Piece piece = clonedBoard.getPieces()[i][j];
+                if (piece != null && piece.isRed() == isRedTurn) {
+                    if (MoveUtils.isHaveValidMove(clonedBoard, new Position(i, j))) {
+                        mockIsOver = false;
+                        break;
+                    }
+                }
+            }
+            if (!mockIsOver)
+                break;
+        }
+
+        if (mockIsOver) {
+            this.endGame(!isRedTurn);
+        }
 
         return true;
     }
