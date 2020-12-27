@@ -48,7 +48,7 @@ public class StompServiceImpl implements StompService {
         playingGameDto.setMoved(move.getMoveString());
         sendMessage("/room/" + roomId + "/move", playingGameDto);
 
-        Optional<GameStopResponse> gameStopResponseOptional = roomStrategy.isGameOver(roomId);
+        Optional<GameStopResponse> gameStopResponseOptional = roomStrategy.handleGameOver(roomId);
 
         gameStopResponseOptional
                 .ifPresent(gameStopResponse -> sendMessage("/room/" + roomId + "/game/stop", gameStopResponse));

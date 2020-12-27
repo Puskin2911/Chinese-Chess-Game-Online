@@ -10,6 +10,7 @@ import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.RoomDto;
+import com.doubleat.ccgame.game.GameCache;
 import com.doubleat.ccgame.game.Player;
 import com.doubleat.ccgame.game.PlayingGame;
 import com.doubleat.ccgame.repository.GameRepository;
@@ -134,7 +135,7 @@ public class RoomStrategyImpl implements RoomStrategy {
         PlayingGame playingGame = room.getPlayingGame();
         Player playerMove = playingGame.getPlayerByUsername(username);
 
-        boolean isMoved = playingGame.doMove(playerMove, move.getMoveString());
+        playingGame.doMove(playerMove, move.getMoveString());
 
         return PlayingGameDto.builder()
                 .boardStatus(playingGame.getBoardStatus())
@@ -144,30 +145,62 @@ public class RoomStrategyImpl implements RoomStrategy {
     }
 
     @Override
-    public Optional<GameStopResponse> isGameOver(Integer roomId) {
+    public Optional<GameStopResponse> handleGameOver(Integer roomId) {
         Room room = roomCache.getRoomById(roomId);
 
-        if (room.isGameOver()) {
-            GameStopResponse gameStopResponse = GameStopResponse.builder()
-                    .build();
-            return Optional.of(gameStopResponse);
-        } else
-            return Optional.empty();
+        GameCache gameCache = room.resolveGame();
+        if (gameCache != null) {
+            Optional<User> winUserOptional = userRepository.findByUsername(gameCache.getWinnerUsername());
+            Optional<User> loseUserOptional = userRepository.findByUsername(gameCache.getLoserUsername());
+
+            if (winUserOptional.isPresent() && loseUserOptional.isPresent()) {
+                User winUser = winUserOptional.get();
+                winUser.setElo(winUser.getElo() + 12);
+                User loseUser = loseUserOptional.get();
+                loseUser.setElo(loseUser.getElo() - 12);
+
+                userRepository.save(winUser);
+                userRepository.save(loseUser);
+
+                // Save game to DB
+                Game game = new Game();
+                game.setWinner(winUser);
+                game.setLoser(loseUser);
+                gameRepository.save(game);
+
+                UserDto winnerDto = userConverter.toDto(winUser);
+                UserDto loserDto = userConverter.toDto(loseUser);
+
+                room.setPlayers(new HashSet<>(Arrays.asList(winnerDto, loserDto)));
+
+                RoomDto roomDto = RoomDto.builder()
+                        .id(roomId)
+                        .players(room.getPlayers())
+                        .viewers(room.getViewers())
+                        .build();
+
+                GameStopResponse gameStopResponse = GameStopResponse.builder()
+                        .winner(winnerDto)
+                        .loser(loserDto)
+                        .roomDto(roomDto)
+                        .build();
+                return Optional.of(gameStopResponse);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
-    public GameStopResponse handleStopGame(Integer roomId, String winner, String loser) {
+    public GameStopResponse handleForceLeaveRoom(Integer roomId, String loser) {
         Room room = roomCache.getRoomById(roomId);
         UserDto winnerDto = null;
         UserDto loserDto = null;
 
-        if (winner == null) {
-            winner = room.getPlayers()
-                    .stream()
-                    .map(UserDto::getUsername)
-                    .collect(Collectors.toList())
-                    .get(0);
-        }
+        String winner = room.getPlayers()
+                .stream()
+                .map(UserDto::getUsername)
+                .collect(Collectors.toList())
+                .get(0);
 
         Optional<User> winnerOptional = userRepository.findByUsername(winner);
         Optional<User> loserOptional = userRepository.findByUsername(loser);
@@ -178,17 +211,19 @@ public class RoomStrategyImpl implements RoomStrategy {
             User loserUser = loserOptional.get();
             loserUser.setElo(loserUser.getElo() - 12);
 
-            winnerDto = userConverter.toDto(winnerUser);
-            loserDto = userConverter.toDto(loserUser);
+            userRepository.save(winnerUser);
+            userRepository.save(loserUser);
 
             Game game = new Game();
             game.setLoser(loserUser);
             game.setWinner(winnerUser);
             gameRepository.save(game);
+
+            winnerDto = userConverter.toDto(winnerUser);
+            loserDto = userConverter.toDto(loserUser);
         }
 
-        assert winnerDto != null;
-        room.setPlayers(new HashSet<>(Arrays.asList(winnerDto, loserDto)));
+        room.setPlayers(new HashSet<>(Collections.singletonList(winnerDto)));
 
         RoomDto roomDto = RoomDto.builder()
                 .id(roomId)
