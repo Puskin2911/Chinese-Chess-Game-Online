@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -10,15 +11,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Autowired
+    private StompConfig stompConfig;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp")
                 .setAllowedOrigins("*")
                 .withSockJS()
-                .setStreamBytesLimit(512 * 1024)
-                .setHttpMessageCacheSize(1000)
-                .setDisconnectDelay(30 * 30);
-        // TODO: use environment variable.
+                .setStreamBytesLimit(stompConfig.getStreamBytesLimit())
+                .setHttpMessageCacheSize(stompConfig.getHttpMessageCacheSize())
+                .setDisconnectDelay(stompConfig.getDisconnectDelay());
     }
 
     @Override

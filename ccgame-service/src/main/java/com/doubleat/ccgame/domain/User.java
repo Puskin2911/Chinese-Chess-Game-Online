@@ -1,7 +1,6 @@
 package com.doubleat.ccgame.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,6 +9,9 @@ import java.util.Set;
 @Table(name = "user")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +25,6 @@ public class User {
 
     @Column(name = "email", unique = true)
     private String email;
-
-    @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
-
-    @Column(name = "provider_id")
-    private String providerId;
 
     @Column(name = "image_url")
     private String imageUrl;

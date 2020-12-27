@@ -1,19 +1,27 @@
 package com.doubleat.ccgame.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final String[] allowedOrigins = { "https://localhost:3000",
-            "http://localhost:3000",
-            "https://v1-0-dev.daslc0bv0s0j5.amplifyapp.com",
-            "http://v1-0-dev.daslc0bv0s0j5.amplifyapp.com",
-            "https://10.10.1.105:3000"};
+
+    @Autowired
+    private MvcConfig mvcConfig;
+
+    private String[] allowedOrigins;
+
+    @PostConstruct
+    public void init() {
+        this.allowedOrigins = mvcConfig.getAllowedOrigins().toArray(new String[0]);
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -27,4 +35,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+
 }

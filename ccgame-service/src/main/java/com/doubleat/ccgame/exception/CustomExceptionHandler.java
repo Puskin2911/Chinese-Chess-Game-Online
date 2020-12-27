@@ -13,6 +13,7 @@ import java.util.Date;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
+
     @ExceptionHandler(BadCredentialsException.class)
     public final ResponseEntity<ResponseError> handleBadCredentialsException(Exception exception) {
         ResponseError error = new ResponseError();
