@@ -8,50 +8,22 @@ spring:
     database: mysql
     hibernate:
       ddl-auto: update
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 1047172535479-u6kekbu37o93ep3lkrt13q8ic9fjgabm.apps.googleusercontent.com
-            client-secret: 1LFybaVldhYd6HEJAWAR8Am0
-            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - email
-              - profile
-            #            facebook:
-            #              clientId: 121189305185277
-            #              clientSecret: 42ffe5aa7379e8326387e0fe16f34132
-            #              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
-            #              scope:
-            #                - email
-            #                - public_profile
-          github:
-            client-id: fd78e5da72331f97f863
-            client-secret: fc5fff1950e15a0228f6c4df79a794d95ab3b95e
-            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - user:email
-              - read:user
-#        provider:
-#          facebook:
-#            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
-#            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
-#            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+
 server:
   port: 8080
 
 logging:
   level:
     org.springframework: info
-app:
+ccgame:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
     tokenExpirationMs: 86400000 # One day
-  oauth2:
-    authorizedRedirectUris:
-      - http://localhost:3000/oauth2/redirect
-      - myandroidapp://oauth2/redirect
-      - myiosapp://oauth2/redirect
-  game:
-    elo: 1200
+  mvc:
+    allowedOrigins:
+      - "http://localhost:3000"
+      - "http://127.0.0.1:3000"
+  stomp:
+    disconnectDelay: 900 # 30 * 30
+    httpMessageCacheSize: 1000
+    streamBytesLimit: 524288 # 512 * 1024

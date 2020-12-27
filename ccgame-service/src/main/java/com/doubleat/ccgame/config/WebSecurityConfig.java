@@ -2,10 +2,6 @@ package com.doubleat.ccgame.config;
 
 import com.doubleat.ccgame.filter.JwtAuthenticationFilter;
 import com.doubleat.ccgame.security.RestAuthenticationEntryPoint;
-import com.doubleat.ccgame.security.oauth2.CustomOAuth2UserService;
-import com.doubleat.ccgame.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.doubleat.ccgame.security.oauth2.OAuth2AuthenticationFailureHandler;
-import com.doubleat.ccgame.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(
-//        securedEnabled = true,
-//        jsr250Enabled = true,
-//        prePostEnabled = true
-//)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {
@@ -49,18 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-
-    @Autowired
-    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
-    @Autowired
-    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-    @Autowired
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -89,27 +68,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/**/*.css",
                                 "/**/*.js")
                         .permitAll()
-                        .antMatchers("/api/auth/**", "/oauth2/**")
+                        .antMatchers("/api/auth/**")
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
-                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
-                        .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
-                                .baseUri("/oauth2/authorize")
-                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
-                        .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-                                .baseUri("/oauth2/callback/*"))
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler)
-                );
+                        .authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(AUTH_WHITELIST);
     }
 

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 
 @Controller
-public class CommunicateController {
+public class StompController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommunicateController.class);
+    private static final Logger logger = LoggerFactory.getLogger(StompController.class);
 
     @Autowired
     private StompService stompService;

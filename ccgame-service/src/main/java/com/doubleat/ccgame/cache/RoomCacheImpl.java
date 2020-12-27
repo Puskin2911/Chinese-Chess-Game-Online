@@ -22,6 +22,8 @@ public class RoomCacheImpl implements RoomCache {
 
     private final AtomicInteger atomicId = new AtomicInteger();
 
+    private static final String ROOM_NOT_FOUND_EXCEPTION_MESSAGE = "Not found room id: ";
+
     @Override
     public Room getRoomById(Integer roomId) {
         synchronized (roomMap) {
@@ -63,7 +65,7 @@ public class RoomCacheImpl implements RoomCache {
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
             if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
+                throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
             Set<UserDto> players = room.getPlayers();
             if (players.size() == 2)
@@ -81,7 +83,7 @@ public class RoomCacheImpl implements RoomCache {
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
             if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
+                throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
             Set<UserDto> players = room.getPlayers();
             players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
@@ -91,7 +93,7 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addViewerToRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
+    public Room addViewerToRoom(UserDto viewer, int roomId) {
         assert viewer != null;
 
         synchronized (roomMap) {
@@ -102,13 +104,13 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public void removeViewerFromRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
+    public void removeViewerFromRoom(UserDto viewer, int roomId) {
         assert viewer != null;
 
         synchronized (roomMap) {
             Room room = roomMap.get(roomId);
             if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
+                throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
             Set<UserDto> viewers = room.getViewers();
             viewers.removeIf(viewerInSet -> viewerInSet.getUsername().equals(viewer.getUsername()));

@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Swagger2Config {
     @Bean
-    public Docket api(){
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.doubleat.ccgame"))
@@ -24,12 +24,13 @@ public class Swagger2Config {
                 .apiInfo(apiEndPointInfo());
     }
 
-    private ApiInfo apiEndPointInfo(){
+    private ApiInfo apiEndPointInfo() {
         return new ApiInfoBuilder()
                 .title("Chinese Chess Game API")
-                .description("Chinese Chess Game online with WebSocket")
-                .contact(new Contact("@@", "http://doubleat.com/ccgame", "hulk@gmail.com"))
+                .description("Chinese Chess Game online")
+                .contact(new Contact("@@", "http://doubleat.com/ccgame", "nguyenthehop2000@gmail.com"))
                 .version("1.0.0")
                 .build();
     }
+
 }
