@@ -1,5 +1,6 @@
 package com.doubleat.ccgame.game;
 
+import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
 import lombok.Builder;
@@ -76,13 +77,13 @@ public class PlayingGame {
         this.setRedWin(isRedWin);
     }
 
-    public boolean doMove(Player player, String move) {
+    public void doMove(Player player, String move) {
         if (!MoveUtils.isValidMove(move)) {
             logger.error("Invalid move format!");
-            return false;
+            throw new InvalidMoveException("Invalid move format!");
         } else if (player.isRed() != isRedTurn) {
             logger.error("Invalid turn!");
-            return false;
+            throw new InvalidMoveException("Invalid turn");
         }
 
         Position from = Position.getPositionFromString(move.substring(0, 2));
@@ -92,7 +93,7 @@ public class PlayingGame {
 
         if (current == null || !current.isValidMove(board, from, to)) {
             logger.error("Invalid move!");
-            return false;
+            throw new InvalidMoveException("Invalid move!");
         }
 
         Piece[][] pieces = board.getPieces();
@@ -123,10 +124,9 @@ public class PlayingGame {
         }
 
         if (mockIsOver) {
+            logger.info("Game is over! Need to send notification to user!");
             this.endGame(!isRedTurn);
         }
-
-        return true;
     }
 
     /**
