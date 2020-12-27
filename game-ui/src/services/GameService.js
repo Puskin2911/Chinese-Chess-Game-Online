@@ -75,7 +75,7 @@ const getAvailableMovePosition = (pieceString, boardStatus, isRedPlayer) => {
                 mockBoardStatus = gameService.resolveBoardStatus(mockBoardStatus, false);
                 const myGeneral = findMyGeneral(mockBoardStatus, isRedPlayer);
 
-                if (!isAbleDead(myGeneral, mockBoardStatus, isRedPlayer)) {
+                if (!isAbleDead(myGeneral, mockBoardStatus)) {
                     const position = {
                         centerX: i,
                         centerY: j
