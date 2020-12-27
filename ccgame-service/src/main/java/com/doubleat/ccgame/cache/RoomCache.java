@@ -79,4 +79,6 @@ public interface RoomCache {
      */
     void kickOutPlayer(UserDto userDto);
 
+    UserDto getUserByName(String username, Integer roomID);
+
 }

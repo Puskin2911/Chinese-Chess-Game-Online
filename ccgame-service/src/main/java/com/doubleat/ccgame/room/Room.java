@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Data
@@ -29,6 +30,20 @@ public class Room {
 
     public boolean isRedWin() {
         return playingGame.isRedWin();
+    }
+
+    public String getWinner(){
+        return this.playingGame.getWinner();
+    }
+    public String getLoser(){
+        Iterator iterator = players.iterator();
+        while (iterator.hasNext()){
+            UserDto userDto = (UserDto) iterator.next();
+            if(!userDto.getUsername().equals(getWinner())){
+                return userDto.getUsername();
+            }
+        }
+        return null;
     }
 
 }

@@ -147,8 +147,11 @@ public class RoomStrategyImpl implements RoomStrategy {
     public Optional<GameStopResponse> isGameOver(Integer roomId) {
         Room room = roomCache.getRoomById(roomId);
 
+        RoomDto roomDto = RoomDto.builder().id(roomId).players(room.getPlayers()).viewers(room.getViewers()).build();
         if (room.isGameOver()) {
-            GameStopResponse gameStopResponse = GameStopResponse.builder()
+            UserDto winnerUser = roomCache.getUserByName(room.getWinner(), roomId);
+            UserDto loserUser = roomCache.getUserByName(room.getLoser(), roomId);
+            GameStopResponse gameStopResponse = GameStopResponse.builder().roomDto(roomDto).winner(winnerUser).loser(loserUser)
                     .build();
             return Optional.of(gameStopResponse);
         } else

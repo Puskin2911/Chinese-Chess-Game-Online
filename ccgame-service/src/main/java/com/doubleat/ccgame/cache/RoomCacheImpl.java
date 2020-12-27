@@ -7,6 +7,7 @@ import com.doubleat.ccgame.room.Room;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -162,4 +163,16 @@ public class RoomCacheImpl implements RoomCache {
         return new Room(roomId);
     }
 
+    @Override
+    public UserDto getUserByName(String username, Integer roomID) {
+        Room room = getRoomById(roomID);
+        Iterator<UserDto> iterator = room.getPlayers().iterator();
+        while (iterator.hasNext()){
+            UserDto user = iterator.next();
+            if(user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
+    }
 }

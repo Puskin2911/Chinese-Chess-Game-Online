@@ -36,6 +36,8 @@ public class PlayingGame {
 
     private boolean isRedWin;
 
+    private String winner;
+
     /**
      * Save all moves.
      */
@@ -73,6 +75,11 @@ public class PlayingGame {
      * @param isRedWin {@code true}  if red player is win and vice versa.
      */
     public void endGame(boolean isRedWin) {
+        if(isRedWin){
+            this.winner = redPlayer.getUsername();
+        } else {
+            this.winner = blackPlayer.getUsername();
+        }
         this.setOver(true);
         this.setRedWin(isRedWin);
     }
@@ -128,6 +135,7 @@ public class PlayingGame {
         }
 
         if (mockIsOver) {
+
             this.endGame(!isRedTurn);
         }
 
