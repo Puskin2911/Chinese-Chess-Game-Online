@@ -76,8 +76,8 @@ public interface RoomStrategy {
      * @param roomId id of room need to check.
      * @return {@code Optional<GameStopResponse>} if game is over. Other wise, return {@code Optional.empty()}
      */
-    Optional<GameStopResponse> isGameOver(Integer roomId);
+    Optional<GameStopResponse> handleGameOver(Integer roomId);
 
-    GameStopResponse handleStopGame(Integer roomId, String winner, String loser);
+    GameStopResponse handleForceLeaveRoom(Integer roomId, String loser);
 
 }

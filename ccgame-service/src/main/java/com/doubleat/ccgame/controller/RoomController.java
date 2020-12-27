@@ -55,7 +55,7 @@ public class RoomController {
         boolean isForceLeave = roomStrategy.playerLeaveRoom(userDto, roomId);
 
         if (isForceLeave) {
-            GameStopResponse gameStopResponse = roomStrategy.handleStopGame(roomId, null, userDto.getUsername());
+            GameStopResponse gameStopResponse = roomStrategy.handleForceLeaveRoom(roomId, userDto.getUsername());
             stompService.notifyStopGame(roomId, gameStopResponse);
         }
 
