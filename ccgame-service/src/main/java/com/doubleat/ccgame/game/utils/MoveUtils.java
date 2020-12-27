@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
 
 public final class MoveUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MoveUtils.class);
-
     private MoveUtils() {
     }
 
@@ -45,7 +43,6 @@ public final class MoveUtils {
 
                     Position myGeneralPosition = PieceUtils.findMyGeneralPosition(mockBoard, currentPiece.isRed());
                     if (!isAbleDead(mockBoard, myGeneralPosition)) {
-                        logger.info("Can Move this\n" + mockBoard + currentPosition + toPosition);
                         return true;
                     }
                 }

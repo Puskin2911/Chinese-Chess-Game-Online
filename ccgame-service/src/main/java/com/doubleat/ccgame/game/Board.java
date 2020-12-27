@@ -87,7 +87,7 @@ public class Board {
 
     @Override
     public Board clone() {
-        Piece[][] pieces = new Piece[Board.ROW][Board.COLUMN];
+        Piece[][] clonedPieces = new Piece[Board.ROW][Board.COLUMN];
 
         for (int i = 0; i < Board.ROW; i++) {
             for (int j = 0; j < Board.COLUMN; j++) {
@@ -96,12 +96,12 @@ public class Board {
                 if (piece != null) {
                     clonedPiece = piece.clone();
                 }
-                pieces[i][j] = clonedPiece;
+                clonedPieces[i][j] = clonedPiece;
             }
         }
 
         Board clonedBoard = new Board();
-        clonedBoard.setPieces(pieces);
+        clonedBoard.setPieces(clonedPieces);
         return clonedBoard;
     }
 

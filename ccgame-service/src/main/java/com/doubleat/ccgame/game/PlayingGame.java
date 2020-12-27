@@ -78,8 +78,6 @@ public class PlayingGame {
     }
 
     public boolean doMove(Player player, String move) {
-        assert player != null;
-
         if (!MoveUtils.isValidMove(move)) {
             logger.error("Invalid move format!");
             return false;
@@ -109,8 +107,6 @@ public class PlayingGame {
 
         // Check game isOver
         boolean mockIsOver = true;
-
-        logger.info("current board status\n" + board);
 
         Board clonedBoard = this.board.clone();
         for (int i = 0; i < Board.ROW; i++) {
