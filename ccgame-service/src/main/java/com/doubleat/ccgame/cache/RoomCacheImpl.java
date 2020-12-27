@@ -169,7 +169,7 @@ public class RoomCacheImpl implements RoomCache {
         Iterator<UserDto> iterator = room.getPlayers().iterator();
         while (iterator.hasNext()){
             UserDto user = iterator.next();
-            if(user.getUsername().equals(username)){
+            if(user != null && user.getUsername().equals(username)){
                 return user;
             }
         }

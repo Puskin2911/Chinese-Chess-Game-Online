@@ -27,7 +27,7 @@ public class General extends Piece {
         }
 
         // King check king
-        if (yFrom == yTo && xFrom != xTo && pieceAtTo != null && pieceAtTo.shortName.equals("ge")
+        if (yFrom == yTo && xFrom != xTo && pieceAtTo != null && pieceAtTo.getShortName().equals("ge")
                 && PieceUtils.getPieceBetweenVertical(board, xFrom, xTo, yTo) == 0) {
             return true;
         }

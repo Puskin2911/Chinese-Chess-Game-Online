@@ -50,9 +50,9 @@ public class PlayingGame {
      * @return Player
      */
     public Player getPlayerByUsername(String username) {
-        if (redPlayer.getUsername().equals(username)) {
+        if (redPlayer != null && redPlayer.getUsername().equals(username)) {
             return redPlayer;
-        } else if (blackPlayer.getUsername().equals(username)) {
+        } else if (blackPlayer != null && blackPlayer.getUsername().equals(username)) {
             return blackPlayer;
         }
 
