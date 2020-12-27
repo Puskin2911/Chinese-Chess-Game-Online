@@ -2,7 +2,6 @@ package com.doubleat.ccgame.game;
 
 import com.doubleat.ccgame.game.piece.Piece;
 import com.doubleat.ccgame.game.utils.MoveUtils;
-import com.doubleat.ccgame.game.utils.PieceUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
