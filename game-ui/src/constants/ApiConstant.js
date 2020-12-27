@@ -4,10 +4,6 @@ const ACCESS_TOKEN = 'accessToken';
 
 const OAUTH2_REDIRECT_URI = 'https://localhost:3000/oauth2/redirect'
 
-const GOOGLE_AUTH_URL = API_BASE_URL + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
-const FACEBOOK_AUTH_URL = API_BASE_URL + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
-const GITHUB_AUTH_URL = API_BASE_URL + '/oauth2/authorize/github?redirect_uri=' + OAUTH2_REDIRECT_URI;
-
 const BASE_AUTH_API_URL = '/api/auth';
 const CHECK_AUTH_URL = API_BASE_URL + BASE_AUTH_API_URL + '/validate';
 const LOGIN_URL = API_BASE_URL + BASE_AUTH_API_URL + '/login';
@@ -27,9 +23,6 @@ const READY_DESTINATION_SOCKET_URL = (roomId) => PREFIX_TRANSFER_MESSAGE + READY
 const ApiConstants = {
     ACCESS_TOKEN,
     OAUTH2_REDIRECT_URI,
-    GOOGLE_AUTH_URL,
-    FACEBOOK_AUTH_URL,
-    GITHUB_AUTH_URL,
     CHECK_AUTH_URL,
     LOGIN_URL,
     SIGNUP_URL,

@@ -23,6 +23,8 @@ public class RoomCacheImpl implements RoomCache {
 
     private final AtomicInteger atomicId = new AtomicInteger();
 
+    private static final String ROOM_NOT_FOUND_EXCEPTION_MESSAGE = "Not found room id: ";
+
     @Override
     public Room getRoomById(Integer roomId) {
         synchronized (roomMap) {
@@ -32,8 +34,6 @@ public class RoomCacheImpl implements RoomCache {
 
     @Override
     public Room addPlayerToRoom(UserDto userDto) {
-        assert userDto != null;
-
         synchronized (roomMap) {
             for (Map.Entry<Integer, Room> entry : roomMap.entrySet()) {
                 Room room = entry.getValue();
@@ -58,62 +58,46 @@ public class RoomCacheImpl implements RoomCache {
     }
 
     @Override
-    public Room addPlayerToRoom(UserDto userDto, int roomId) {
-        assert userDto != null;
+    public synchronized Room addPlayerToRoom(UserDto userDto, int roomId) {
+        Room room = roomMap.get(roomId);
+        if (room == null)
+            throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
-        synchronized (roomMap) {
-            Room room = roomMap.get(roomId);
-            if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
+        Set<UserDto> players = room.getPlayers();
+        if (players.size() == 2)
+            throw new RoomIsFullPlayersException("Room have id: " + roomId + " is full");
 
-            Set<UserDto> players = room.getPlayers();
-            if (players.size() == 2)
-                throw new RoomIsFullPlayersException("Room have id: " + roomId + " is full");
-
-            players.add(userDto);
-            return room;
-        }
+        players.add(userDto);
+        return room;
     }
 
     @Override
-    public boolean removePlayerFromRoom(UserDto userDto, int roomId) {
-        assert userDto != null;
+    public synchronized boolean removePlayerFromRoom(UserDto userDto, int roomId) {
+        Room room = roomMap.get(roomId);
+        if (room == null)
+            throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
-        synchronized (roomMap) {
-            Room room = roomMap.get(roomId);
-            if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
+        Set<UserDto> players = room.getPlayers();
+        players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
 
-            Set<UserDto> players = room.getPlayers();
-            players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
-
-            return !room.isGameOver();
-        }
+        return !room.isGameOver();
     }
 
     @Override
-    public Room addViewerToRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
-        assert viewer != null;
-
-        synchronized (roomMap) {
-            Room room = roomMap.get(roomId);
-            room.getPlayers().add(viewer);
-            return room;
-        }
+    public synchronized Room addViewerToRoom(UserDto viewer, int roomId) {
+        Room room = roomMap.get(roomId);
+        room.getPlayers().add(viewer);
+        return room;
     }
 
     @Override
-    public void removeViewerFromRoom(UserDto viewer, int roomId) throws RoomNotFoundException {
-        assert viewer != null;
+    public synchronized void removeViewerFromRoom(UserDto viewer, int roomId) {
+        Room room = roomMap.get(roomId);
+        if (room == null)
+            throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
 
-        synchronized (roomMap) {
-            Room room = roomMap.get(roomId);
-            if (room == null)
-                throw new RoomNotFoundException("Have no room have id: " + roomId);
-
-            Set<UserDto> viewers = room.getViewers();
-            viewers.removeIf(viewerInSet -> viewerInSet.getUsername().equals(viewer.getUsername()));
-        }
+        Set<UserDto> viewers = room.getViewers();
+        viewers.removeIf(viewerInSet -> viewerInSet.getUsername().equals(viewer.getUsername()));
     }
 
     /**

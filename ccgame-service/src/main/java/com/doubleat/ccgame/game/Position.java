@@ -13,8 +13,6 @@ public class Position {
     private int y;
 
     public static Position getPositionFromString(String text) {
-        assert text != null;
-
         int x = Character.getNumericValue(text.charAt(0));
         int y = Character.getNumericValue(text.charAt(1));
 

@@ -1,6 +1,6 @@
 package com.doubleat.ccgame.security.jwt;
 
-import com.doubleat.ccgame.config.AppProperties;
+import com.doubleat.ccgame.config.AuthConfig;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProviderImpl.class);
 
     @Autowired
-    private AppProperties appProperties;
+    private AuthConfig authConfig;
 
     private Long tokenExpirationMs;
 
@@ -26,8 +26,8 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     @PostConstruct
     public void init() {
-        tokenExpirationMs = appProperties.getAuth().getTokenExpirationMs();
-        tokenSecret = appProperties.getAuth().getTokenSecret();
+        tokenExpirationMs = authConfig.getTokenExpirationMs();
+        tokenSecret = authConfig.getTokenSecret();
     }
 
     @Override
@@ -77,4 +77,5 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
             return false;
         }
     }
+
 }
