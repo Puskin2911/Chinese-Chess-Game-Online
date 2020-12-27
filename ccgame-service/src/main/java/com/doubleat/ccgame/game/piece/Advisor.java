@@ -7,6 +7,7 @@ public class Advisor extends Piece {
     public Advisor(String shortName) {
         super(shortName);
     }
+
     @Override
     public boolean isValidMove(Board board, Position from, Position to) {
 
@@ -17,22 +18,24 @@ public class Advisor extends Piece {
 
         Piece pieceAtTo = board.getPieces()[xTo][yTo];
 
-        if(yFrom >= 3 && yFrom <= 5 && yTo >= 3 && yTo <= 5){
-            if(Math.abs(xFrom - xTo) == 1 && Math.abs(yFrom - yTo) == 1){
-                if(this.isRed && xFrom >= 7 && xFrom <= 9 && xTo >= 7 && xTo <= 9){
-                    if(pieceAtTo == null){
-                        return  true;
+        if (yFrom >= 3 && yFrom <= 5 && yTo >= 3 && yTo <= 5) {
+            if (Math.abs(xFrom - xTo) == 1 && Math.abs(yFrom - yTo) == 1) {
+                if (this.isRed && xFrom >= 7 && xFrom <= 9 && xTo >= 7 && xTo <= 9) {
+                    if (pieceAtTo == null) {
+                        return true;
                     }
-                    return pieceAtTo.isRed != this.isRed;
+                    return !pieceAtTo.isRed;
                 }
-                if (!this.isRed && xFrom >= 0 && xFrom <= 2 && xTo >= 0 && xTo <= 2) {
+                if (!this.isRed && xFrom >= 0 && xFrom <= 2 && xTo <= 2) {
                     // Just move
-                    if (pieceAtTo == null) return true;
+                    if (pieceAtTo == null)
+                        return true;
                     // Fight (eat piece).
-                    return pieceAtTo.isRed != this.isRed;
+                    return pieceAtTo.isRed;
                 }
             }
         }
         return false;
     }
+
 }

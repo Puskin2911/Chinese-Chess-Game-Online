@@ -24,4 +24,5 @@ public abstract class Piece {
         clonedPiece.setRed(isRed);
         return clonedPiece;
     }
+
 }

@@ -157,9 +157,6 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     @Override
     public GameStopResponse handleStopGame(Integer roomId, String winner, String loser) {
-
-        // TODO : re-handle this method
-
         Room room = roomCache.getRoomById(roomId);
         UserDto winnerDto = null;
         UserDto loserDto = null;

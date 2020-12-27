@@ -18,25 +18,26 @@ public class Horse extends Piece {
         Piece pieceAtTo = board.getPieces()[xTo][yTo];
 
         if (Math.abs(xFrom - xTo) == 1 && yFrom - yTo == 2 && board.getPieces()[xFrom][yFrom - 1] == null) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
-
         if (Math.abs(xFrom - xTo) == 1 && yFrom - yTo == -2 && board.getPieces()[xFrom][yFrom - 1 + 2] == null) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
-
         if (xFrom - xTo == 2 && Math.abs(yFrom - yTo) == 1 && board.getPieces()[xFrom - 1][yFrom] == null) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
-
         if (xFrom - xTo == -2 && Math.abs(yFrom - yTo) == 1 && board.getPieces()[xFrom - 1 + 2][yFrom] == null) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
-
         return false;
     }
+
 }

@@ -19,14 +19,16 @@ public class Chariot extends Piece {
         Piece pieceAtTo = board.getPieces()[xTo][yTo];
 
         if (xFrom == xTo && PieceUtils.getPieceBetweenHorizontal(board, xFrom, yFrom, yTo) == 0) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
         if (yFrom == yTo && PieceUtils.getPieceBetweenVertical(board, xFrom, xTo, yFrom) == 0) {
-            if (pieceAtTo == null) return true;
+            if (pieceAtTo == null)
+                return true;
             return pieceAtTo.isRed != this.isRed;
         }
-
         return false;
     }
+
 }
