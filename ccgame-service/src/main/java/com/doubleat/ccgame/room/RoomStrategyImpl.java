@@ -192,50 +192,20 @@ public class RoomStrategyImpl implements RoomStrategy {
 
     @Override
     public GameStopResponse handleForceLeaveRoom(Integer roomId, String loser) {
+        // Handle end game first.
+        forceEndGame(roomId, loser);
+
+        return handleGameOver(roomId).orElse(null);
+    }
+
+    private void forceEndGame(Integer roomId, String loserUsername) {
         Room room = roomCache.getRoomById(roomId);
-        UserDto winnerDto = null;
-        UserDto loserDto = null;
 
-        String winner = room.getPlayers()
-                .stream()
-                .map(UserDto::getUsername)
-                .collect(Collectors.toList())
-                .get(0);
-
-        Optional<User> winnerOptional = userRepository.findByUsername(winner);
-        Optional<User> loserOptional = userRepository.findByUsername(loser);
-
-        if (winnerOptional.isPresent() && loserOptional.isPresent()) {
-            User winnerUser = winnerOptional.get();
-            winnerUser.setElo(winnerUser.getElo() + 12);
-            User loserUser = loserOptional.get();
-            loserUser.setElo(loserUser.getElo() - 12);
-
-            userRepository.save(winnerUser);
-            userRepository.save(loserUser);
-
-            Game game = new Game();
-            game.setLoser(loserUser);
-            game.setWinner(winnerUser);
-            gameRepository.save(game);
-
-            winnerDto = userConverter.toDto(winnerUser);
-            loserDto = userConverter.toDto(loserUser);
+        PlayingGame playingGame = room.getPlayingGame();
+        if (playingGame != null) {
+            String redPlayerUsername = playingGame.getRedPlayer().getUsername();
+            playingGame.endGame(!redPlayerUsername.equals(loserUsername));
         }
-
-        room.setPlayers(new HashSet<>(Collections.singletonList(winnerDto)));
-
-        RoomDto roomDto = RoomDto.builder()
-                .id(roomId)
-                .players(room.getPlayers())
-                .viewers(room.getViewers())
-                .build();
-
-        return GameStopResponse.builder()
-                .winner(winnerDto)
-                .loser(loserDto)
-                .roomDto(roomDto)
-                .build();
     }
 
 }
