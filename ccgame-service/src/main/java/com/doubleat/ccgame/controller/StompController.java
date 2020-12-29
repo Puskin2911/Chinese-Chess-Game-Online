@@ -59,4 +59,10 @@ public class StompController {
         return drawRequest;
     }
 
+    @MessageMapping("/room/{roomId}/game/surrender-request")
+    public void handleSurrenderRequest(@DestinationVariable Integer roomId,
+                                       Principal principal) {
+        stompService.handleSurrenderRequest(roomId, principal.getName());
+    }
+
 }

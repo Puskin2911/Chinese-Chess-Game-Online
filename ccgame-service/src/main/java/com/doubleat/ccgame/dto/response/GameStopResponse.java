@@ -19,4 +19,7 @@ public class GameStopResponse {
     @JsonProperty("room")
     private RoomDto roomDto;
 
+    @JsonProperty("type")
+    private String type;
+
 }

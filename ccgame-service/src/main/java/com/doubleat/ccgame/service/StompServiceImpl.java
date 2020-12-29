@@ -69,6 +69,13 @@ public class StompServiceImpl implements StompService {
         sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
     }
 
+    @Override
+    public void handleSurrenderRequest(Integer roomId, String loserUsername) {
+        GameStopResponse gameStopResponse = roomStrategy.handleSurrenderRequest(roomId, loserUsername);
+
+        sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
+    }
+
     private void sendMessage(String destination, Object payload) {
         try {
             messagingTemplate.convertAndSend(destination, payload);

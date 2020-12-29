@@ -80,4 +80,6 @@ public interface RoomStrategy {
 
     GameStopResponse handleForceLeaveRoom(Integer roomId, String loser);
 
+    GameStopResponse handleSurrenderRequest(Integer roomId, String loserUsername);
+
 }

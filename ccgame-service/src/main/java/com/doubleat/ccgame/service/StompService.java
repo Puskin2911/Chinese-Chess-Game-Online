@@ -6,6 +6,7 @@ import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
 
 public interface StompService {
+
     void handlePlayerReady(ReadyMessage message, Integer roomId, String name);
 
     void handleMove(MoveMessage move, String username, Integer roomId);
@@ -15,5 +16,7 @@ public interface StompService {
     void notifyPlayerJoinRoom(int roomId, UserDto userDto);
 
     void notifyStopGame(int roomId, GameStopResponse gameStopResponse);
+
+    void handleSurrenderRequest(Integer roomId, String loserUsername);
 
 }

@@ -171,6 +171,9 @@ public class RoomStrategyImpl implements RoomStrategy {
                 UserDto winnerDto = userConverter.toDto(winUser);
                 UserDto loserDto = userConverter.toDto(loseUser);
 
+                winnerDto.setReady(false);
+                loserDto.setReady(false);
+
                 room.setPlayers(new HashSet<>(Arrays.asList(winnerDto, loserDto)));
 
                 RoomDto roomDto = RoomDto.builder()
@@ -194,6 +197,14 @@ public class RoomStrategyImpl implements RoomStrategy {
     public GameStopResponse handleForceLeaveRoom(Integer roomId, String loser) {
         // Handle end game first.
         forceEndGame(roomId, loser);
+
+        return handleGameOver(roomId).orElse(null);
+    }
+
+    @Override
+    public GameStopResponse handleSurrenderRequest(Integer roomId, String loserUsername) {
+
+        forceEndGame(roomId, loserUsername);
 
         return handleGameOver(roomId).orElse(null);
     }
