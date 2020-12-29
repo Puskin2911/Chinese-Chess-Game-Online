@@ -169,7 +169,7 @@ export default class Board extends React.Component {
         return (
             <div className="col-md-8 col-lg-5 mt-4 text-center">
                 <canvas ref={this.canvasRef}
-                        className="border border-success"
+                        className="border border-success rounded"
                         width={BOARD_WIDTH_SIZE}
                         height={BOARD_HEIGHT_SIZE}
                         onClick={this.handleMove}

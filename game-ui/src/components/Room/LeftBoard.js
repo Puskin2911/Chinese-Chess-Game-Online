@@ -28,8 +28,12 @@ export default class LeftBoard extends React.Component {
         })
     }
 
-    handleRequestLose = () => {
-        this.stompClient.send("/room/" + this.props.room.id + "/request-lose", {}, {});
+    handleSurrenderRequest = () => {
+        this.stompClient.send("/app/room/" + this.props.room.id + "/game/surrender-request", {}, {});
+    }
+
+    handleDrawRequest = () => {
+        this.stompClient.send("/app/room/" + this.props.room.id + "/game/draw-request", {}, {});
     }
 
     render() {
@@ -47,12 +51,12 @@ export default class LeftBoard extends React.Component {
                                         className="btn border-success bg-white mr-1">Hòa đê
                                 </button>
                                 <ConfirmModal id="confirmDrawModal" title="Bạn có chắc muốn cầu hòa không ?"
-                                              cancel="Thôi" ok="Hòa đê" handleOk=""/>
+                                              cancel="Thôi" ok="Hòa đê" handleOk={this.handleDrawRequest}/>
                                 <button type="button" data-toggle="modal" data-target="#confirmLoseModal"
                                         className="btn border-danger bg-white ml-1">Xin thua
                                 </button>
                                 <ConfirmModal id="confirmLoseModal" title="Bạn có chắc muốn xin thua không ?"
-                                              cancel="Thôi" ok="Thua đê" handleOk={this.handleRequestLose}/>
+                                              cancel="Thôi" ok="Thua đê" handleOk={this.handleSurrenderRequest}/>
                             </div>
                         </div>
                         : <button type="button" className="btn" onClick={this.handleReady}>
