@@ -20,8 +20,8 @@ export default function Lobby(props) {
 
     return (
         <div id="lobby" className="container vh-100">
-            <div className="row justify-content-around">
-                <div className="col-4 text-left mt-2">
+            <div className="row justify-content-center">
+                <div className="col-4 text-left mt-3">
                     <img src={imageLoader.userAvatar} width="50px" className="rounded-circle"
                          alt="avatar"/>
                     <label className="text-center rounded bg-white py-1 px-2 ml-2 mb-0">
@@ -32,7 +32,7 @@ export default function Lobby(props) {
                         </h5>
                     </label>
                 </div>
-                <div className="col-4 text-right mt-2">
+                <div className="col-4 text-right mt-3">
                     <button type="button" className="btn bg-white p-1 mx-1">
                         <i className="fas fa-2x fa-user-friends"/>
                     </button>
