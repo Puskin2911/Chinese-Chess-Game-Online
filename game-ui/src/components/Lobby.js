@@ -1,7 +1,7 @@
 import React from "react";
 import localStorageHelper from "../utils/LocalStorageHelper";
 import {useHistory} from "react-router-dom";
-import imageLoader from "../common/ImageLoader";
+import imageLoader from "../imageLoader/ImageLoader";
 
 export default function Lobby(props) {
     document.title = "Chinese Chess Game | Lobby";

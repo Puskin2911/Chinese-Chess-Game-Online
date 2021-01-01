@@ -5,7 +5,6 @@ import Login from "./components/login/Login";
 import Home from "./components/Home";
 import PrivateRoute from "./common/PrivateRoute";
 import Signup from "./components/Signup";
-import OAuth2RedirectHandler from "./common/OAuth2RedirectHandler";
 
 export default function App() {
     return (
@@ -17,8 +16,6 @@ export default function App() {
             <Route exact path="/login" component={Login}/>
 
             <Route exact path="/signup" component={Signup}/>
-
-            <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}/>
 
             <PrivateRoute path="/game" component={Home}/>
 

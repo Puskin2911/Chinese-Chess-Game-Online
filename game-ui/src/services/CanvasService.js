@@ -1,5 +1,5 @@
 import {CELL_SIZE} from "../constants/BoardConstants";
-import imagePieceMap from "../common/ImagePieceLoader";
+import imagePieceMap from "../imageLoader/ImagePieceLoader";
 import gameService from "./GameService";
 import Board from "../game/Board";
 

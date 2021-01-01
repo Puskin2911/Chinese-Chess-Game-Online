@@ -14,7 +14,7 @@ export default function RightBoard(props) {
         <div className="col-3 text-center rounded">
             <UserProfile user={competitor}/>
             <Clock isEnable={isGameStarted}/>
-            <div className="mt-4">
+            <div className="mt-4 mr-4">
                 <ChatBox roomId={props.room.id} stompClient={stompClient}/>
                 <SendMessage room={props.room} username={user.username} stompClient={stompClient}/>
             </div>
