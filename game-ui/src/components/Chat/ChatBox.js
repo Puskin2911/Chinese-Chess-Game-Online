@@ -23,13 +23,13 @@ export default class ChatBox extends React.Component {
     showMessage() {
         return this.state.messages.map((message, index) => {
             const displayMessage = "- " + message.username + ": " + message.message;
-            return (<p key={index} className="my-1">{displayMessage}</p>);
+            return (<p key={index} className="my-1 text-white">{displayMessage}</p>);
         });
     }
 
     render() {
         return (
-            <div className="bg-white rounded text-left p-2 h-200px pre-scrollable">
+            <div className="border rounded text-left p-2 h-200px overflow-auto">
                 {this.showMessage()}
             </div>
         );

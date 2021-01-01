@@ -19,7 +19,7 @@ export default function Lobby(props) {
     }, [history]);
 
     return (
-        <div className="container vh-100">
+        <div id="lobby" className="container vh-100">
             <div className="row justify-content-around">
                 <div className="col-4 text-left mt-2">
                     <img src={imageLoader.userAvatar} width="50px" className="rounded-circle"
@@ -44,15 +44,22 @@ export default function Lobby(props) {
                     </button>
                 </div>
             </div>
-            <div className="row justify-content-around pt-5 mt-5">
-                <div className="col-3 text-center border">
-                    <button type="button" className="btn btn-danger" onClick={handleJoinRoom}>
-                        Go to Solo
+            <div className="row justify-content-center">
+                <div className="col text-center">
+                    <button type="button" className="btn border-0">
+                        <img src={imageLoader.goodGamePlaying} width="400px" alt="Chinese Chess Image"/>
                     </button>
                 </div>
-                <div className="col-3 text-center border">
-                    <button type="submit" className="btn btn-secondary">
-                        Go to watching
+            </div>
+            <div className="row justify-content-center">
+                <div className="col-4 text-center">
+                    <button type="button" className="btn border-0" onClick={handleJoinRoom}>
+                        <img src={imageLoader.bgNormalChess} width="200px" alt="Chinese Chess Image"/>
+                    </button>
+                </div>
+                <div className="col-4 text-center">
+                    <button type="button" className="btn border-0">
+                        <img src={imageLoader.bgUnNormalChess} width="200px" alt="Chinese Chess Image"/>
                     </button>
                 </div>
             </div>

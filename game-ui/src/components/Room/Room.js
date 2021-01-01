@@ -108,8 +108,8 @@ export default class Room extends React.Component {
         const room = this.props.room;
         const user = this.props.user;
         return (
-            <div className="container-fluid vh-100">
-                <div className="row justify-content-center">
+            <div className="container vh-100">
+                <div id="playing-area" className="row justify-content-center">
                     <LeftBoard room={room} user={user} isGameStarted={this.state.isGameStarted}
                                stompClient={this.stompClient}
                                handleLeaveRoom={this.handleLeaveRoom}/>

@@ -33,7 +33,7 @@ export default class Board extends React.Component {
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         canvasService.clearBoard(canvas);
-        canvasService.drawBlankBoard(ctx);
+        // canvasService.drawBlankBoard(ctx);
         canvasService.drawPieces(ctx, this.state.boardStatus, isRedPlayer);
         canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
         canvasService.drawPieceBorder(ctx, this.state.clickingPiece, true);
@@ -167,9 +167,8 @@ export default class Board extends React.Component {
 
     render() {
         return (
-            <div className="col-md-8 col-lg-5 mt-4 text-center">
-                <canvas ref={this.canvasRef}
-                        className="border border-success rounded"
+            <div className="col-6 text-center mt-4">
+                <canvas id="board" ref={this.canvasRef}
                         width={BOARD_WIDTH_SIZE}
                         height={BOARD_HEIGHT_SIZE}
                         onClick={this.handleMove}

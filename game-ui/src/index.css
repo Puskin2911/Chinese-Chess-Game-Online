@@ -4,6 +4,19 @@
     background-size: cover;
 }
 
+#board {
+    background-image: url("assets/images/blank_board.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#playing-area {
+    background-image: url("assets/images/bg_playing_area.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 620px;
+}
+
 .w-40 {
     width: 40%;
 }

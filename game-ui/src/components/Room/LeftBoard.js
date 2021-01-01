@@ -2,6 +2,7 @@ import React from "react";
 import ApiConstants from "../../constants/ApiConstant";
 import ConfirmModal from "../../common/ConfirmModal";
 import UserProfile from "../../common/UserProfile";
+import Clock from "../../common/Clock";
 
 export default class LeftBoard extends React.Component {
     constructor(props) {
@@ -37,15 +38,13 @@ export default class LeftBoard extends React.Component {
 
     render() {
         return (
-            <div className="col-2 mt-4 border border-danger text-center rounded">
+            <div className="col-3 text-center rounded">
                 <UserProfile user={this.props.user}/>
-                <div className="text-center my-5">
+                <Clock isEnable={this.props.isGameStarted}/>
+                <div className="text-center mt-4">
                     {this.props.isGameStarted
                         ? <div>
-                            <div className="my-5">
-                                Clock Here
-                            </div>
-                            <div className="my-5">
+                            <div className="my-4">
                                 <button type="button" data-toggle="modal" data-target="#confirmDrawModal"
                                         className="btn border-success bg-white mr-1">Hòa đê
                                 </button>
@@ -80,8 +79,10 @@ export default class LeftBoard extends React.Component {
                             <i className="fas fa-2x fa-power-off" onClick={this.handleLeaveRoom}/>
                         </button>
                     }
-                    <h5 className="text-center rounded bg-white mx-4 py-1">
-                        room: <code> {this.props.room.id}</code>
+                    <h5 className="text-center mt-2">
+                        <span className=" rounded bg-white p-1">
+                            <code> ROOM {this.props.room.id}</code>
+                        </span>
                     </h5>
                 </div>
             </div>
