@@ -80,7 +80,7 @@ export default class LeftBoard extends React.Component {
                         </button>
                     }
                     <h5 className="text-center mt-2">
-                        <span className=" rounded bg-white p-1">
+                        <span className="rounded bg-white p-1">
                             <code> ROOM {this.props.room.id}</code>
                         </span>
                     </h5>
