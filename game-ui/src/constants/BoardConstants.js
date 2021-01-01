@@ -1,4 +1,4 @@
-export const CELL_SIZE = 58;
+export const CELL_SIZE = 56;
 export const BOARD_WIDTH_SIZE = (CELL_SIZE + 1) * 9;
 export const BOARD_HEIGHT_SIZE = (CELL_SIZE + 1) * 10;
 export const BOARD_DEFAULT_STATUS = "00bch_01bho_02bel_03bad_04bge_05bad_06bel_07bho_08bch"
