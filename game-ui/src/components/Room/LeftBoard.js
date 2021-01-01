@@ -9,7 +9,6 @@ export default class LeftBoard extends React.Component {
 
         this.handleLeaveRoom = props.handleLeaveRoom;
         this.stompClient = props.stompClient;
-        this.user = props.user;
 
         this.state = {
             isReady: false
@@ -39,7 +38,7 @@ export default class LeftBoard extends React.Component {
     render() {
         return (
             <div className="col-2 mt-4 border border-danger text-center rounded">
-                <UserProfile user={this.user}/>
+                <UserProfile user={this.props.user}/>
                 <div className="text-center my-5">
                     {this.props.isGameStarted
                         ? <div>

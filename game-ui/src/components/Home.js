@@ -51,7 +51,8 @@ export default class Home extends React.Component {
             <div>
                 {this.state.room == null
                     ? <Lobby user={this.props.user} handleJoinRoom={this.handleJoinRoom}/>
-                    : <Room room={this.state.room} user={this.props.user} updateRoom={this.updateRoom}
+                    : <Room room={this.state.room} updateRoom={this.updateRoom}
+                            user={this.props.user} updateUser={this.props.updateUser}
                             handleLeaveRoom={this.handleLeaveRoom}/>
                 }
             </div>

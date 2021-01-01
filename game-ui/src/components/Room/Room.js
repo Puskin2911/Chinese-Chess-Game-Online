@@ -84,6 +84,13 @@ export default class Room extends React.Component {
                     isRedPlayer: false
                 });
                 this.props.updateRoom(gameStop.room);
+
+                let userToUpdate;
+                if (gameStop.winner.username === this.props.user.username) userToUpdate = gameStop.winner;
+                else userToUpdate = gameStop.loser;
+                if (userToUpdate != null) {
+                    this.props.updateUser(userToUpdate);
+                }
             });
         });
     }

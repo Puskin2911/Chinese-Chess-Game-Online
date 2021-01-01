@@ -31,6 +31,10 @@ const PrivateRoute = ({component: Component, ...rest}) => {
         });
     }, []);
 
+    const updateUser = (user) => {
+        setUser(user);
+    };
+
     if (isLoading) return <LoadingIndicator/>;
 
     return (
@@ -38,7 +42,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
             {...rest}
             render={props =>
                 isAuthenticated ?
-                    <Component {...rest} {...props} user={user}/>
+                    <Component {...rest} {...props} user={user} updateUser={updateUser}/>
                     :
                     <Redirect
                         to={{
