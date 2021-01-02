@@ -64,7 +64,14 @@ export default class Board extends React.Component {
     }
 
     handleCacheFromAndToPiece = (moved) => {
-        if (moved == null) return;
+        if (moved == null) {
+            this.setState({
+                fromPiece: null,
+                toPiece: null
+            });
+            return;
+        }
+
         this.setState({
             fromPiece: {
                 centerX: moved.charAt(0),
