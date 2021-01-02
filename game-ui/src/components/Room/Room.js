@@ -86,11 +86,18 @@ export default class Room extends React.Component {
                 this.props.updateRoom(gameStop.room);
 
                 let userToUpdate;
-                if (gameStop.winner.username === this.props.user.username) userToUpdate = gameStop.winner;
-                else userToUpdate = gameStop.loser;
-                if (userToUpdate != null) {
-                    this.props.updateUser(userToUpdate);
+                let competitorToUpdate;
+                if (gameStop.winner.username === this.props.user.username) {
+                    userToUpdate = gameStop.winner;
+                    competitorToUpdate = gameStop.loser;
+                } else {
+                    userToUpdate = gameStop.loser;
+                    competitorToUpdate = gameStop.winner;
                 }
+                this.props.updateUser(userToUpdate);
+                this.setState({
+                    competitor: competitorToUpdate
+                });
             });
         });
     }
