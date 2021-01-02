@@ -144,6 +144,7 @@ public class RoomStrategyImpl implements RoomStrategy {
                 .boardStatus(playingGame.getBoardStatus())
                 .nextTurnUsername(playingGame.getNextTurnUsername())
                 .redPlayerUsername(playingGame.getRedPlayer().getUsername())
+                .isGeneralChecking(playingGame.isGeneralChecking())
                 .build();
     }
 

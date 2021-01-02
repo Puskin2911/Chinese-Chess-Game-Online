@@ -17,6 +17,9 @@ public class PlayingGameDto {
     @JsonProperty("redPlayerUsername")
     private String redPlayerUsername;
 
+    @JsonProperty("isGeneralChecking")
+    private boolean isGeneralChecking;
+
     @JsonProperty("moved")
     private String moved;
 

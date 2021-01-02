@@ -2,7 +2,9 @@ package com.doubleat.ccgame.game;
 
 import com.doubleat.ccgame.game.exception.InvalidMoveException;
 import com.doubleat.ccgame.game.piece.Piece;
+import com.doubleat.ccgame.game.utils.GameUtils;
 import com.doubleat.ccgame.game.utils.MoveUtils;
+import com.doubleat.ccgame.game.utils.PieceUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -36,6 +38,8 @@ public class PlayingGame {
 
     private boolean isRedWin;
 
+    private boolean isGeneralChecking;
+
     /**
      * Save all moves.
      */
@@ -64,6 +68,7 @@ public class PlayingGame {
         board = new Board();
         isRedTurn = true;
         isOver = false;
+        isGeneralChecking = false;
         moves = new Stack<>();
     }
 
@@ -105,10 +110,17 @@ public class PlayingGame {
         isRedTurn = !isRedTurn;
         moves.push(move);
 
+        // Check general checking
+        Board clonedBoard = this.board.clone();
+        Position redGeneralPosition = PieceUtils.findMyGeneralPosition(board, true);
+        Position blackGeneralPosition = PieceUtils.findMyGeneralPosition(board, false);
+        if (GameUtils.isAbleDead(clonedBoard, redGeneralPosition) || GameUtils
+                .isAbleDead(clonedBoard, blackGeneralPosition))
+            isGeneralChecking = true;
+
         // Check game isOver
         boolean mockIsOver = true;
 
-        Board clonedBoard = this.board.clone();
         for (int i = 0; i < Board.ROW; i++) {
             for (int j = 0; j < Board.COLUMN; j++) {
                 Piece piece = clonedBoard.getPieces()[i][j];
