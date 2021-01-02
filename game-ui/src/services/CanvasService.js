@@ -1,7 +1,8 @@
-import {CELL_SIZE} from "../constants/BoardConstants";
+import {BOARD_HEIGHT_SIZE, BOARD_WIDTH_SIZE, CELL_SIZE} from "../constants/BoardConstants";
 import imagePieceMap from "../imageLoader/ImagePieceLoader";
 import gameService from "./GameService";
 import Board from "../game/Board";
+import effectImageLoader from "../imageLoader/EffectImageLoader";
 
 const drawBlankBoard = (ctx) => {
     // Horizontal
@@ -126,13 +127,43 @@ const drawFromPiece = (ctx, fromPosition, isRedPlayer) => {
     ctx.stroke();
 }
 
+const drawGeneralChecking = (ctx, position, isRedPlayer) => {
+    if (position == null) return;
+
+    let x, y;
+    if (isRedPlayer) {
+        const xCenter = position.centerX;
+        const yCenter = position.centerY;
+        x = CELL_SIZE / 2 + (CELL_SIZE + 1) * yCenter - 1;
+        y = CELL_SIZE / 2 + CELL_SIZE * xCenter - 1;
+    } else {
+        const xCenter = Board.ROW - 1 - position.centerX;
+        const yCenter = Board.COLUMN - 1 - position.centerY;
+        x = CELL_SIZE / 2 + (CELL_SIZE + 1) * yCenter - 1;
+        y = CELL_SIZE / 2 + CELL_SIZE * xCenter + 7;
+    }
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "red";
+
+    ctx.beginPath();
+    ctx.arc(x, y, 16, 0, Math.PI * 2, true);
+    ctx.stroke();
+}
+
+const drawGeneralCheckingEffect = (ctx) => {
+    ctx.drawImage(effectImageLoader.generalChecking, BOARD_WIDTH_SIZE / 4 - 8, BOARD_HEIGHT_SIZE / 4 + 10);
+}
+
 const canvasService = {
     drawBlankBoard,
     drawPieces,
     clearBoard,
     drawPieceBorder,
     drawFromPiece,
-    drawAvailableMovePosition
+    drawAvailableMovePosition,
+    drawGeneralChecking,
+    drawGeneralCheckingEffect
 };
 
 export default canvasService;

@@ -146,12 +146,31 @@ const isValidMove = (boardStatus, movingPiece, to, isRedPlayer) => {
     return pieceObject.isValidMove(Board.convertToMatrix(boardStatus), from, to);
 }
 
+const resolveGeneralCheckingPosition = (boardStatus) => {
+    const redGeneral = findMyGeneral(boardStatus, true);
+    const blackGeneral = findMyGeneral(boardStatus, false);
+
+    if (isAbleDead(redGeneral, boardStatus))
+        return {
+            centerX: redGeneral.charAt(0),
+            centerY: redGeneral.charAt(1)
+        };
+    if (isAbleDead(blackGeneral, boardStatus))
+        return {
+            centerX: blackGeneral.charAt(0),
+            centerY: blackGeneral.charAt(1)
+        }
+
+    return null;
+}
+
 const gameService = {
     isMyPiece,
     resolveMove,
     getAvailableMovePosition,
     resolveBoardStatus,
-    isValidMove
+    isValidMove,
+    resolveGeneralCheckingPosition
 }
 
 export default gameService;

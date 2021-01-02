@@ -24,21 +24,35 @@ export default class Board extends React.Component {
             fromPiece: null,
             toPiece: null,
             availableMovePositions: [],
-            isMyTurn: false
+            isMyTurn: false,
+            isGeneralChecking: false
         }
     }
 
     drawBoard = () => {
-        const isRedPlayer = this.props.isRedPlayer;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
+
+        const isRedPlayer = this.props.isRedPlayer;
+        const boardStatus = this.state.boardStatus;
+
         canvasService.clearBoard(canvas);
         // canvasService.drawBlankBoard(ctx);
-        canvasService.drawPieces(ctx, this.state.boardStatus, isRedPlayer);
+        canvasService.drawPieces(ctx, boardStatus, isRedPlayer);
         canvasService.drawAvailableMovePosition(ctx, this.state.availableMovePositions);
         canvasService.drawPieceBorder(ctx, this.state.clickingPiece, true);
         canvasService.drawPieceBorder(ctx, this.state.toPiece, isRedPlayer);
         canvasService.drawFromPiece(ctx, this.state.fromPiece, isRedPlayer);
+        canvasService.drawGeneralChecking(ctx, gameService.resolveGeneralCheckingPosition(boardStatus), isRedPlayer);
+
+        if (this.state.isGeneralChecking === true) {
+            canvasService.drawGeneralCheckingEffect(ctx);
+            setTimeout(() => {
+                this.setState({
+                    isGeneralChecking: false
+                });
+            }, 1500);
+        }
     }
 
     handleCancelMove = () => {
@@ -154,7 +168,8 @@ export default class Board extends React.Component {
                 isMyTurn: isMyTurnToUpdate,
                 clickingPiece: null,
                 movingPiece: null,
-                availableMovePositions: []
+                availableMovePositions: [],
+                isGeneralChecking: gameDto.isGeneralChecking
             });
         });
     }
