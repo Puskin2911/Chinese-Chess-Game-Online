@@ -73,7 +73,7 @@ Then I asked myself why not make my own game? This is the first bricks base.
 #### Database design
 - The Database is very simple
 
-![DB schema](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/db_schemal.png)
+![DB schema](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/db_schema.png)
 
 ### CI/CD & Deployment
 #### Github CI
