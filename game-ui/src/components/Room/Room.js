@@ -26,7 +26,8 @@ export default class Room extends React.Component {
             isSocketConnected: false,
             isGameStarted: false,
             isRedPlayer: false,
-            competitor: competitor
+            competitor: competitor,
+            gameResultCached: null,
         }
     }
 
@@ -65,7 +66,8 @@ export default class Room extends React.Component {
 
                 this.setState({
                     isGameStarted: true,
-                    isRedPlayer: gameStart.redPlayerUsername === user.username
+                    isRedPlayer: gameStart.redPlayerUsername === user.username,
+                    gameResultCached: null
                 });
             });
 
@@ -77,7 +79,11 @@ export default class Room extends React.Component {
 
                 this.setState({
                     isGameStarted: false,
-                    isRedPlayer: false
+                    isRedPlayer: false,
+                    gameResultCached: {
+                        winner: gameStop.winner,
+                        loser: gameStop.loser
+                    }
                 });
                 this.props.updateRoom(gameStop.room);
 
@@ -98,13 +104,6 @@ export default class Room extends React.Component {
         });
     }
 
-    componentWillUnmount() {
-        this.stompClient.disconnect(() => {
-
-        });
-    }
-
-
     render() {
         if (!this.state.isSocketConnected) return <LoadingIndicator/>;
 
@@ -117,6 +116,7 @@ export default class Room extends React.Component {
                                stompClient={this.stompClient}
                                handleLeaveRoom={this.handleLeaveRoom}/>
                     <Board room={room} user={user} stompClient={this.stompClient}
+                           gameResultCached={this.state.gameResultCached}
                            isRedPlayer={this.state.isRedPlayer}/>
                     <RightBoard user={user} competitor={this.state.competitor} room={room}
                                 isGameStarted={this.state.isGameStarted}

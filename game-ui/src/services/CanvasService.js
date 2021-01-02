@@ -155,6 +155,14 @@ const drawGeneralCheckingEffect = (ctx) => {
     ctx.drawImage(effectImageLoader.generalChecking, BOARD_WIDTH_SIZE / 4 - 8, BOARD_HEIGHT_SIZE / 4 + 10);
 }
 
+const drawWinnerEffect = (ctx) => {
+    ctx.drawImage(effectImageLoader.winner, BOARD_WIDTH_SIZE / 3 - 12, BOARD_HEIGHT_SIZE / 3 + 20);
+}
+
+const drawLoserEffect = (ctx) => {
+    ctx.drawImage(effectImageLoader.loser, BOARD_WIDTH_SIZE / 3 + 18, BOARD_HEIGHT_SIZE / 3 + 22);
+}
+
 const canvasService = {
     drawBlankBoard,
     drawPieces,
@@ -163,7 +171,9 @@ const canvasService = {
     drawFromPiece,
     drawAvailableMovePosition,
     drawGeneralChecking,
-    drawGeneralCheckingEffect
+    drawGeneralCheckingEffect,
+    drawWinnerEffect,
+    drawLoserEffect
 };
 
 export default canvasService;

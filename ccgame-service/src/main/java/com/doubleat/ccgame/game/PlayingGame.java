@@ -114,9 +114,8 @@ public class PlayingGame {
         Board clonedBoard = this.board.clone();
         Position redGeneralPosition = PieceUtils.findMyGeneralPosition(board, true);
         Position blackGeneralPosition = PieceUtils.findMyGeneralPosition(board, false);
-        if (GameUtils.isAbleDead(clonedBoard, redGeneralPosition) || GameUtils
-                .isAbleDead(clonedBoard, blackGeneralPosition))
-            isGeneralChecking = true;
+        isGeneralChecking = GameUtils.isAbleDead(clonedBoard, redGeneralPosition) || GameUtils
+                .isAbleDead(clonedBoard, blackGeneralPosition);
 
         // Check game isOver
         boolean mockIsOver = true;

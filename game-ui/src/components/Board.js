@@ -33,6 +33,7 @@ export default class Board extends React.Component {
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
 
+        const user = this.props.user;
         const isRedPlayer = this.props.isRedPlayer;
         const boardStatus = this.state.boardStatus;
 
@@ -45,7 +46,7 @@ export default class Board extends React.Component {
         canvasService.drawFromPiece(ctx, this.state.fromPiece, isRedPlayer);
         canvasService.drawGeneralChecking(ctx, gameService.resolveGeneralCheckingPosition(boardStatus), isRedPlayer);
 
-        if (this.state.isGeneralChecking === true) {
+        if (this.state.isGeneralChecking) {
             canvasService.drawGeneralCheckingEffect(ctx);
             setTimeout(() => {
                 this.setState({
@@ -53,6 +54,16 @@ export default class Board extends React.Component {
                 });
             }, 1500);
         }
+
+        const gameResultCached = this.props.gameResultCached;
+        if (gameResultCached != null) {
+            if (user.username === gameResultCached.winner.username) {
+                canvasService.drawWinnerEffect(ctx);
+            } else {
+                canvasService.drawLoserEffect(ctx);
+            }
+        }
+
     }
 
     handleCancelMove = () => {
