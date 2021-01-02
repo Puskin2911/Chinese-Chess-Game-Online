@@ -201,10 +201,13 @@ public class RoomStrategyImpl implements RoomStrategy {
     public GameStopResponse handleForceLeaveRoom(Integer roomId, String loser) {
         // Handle end game first.
         forceEndGame(roomId, loser);
-        // Handle player leave room.
+
+        GameStopResponse gameStopResponse = handleGameOver(roomId).orElse(null);
+
+        // Handle player leave room before response.
         playerLeaveRoom(loser, roomId);
 
-        return handleGameOver(roomId).orElse(null);
+        return gameStopResponse;
     }
 
     @Override
