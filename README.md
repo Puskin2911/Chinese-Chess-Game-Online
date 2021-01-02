@@ -28,16 +28,25 @@ Then I asked myself why not make my own game? This is the first bricks base.
 #### Use cases
 - The use case for this app is very simple.
 - Just one actor is `User`, who can `login`, `sign up`, `play a game`, `watching a game`.
+
   ![Use case image](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/use-case.PNG)
+  
 ### Authenticate Strategy
 - First at all is authenticate user. We use JWT:
 #### JWT workflow
+
   ![JWT workflow](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/jwt-workflow.PNG)
+  
 #### Generate JWT token
+
   ![Generate JWT](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/gen-jwt.PNG)
+  
 #### Validate JWT token
+
   ![Validate JWT](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/validate-jwt.PNG)
--**Note:** For more detail about authentication with JWT, you can see in wiki page. You can click [here](https://github.com/Puskin2911/SE04-Group-23.1/wiki/Authentication-with-JWT) 
+
+-**Note:** For more detail about authentication with JWT, you can see in wiki page. You can click [here](https://github.com/Puskin2911/SE04-Group-23.1/wiki/Authentication-with-JWT)
+ 
 ### Room Strategy
 ### Message Strategy
 ### CI/CD & Deployment
