@@ -14,6 +14,7 @@ export default class Room extends React.Component {
         this.handleLeaveRoom = props.handleLeaveRoom;
         this.ws = new SockJs(ApiConstants.SOCKET_CONNECT_URL);
         this.stompClient = Stomp.over(this.ws);
+        this.subscriptions = [];
 
         const players = props.room.players;
         let competitor = null;
@@ -42,7 +43,7 @@ export default class Room extends React.Component {
                 isSocketConnected: true
             });
 
-            stompClient.subscribe("/room/" + roomId, (payload) => {
+            const roomSub = stompClient.subscribe("/room/" + roomId, (payload) => {
                 const userDto = JSON.parse(payload.body);
                 if (userDto.username !== user.username) {
                     this.setState({
@@ -51,7 +52,7 @@ export default class Room extends React.Component {
                 }
             });
 
-            stompClient.subscribe("/room/" + roomId + "/leave", (payload) => {
+            const leaveSub = stompClient.subscribe("/room/" + roomId + "/leave", (payload) => {
                 const userDto = JSON.parse(payload.body);
                 if (userDto.username !== user.username) {
                     this.setState({
@@ -60,7 +61,7 @@ export default class Room extends React.Component {
                 }
             });
 
-            stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+            const startSub = stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
                 console.log("From Room receive signal start game!");
                 const gameStart = JSON.parse(payload.body);
 
@@ -71,7 +72,7 @@ export default class Room extends React.Component {
                 });
             });
 
-            stompClient.subscribe("/room/" + roomId + "/game/stop", (payload) => {
+            const stopSub = stompClient.subscribe("/room/" + roomId + "/game/stop", (payload) => {
                 console.log("From Room receive signal stop game!");
                 const gameStop = JSON.parse(payload.body);
 
@@ -101,7 +102,16 @@ export default class Room extends React.Component {
                     competitor: competitorToUpdate
                 });
             });
+
+            this.subscriptions.push(roomSub, leaveSub, startSub, stopSub);
         });
+    }
+
+    componentWillUnmount() {
+        for (let i = 0; i < this.subscriptions.length; i++) {
+            this.subscriptions[i].unsubscribe();
+        }
+        this.stompClient.disconnect();
     }
 
     render() {

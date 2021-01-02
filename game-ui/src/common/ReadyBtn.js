@@ -5,6 +5,7 @@ export default class ReadyBtn extends React.Component {
     constructor(props) {
         super(props);
         this.stompClient = props.stompClient;
+        this.subscription = null;
 
         this.state = {
             isReady: false
@@ -12,8 +13,14 @@ export default class ReadyBtn extends React.Component {
     }
 
     componentDidMount() {
-        this.stompClient.subscribe("/room/" + this.props.room.id + "/ready", () => {
+        this.subscription = this.stompClient.subscribe("/room/" + this.props.room.id + "/ready", () => {
         });
+    }
+
+    componentWillUnmount() {
+        if (this.subscription != null) {
+            this.subscription.unsubscribe();
+        }
     }
 
     handleReady = () => {
