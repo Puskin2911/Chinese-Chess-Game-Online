@@ -1,4 +1,4 @@
-package com.doubleat.ccgame.cache;
+package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.room.Room;
@@ -42,6 +42,8 @@ public interface RoomCache {
      * @return {@code true} if leave room when game is not over.
      */
     boolean removePlayerFromRoom(UserDto userDto, int roomId);
+
+    boolean removePlayerFromRoom(String username, int roomId);
 
     /**
      * Add specific viewer to room which have specific id.

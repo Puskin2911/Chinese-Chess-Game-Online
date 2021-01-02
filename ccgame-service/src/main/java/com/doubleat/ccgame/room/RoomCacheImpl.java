@@ -1,9 +1,8 @@
-package com.doubleat.ccgame.cache;
+package com.doubleat.ccgame.room;
 
 import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.exception.RoomIsFullPlayersException;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
-import com.doubleat.ccgame.room.Room;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -78,6 +77,18 @@ public class RoomCacheImpl implements RoomCache {
 
         Set<UserDto> players = room.getPlayers();
         players.removeIf(player -> player.getUsername().equals(userDto.getUsername()));
+
+        return !room.isGameOver();
+    }
+
+    @Override
+    public synchronized boolean removePlayerFromRoom(String username, int roomId) {
+        Room room = roomMap.get(roomId);
+        if (room == null)
+            throw new RoomNotFoundException(ROOM_NOT_FOUND_EXCEPTION_MESSAGE + roomId);
+
+        Set<UserDto> players = room.getPlayers();
+        players.removeIf(player -> player.getUsername().equals(username));
 
         return !room.isGameOver();
     }

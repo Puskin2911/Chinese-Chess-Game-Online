@@ -1,6 +1,5 @@
 package com.doubleat.ccgame.room;
 
-import com.doubleat.ccgame.cache.RoomCache;
 import com.doubleat.ccgame.domain.Game;
 import com.doubleat.ccgame.domain.User;
 import com.doubleat.ccgame.dto.response.UserDto;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Hop Nguyen
@@ -57,6 +55,11 @@ public class RoomStrategyImpl implements RoomStrategy {
     @Override
     public boolean playerLeaveRoom(UserDto userDto, int roomId) {
         return roomCache.removePlayerFromRoom(userDto, roomId);
+    }
+
+    @Override
+    public boolean playerLeaveRoom(String username, int roomId) {
+        return roomCache.removePlayerFromRoom(username, roomId);
     }
 
     @Override
@@ -197,13 +200,14 @@ public class RoomStrategyImpl implements RoomStrategy {
     public GameStopResponse handleForceLeaveRoom(Integer roomId, String loser) {
         // Handle end game first.
         forceEndGame(roomId, loser);
+        // Handle player leave room.
+        playerLeaveRoom(loser, roomId);
 
         return handleGameOver(roomId).orElse(null);
     }
 
     @Override
     public GameStopResponse handleSurrenderRequest(Integer roomId, String loserUsername) {
-
         forceEndGame(roomId, loserUsername);
 
         return handleGameOver(roomId).orElse(null);

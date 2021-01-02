@@ -30,6 +30,8 @@ public interface RoomStrategy {
      */
     boolean playerLeaveRoom(UserDto userDto, int roomId);
 
+    boolean playerLeaveRoom(String username, int roomId);
+
     /**
      * Add player join a specific room.
      *
