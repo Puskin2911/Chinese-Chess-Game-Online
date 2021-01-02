@@ -153,7 +153,23 @@ export default class Board extends React.Component {
                     break;
                 }
             }
-            if (!isAbleMove) return;
+            if (!isAbleMove) {
+                if (color !== '0' && gameService.isMyPiece(color, isRedPlayer)) {
+
+                    const availableMovePositionToSave = gameService
+                        .getAvailableMovePosition(piece, boardStatus, isRedPlayer);
+
+                    this.setState({
+                        movingPiece: piece,
+                        clickingPiece: clickingPiece,
+                        fromPiece: null,
+                        toPiece: null,
+                        availableMovePositions: availableMovePositionToSave
+                    });
+                }
+
+                return;
+            }
 
             // TODO: Handle asynchronous display
             let move = movingPiece.slice(0, 2) + '_' + piece.slice(0, 2);
