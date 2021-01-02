@@ -31,27 +31,53 @@ Then I asked myself why not make my own game? This is the first bricks base.
 
   ![Use case image](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/use-case.PNG)
   
-### Authenticate Strategy
+#### Authenticate Strategy
 - First at all is authenticate user. We use JWT:
-#### JWT workflow
+##### JWT workflow
 
   ![JWT workflow](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/jwt-workflow.PNG)
   
-#### Generate JWT token
+##### Generate JWT token
 
   ![Generate JWT](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/gen-jwt.PNG)
   
-#### Validate JWT token
+##### Validate JWT token
 
   ![Validate JWT](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/validate-jwt.PNG)
 
--**Note:** For more detail about authentication with JWT, you can see in wiki page. You can click [here](https://github.com/Puskin2911/SE04-Group-23.1/wiki/Authentication-with-JWT)
+- **Note:** For more detail about authentication with JWT, you can see in wiki page. You can click [here](https://github.com/Puskin2911/SE04-Group-23.1/wiki/Authentication-with-JWT).
  
-### Room Strategy
-### Message Strategy
+#### Room Strategy
+
+- To play game, user need to join room:
+- Data Structure to cache room: `Map<Integerm Room>`: Unique id and quick query. (Redis to cache).
+##### Sequence diagram 
+![Sequence diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/room-sequence.png)
+##### Class diagram
+
+![RoomStrategy Class diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/roomStrategy-class-diagram.png)
+![Room class diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/room-class-diagram.png)
+
+- **Note:** For more detail, you can see in wiki page. You can click [here](https://github.com/Puskin2911/SE04-Group-23.1/wiki/Room-Strategy).
+#### Communication Strategy
+- Stomp base on websocket to achieve real time communicate:
+- Public chanel `/room/chat/`, `/room/game`, ...
+
+  ![Stomp](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/web-socket.png)
+  
+#### Game Class diagram
+
+![Game class diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/game-class-diagram.png)
+![Piece class diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/pieces-class-diagram.png)
+
+#### Database design
+- The Database is very simple
+
+![DB schema](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/uml/db_schemal.png)
+
 ### CI/CD & Deployment
 #### Github CI
-- Git flow: Protected branch `v1.0-dev` is main. Other branch follow format `task/...` or `bugfix...`.
+- Git flow: Protected branch `v1.0-dev` is main. Other branch follow format `task/...` or `bugfix/...`.
   ![Git flow diagram](https://github.com/Puskin2911/SE04-Group-23.1/blob/v1.0-dev/refs/git-flow-diagram.png)
 - Github CI: Maven build, trigger when have new Pull Request on branch `v1.0-dev` or push to `v1.0-dev`.
   ```
@@ -82,7 +108,7 @@ Then I asked myself why not make my own game? This is the first bricks base.
       ```
         server {
                 listen        80;
-                server_name   ec2-54-151-177-156.ap-southeast-1.compute.amazonaws.com;
+                server_name   ec2_public_ip;
         
         		root /home/ubuntu/ccgame/web-ui/; 
         		index index.html index.htm;
