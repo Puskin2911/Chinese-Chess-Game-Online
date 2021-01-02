@@ -1,8 +1,8 @@
 import React from "react";
-import ApiConstants from "../../constants/ApiConstant";
 import ConfirmModal from "../../common/ConfirmModal";
 import UserProfile from "../../common/UserProfile";
 import Clock from "../../common/Clock";
+import ReadyBtn from "../../common/ReadyBtn";
 
 export default class LeftBoard extends React.Component {
     constructor(props) {
@@ -10,22 +10,6 @@ export default class LeftBoard extends React.Component {
 
         this.handleLeaveRoom = props.handleLeaveRoom;
         this.stompClient = props.stompClient;
-
-        this.state = {
-            isReady: false
-        };
-    }
-
-    handleReady = () => {
-        const msgToSend = {
-            username: this.props.user.username,
-            isReady: !this.state.isReady
-        }
-        this.stompClient.send(ApiConstants.READY_DESTINATION_SOCKET_URL(this.props.room.id), {}, JSON.stringify(msgToSend));
-
-        this.setState({
-            isReady: !this.state.isReady
-        })
     }
 
     handleSurrenderRequest = () => {
@@ -57,12 +41,7 @@ export default class LeftBoard extends React.Component {
                                               cancel="Thôi" ok="Thua đê" handleOk={this.handleSurrenderRequest}/>
                             </div>
                         </div>
-                        : <button type="button" className="btn" onClick={this.handleReady}>
-                            {this.state.isReady ?
-                                <i className="far fa-2x fa-times-circle"/>
-                                : <i className="fas fa-2x fa-chevron-circle-right"/>
-                            }
-                        </button>
+                        : <ReadyBtn room={this.props.room} user={this.props.user} stompClient={this.stompClient}/>
                     }
                 </div>
                 <div className="text-center mt-5">
@@ -75,7 +54,8 @@ export default class LeftBoard extends React.Component {
                                           title="Bạn sẽ thua ván này nếu thoát ra ngoài. Bạn có chắc muốn thoát không ?"
                                           cancel="Thôi" ok="Thoát đê" handleOk={this.handleLeaveRoom}/>
                         </div>
-                        : <button type="button" className="btn" data-toggle="modal" data-target="#confirmExitModal">
+                        : <button type="button" title="Rời phòng" className="btn" data-toggle="modal"
+                                  data-target="#confirmExitModal">
                             <i className="fas fa-2x fa-power-off" onClick={this.handleLeaveRoom}/>
                         </button>
                     }

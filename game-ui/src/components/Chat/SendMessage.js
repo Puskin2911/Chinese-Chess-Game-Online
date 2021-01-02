@@ -48,8 +48,9 @@ export default function SendMessage(props) {
                             <option value="">Chat nhanh ở đây</option>
                             <option value="Nước đó rất cao!">Nước đó rất cao!</option>
                             <option value="Làm ván nữa nhé!">Làm ván nữa nhé!</option>
+                            <option value="Thua đi bác ơi!">Thua đi bác ơi!</option>
                             <option value="Các hạ quá khen!">Các hạ quá khen!</option>
-                            <option value="hanh đi lâu vậy!">Nhanh đi lâu vậy!</option>
+                            <option value="Nhanh đi lâu vậy!">Nhanh đi lâu vậy!</option>
                             <option value="Kết bạn đi!">Kết bạn đi!</option>
                             <option value="Chơi hay nghỉ đây?">Chơi hay nghỉ đây?</option>
                             <option value="Nhường em bác ơi !!">Nhường em bác ơi !!</option>

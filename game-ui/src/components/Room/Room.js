@@ -59,10 +59,6 @@ export default class Room extends React.Component {
                 }
             });
 
-            stompClient.subscribe("/room/" + roomId + "/ready", (payload) => {
-                console.log("READY: " + JSON.parse(payload.body));
-            });
-
             stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
                 console.log("From Room receive signal start game!");
                 const gameStart = JSON.parse(payload.body);
