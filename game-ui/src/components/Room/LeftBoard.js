@@ -21,10 +21,13 @@ export default class LeftBoard extends React.Component {
     }
 
     render() {
+        const user = this.props.user;
+        const room = this.props.room;
         return (
             <div className="col-3 text-center rounded">
-                <UserProfile user={this.props.user}/>
-                <Clock isEnable={this.props.isGameStarted}/>
+                <UserProfile user={user}/>
+                <Clock isEnable={this.props.isGameStarted} room={this.props.room} user={user}
+                       stompClient={this.stompClient}/>
                 <div className="text-center mt-4">
                     {this.props.isGameStarted
                         ? <div>
@@ -41,7 +44,7 @@ export default class LeftBoard extends React.Component {
                                               cancel="Thôi" ok="Thua đê" handleOk={this.handleSurrenderRequest}/>
                             </div>
                         </div>
-                        : <ReadyBtn room={this.props.room} user={this.props.user} stompClient={this.stompClient}/>
+                        : <ReadyBtn room={room} user={user} stompClient={this.stompClient}/>
                     }
                 </div>
                 <div className="text-center mt-5">
@@ -65,7 +68,7 @@ export default class LeftBoard extends React.Component {
                     }
                     <h5 className="text-center mt-2">
                         <span className="rounded bg-white p-1">
-                            <code> ROOM {this.props.room.id}</code>
+                            <code> ROOM {room.id}</code>
                         </span>
                     </h5>
                 </div>

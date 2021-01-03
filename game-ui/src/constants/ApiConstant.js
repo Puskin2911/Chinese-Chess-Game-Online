@@ -1,8 +1,6 @@
 const API_BASE_URL = 'http://127.0.0.1:8080';
-// const API_BASE_URL = 'http://ec2-54-255-171-17.ap-southeast-1.compute.amazonaws.com';
+// const API_BASE_URL = 'http://ec2-54-169-208-186.ap-southeast-1.compute.amazonaws.com';
 const ACCESS_TOKEN = 'accessToken';
-
-const OAUTH2_REDIRECT_URI = 'https://localhost:3000/oauth2/redirect'
 
 const BASE_AUTH_API_URL = '/api/auth';
 const CHECK_AUTH_URL = API_BASE_URL + BASE_AUTH_API_URL + '/validate';
@@ -22,7 +20,6 @@ const READY_DESTINATION_SOCKET_URL = (roomId) => PREFIX_TRANSFER_MESSAGE + READY
 
 const ApiConstants = {
     ACCESS_TOKEN,
-    OAUTH2_REDIRECT_URI,
     CHECK_AUTH_URL,
     LOGIN_URL,
     SIGNUP_URL,
