@@ -20,6 +20,11 @@ export default class ChatBox extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const msgContainer = document.getElementById("message-container");
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+    }
+
     showMessage() {
         return this.state.messages.map((message, index) => {
             const displayMessage = "- " + message.username + ": " + message.message;
@@ -29,7 +34,7 @@ export default class ChatBox extends React.Component {
 
     render() {
         return (
-            <div className="border rounded text-left p-2 h-200px overflow-auto">
+            <div id="message-container" className="border rounded text-left p-2 h-200px overflow-auto">
                 {this.showMessage()}
             </div>
         );
