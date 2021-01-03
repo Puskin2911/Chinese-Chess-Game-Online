@@ -9,4 +9,6 @@ public final class GameOverReason {
 
     public static final String SURRENDER = "surrender";
 
+    public static final String DRAW_REQUEST = "draw_request";
+
 }

@@ -10,6 +10,7 @@ import com.doubleat.ccgame.dto.response.GameStopResponse;
 import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.RoomDto;
 import com.doubleat.ccgame.game.GameCache;
+import com.doubleat.ccgame.game.GameOverReason;
 import com.doubleat.ccgame.game.Player;
 import com.doubleat.ccgame.game.PlayingGame;
 import com.doubleat.ccgame.repository.GameRepository;
@@ -86,8 +87,16 @@ public class RoomStrategyImpl implements RoomStrategy {
         if (readyPlayers == 2) {
             List<UserDto> players = new ArrayList<>(room.getPlayers());
 
-            UserDto firstPlayer = players.get(0);
-            UserDto secondPlayer = players.get(1);
+            int rand = (new Random()).nextInt(10);
+
+            UserDto firstPlayer, secondPlayer;
+            if (rand % 2 == 0) {
+                firstPlayer = players.get(0);
+                secondPlayer = players.get(1);
+            } else {
+                firstPlayer = players.get(1);
+                secondPlayer = players.get(0);
+            }
 
             Player redPlayer = new Player(firstPlayer.getUsername(), true);
             Player blackPlayer = new Player(secondPlayer.getUsername(), false);
@@ -215,6 +224,23 @@ public class RoomStrategyImpl implements RoomStrategy {
         forceEndGame(roomId, loserUsername);
 
         return handleGameOver(roomId).orElse(null);
+    }
+
+    @Override
+    public GameStopResponse handleDraw(Integer roomId) {
+        Room room = roomCache.getRoomById(roomId);
+        room.setPlayingGame(null);
+
+        RoomDto roomDto = RoomDto.builder()
+                .id(roomId)
+                .players(room.getPlayers())
+                .viewers(room.getViewers())
+                .build();
+
+        return GameStopResponse.builder()
+                .roomDto(roomDto)
+                .reason(GameOverReason.DRAW_REQUEST)
+                .build();
     }
 
     private void forceEndGame(Integer roomId, String loserUsername) {

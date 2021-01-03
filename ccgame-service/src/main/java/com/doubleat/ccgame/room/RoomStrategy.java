@@ -84,4 +84,6 @@ public interface RoomStrategy {
 
     GameStopResponse handleSurrenderRequest(Integer roomId, String loserUsername);
 
+    GameStopResponse handleDraw(Integer roomId);
+
 }

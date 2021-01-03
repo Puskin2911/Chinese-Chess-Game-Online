@@ -50,13 +50,20 @@ public class StompController {
         stompService.handlePlayerReady(message, roomId, principal.getName());
     }
 
-    @MessageMapping("/room/{roomId}/game/draw/request")
-    @SendTo("/room/{roomId}/game/draw/request")
+    @MessageMapping("/room/{roomId}/game/draw-request")
+    @SendTo("/room/{roomId}/game/draw-request")
     public DrawRequest handleDrawRequest(Principal principal) {
         DrawRequest drawRequest = new DrawRequest();
         drawRequest.setUsername(principal.getName());
 
         return drawRequest;
+    }
+
+    @MessageMapping("/room/{roomId}/game/draw-response")
+    public void handleDrawResponse(@DestinationVariable Integer roomId,
+                                   @Payload boolean isAgree,
+                                   Principal principal) {
+        stompService.handleDrawResponse(roomId, isAgree, principal.getName());
     }
 
     @MessageMapping("/room/{roomId}/game/surrender-request")

@@ -1,11 +1,12 @@
 package com.doubleat.ccgame.service;
 
-import com.doubleat.ccgame.dto.response.UserDto;
+import com.doubleat.ccgame.dto.message.DrawResponse;
 import com.doubleat.ccgame.dto.message.MoveMessage;
 import com.doubleat.ccgame.dto.message.ReadyMessage;
-import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.GameStartResponse;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
+import com.doubleat.ccgame.dto.response.PlayingGameDto;
+import com.doubleat.ccgame.dto.response.UserDto;
 import com.doubleat.ccgame.game.GameOverReason;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
@@ -84,6 +85,20 @@ public class StompServiceImpl implements StompService {
         gameStopResponse.setReason(GameOverReason.TIME_UP);
 
         sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
+    }
+
+    @Override
+    public void handleDrawResponse(Integer roomId, boolean isAgree, String name) {
+        DrawResponse drawResponse = DrawResponse.builder()
+                .username(name)
+                .isAgree(isAgree)
+                .build();
+        sendMessage("/room/" + roomId + "/game/draw-response", drawResponse);
+
+        if (isAgree) {
+            GameStopResponse gameStopResponse = roomStrategy.handleDraw(roomId);
+            sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
+        }
     }
 
     private void sendMessage(String destination, Object payload) {

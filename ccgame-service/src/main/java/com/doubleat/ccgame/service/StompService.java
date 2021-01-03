@@ -21,4 +21,6 @@ public interface StompService {
 
     void handleTimeOver(Integer roomId, String loserUsername);
 
+    void handleDrawResponse(Integer roomId, boolean isAgree, String name);
+
 }
