@@ -6,6 +6,7 @@ import Clock from "../../common/Clock";
 
 export default function RightBoard(props) {
     const user = props.user;
+    const room = props.room;
     const competitor = props.competitor;
     const stompClient = props.stompClient;
     const isGameStarted = props.isGameStarted;
@@ -13,7 +14,7 @@ export default function RightBoard(props) {
     return (
         <div className="col-3 text-center rounded">
             <UserProfile user={competitor}/>
-            <Clock isEnable={isGameStarted}/>
+            <Clock isEnable={isGameStarted} stompClient={stompClient} room={room} user={competitor}/>
             <div className="mt-4 mr-4">
                 <ChatBox roomId={props.room.id} stompClient={stompClient}/>
                 <SendMessage room={props.room} username={user.username} stompClient={stompClient}/>

@@ -9,9 +9,6 @@ export default class Board extends React.Component {
     constructor(props) {
         super(props);
 
-        this.room = props.room;
-        this.roomId = this.room.id;
-        this.user = props.user;
         this.stompClient = props.stompClient;
         this.subscription = null;
 
@@ -178,8 +175,8 @@ export default class Board extends React.Component {
             move = gameService.resolveMove(move, isRedPlayer);
 
             // Send message to server.
-            this.stompClient.send("/app/room/" + this.roomId + "/move", {}, JSON.stringify({
-                roomId: this.roomId,
+            this.stompClient.send("/app/room/" + this.props.room.id + "/move", {}, JSON.stringify({
+                roomId: this.props.room.id,
                 move: move
             }));
         }
@@ -192,9 +189,9 @@ export default class Board extends React.Component {
     }
 
     componentDidMount() {
-        this.subscription = this.stompClient.subscribe("/room/" + this.roomId + "/move", (payload) => {
+        this.subscription = this.stompClient.subscribe("/room/" + this.props.room.id + "/move", (payload) => {
             const gameDto = JSON.parse(payload.body);
-            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.user.username;
+            const isMyTurnToUpdate = gameDto.nextTurnUsername === this.props.user.username;
             this.handleCacheFromAndToPiece(gameDto.moved);
 
             this.setState({

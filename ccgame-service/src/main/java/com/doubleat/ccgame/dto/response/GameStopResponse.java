@@ -22,4 +22,7 @@ public class GameStopResponse {
     @JsonProperty("type")
     private String type;
 
+    @JsonProperty("reason")
+    private String reason;
+
 }
