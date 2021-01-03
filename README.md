@@ -1,6 +1,6 @@
 # Chinese Chess Game online
 
-- This app now is available at http://ec2-54-254-252-59.ap-southeast-1.compute.amazonaws.com/game.
+- This app now is available at http://ec2-54-169-208-186.ap-southeast-1.compute.amazonaws.com/game Or http://ec2-46-137-194-129.ap-southeast-1.compute.amazonaws.com/ for backup
 
 ## Introduction
 #### Why is this application born?
