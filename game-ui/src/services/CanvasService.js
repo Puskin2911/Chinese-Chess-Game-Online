@@ -143,12 +143,14 @@ const drawGeneralChecking = (ctx, position, isRedPlayer) => {
         y = CELL_SIZE / 2 + CELL_SIZE * xCenter + 7;
     }
 
+    ctx.save();
     ctx.lineWidth = 2;
     ctx.strokeStyle = "red";
 
     ctx.beginPath();
     ctx.arc(x, y, 16, 0, Math.PI * 2, true);
     ctx.stroke();
+    ctx.restore();
 }
 
 const drawGeneralCheckingEffect = (ctx) => {
@@ -164,9 +166,21 @@ const drawLoserEffect = (ctx) => {
 }
 
 const drawTimeUpNotification = (ctx, loserUsername) => {
+    ctx.save();
     ctx.font = '30px Comic Sans MS';
     ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
     ctx.strokeText(loserUsername + ' hết thời gian', 120, 400);
+    ctx.restore();
+}
+
+const drawSurrenderNotification = (ctx, loserUsername) => {
+    ctx.save();
+    ctx.font = '30px Comic Sans MS';
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeText(loserUsername + ' đầu hàng', 150, 400);
+    ctx.restore();
 }
 
 const canvasService = {
@@ -180,7 +194,8 @@ const canvasService = {
     drawGeneralCheckingEffect,
     drawWinnerEffect,
     drawLoserEffect,
-    drawTimeUpNotification
+    drawTimeUpNotification,
+    drawSurrenderNotification
 };
 
 export default canvasService;

@@ -61,6 +61,8 @@ export default class Board extends React.Component {
             }
             if (gameResultCached.reason === "time_up") {
                 canvasService.drawTimeUpNotification(ctx, gameResultCached.loser.username);
+            } else if (gameResultCached.reason === "surrender") {
+                canvasService.drawSurrenderNotification(ctx, gameResultCached.loser.username);
             }
         }
 
