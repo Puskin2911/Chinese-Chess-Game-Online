@@ -5,7 +5,7 @@ export default function UserProfile(props) {
     const user = props.user;
 
     return (
-        <div className="mt-5">
+        <div className="mt-4">
             <button type="button" className="btn">
                 <img src={imageLoader.userAvatar} width="80px" className="rounded-circle"
                      alt="User Avatar"/>

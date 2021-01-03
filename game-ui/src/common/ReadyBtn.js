@@ -37,15 +37,13 @@ export default class ReadyBtn extends React.Component {
 
     render() {
         const isReady = this.state.isReady;
+        const displayText = isReady ? "Hủy" : "Sẵn sàng";
+        
         return (
             <div>
-                <button type="button" className="btn p-0 bg-white rounded" title="Sẵn sàng" onClick={this.handleReady}>
-                    <span className="text-success">
-                        {isReady ?
-                            <i className="far fa-2x fa-times-circle"/>
-                            : <i className="fas fa-2x fa-chevron-circle-right"/>
-                        }
-                    </span>
+                <button type="button" className="btn btn-outline-success p-0 bg-white rounded"
+                        onClick={this.handleReady}>
+                    <h5><code className="text-success px-1">{displayText}</code></h5>
                 </button>
             </div>
         );

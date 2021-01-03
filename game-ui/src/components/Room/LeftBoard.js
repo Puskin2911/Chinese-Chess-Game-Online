@@ -48,15 +48,19 @@ export default class LeftBoard extends React.Component {
                     {this.props.isGameStarted
                         ? <div>
                             <button type="button" className="btn" data-toggle="modal" data-target="#confirmExitModal">
-                                <i className="fas fa-2x fa-power-off"/>
+                                <span className="text-danger">
+                                    <i className="fas fa-2x fa-power-off"/>
+                                </span>
                             </button>
                             <ConfirmModal id="confirmExitModal"
                                           title="Bạn sẽ thua ván này nếu thoát ra ngoài. Bạn có chắc muốn thoát không ?"
                                           cancel="Thôi" ok="Thoát đê" handleOk={this.handleLeaveRoom}/>
                         </div>
                         : <button type="button" title="Rời phòng" className="btn" data-toggle="modal"
-                                  data-target="#confirmExitModal">
-                            <i className="fas fa-2x fa-power-off" onClick={this.handleLeaveRoom}/>
+                                  data-target="#confirmExitModal" onClick={this.handleLeaveRoom}>
+                            <span className="text-white">
+                                <i className="fas fa-2x fa-power-off"/>
+                            </span>
                         </button>
                     }
                     <h5 className="text-center mt-2">

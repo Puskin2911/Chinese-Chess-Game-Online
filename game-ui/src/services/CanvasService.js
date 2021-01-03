@@ -160,7 +160,7 @@ const drawWinnerEffect = (ctx) => {
 }
 
 const drawLoserEffect = (ctx) => {
-    ctx.drawImage(effectImageLoader.loser, BOARD_WIDTH_SIZE / 3 + 18, BOARD_HEIGHT_SIZE / 3 + 22);
+    ctx.drawImage(effectImageLoader.loser, BOARD_WIDTH_SIZE / 3 + 16, BOARD_HEIGHT_SIZE / 3 + 22);
 }
 
 const canvasService = {
