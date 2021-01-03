@@ -5,9 +5,7 @@ import com.doubleat.ccgame.exception.RoomIsFullPlayersException;
 import com.doubleat.ccgame.exception.RoomNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -36,6 +34,16 @@ public class RoomCacheImpl implements RoomCache {
             for (Map.Entry<Integer, Room> entry : roomMap.entrySet()) {
                 Room room = entry.getValue();
                 Set<UserDto> players = room.getPlayers();
+
+                List<UserDto> playerList = new ArrayList<>(players);
+                for (UserDto user : playerList) {
+                    if (user.getUsername().equals(userDto.getUsername())) {
+                        playerList.remove(user);
+                        playerList.add(userDto);
+                        room.setPlayers(new HashSet<>(playerList));
+                        return room;
+                    }
+                }
 
                 if (players.size() < 2) {
                     players.add(userDto);
