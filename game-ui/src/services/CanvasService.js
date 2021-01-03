@@ -163,6 +163,12 @@ const drawLoserEffect = (ctx) => {
     ctx.drawImage(effectImageLoader.loser, BOARD_WIDTH_SIZE / 3 + 16, BOARD_HEIGHT_SIZE / 3 + 22);
 }
 
+const drawTimeUpNotification = (ctx, loserUsername) => {
+    ctx.font = '30px Comic Sans MS';
+    ctx.strokeStyle = "white";
+    ctx.strokeText(loserUsername + ' hết thời gian', 120, 400);
+}
+
 const canvasService = {
     drawBlankBoard,
     drawPieces,
@@ -173,7 +179,8 @@ const canvasService = {
     drawGeneralChecking,
     drawGeneralCheckingEffect,
     drawWinnerEffect,
-    drawLoserEffect
+    drawLoserEffect,
+    drawTimeUpNotification
 };
 
 export default canvasService;

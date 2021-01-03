@@ -67,8 +67,8 @@ public class StompController {
 
     @MessageMapping("/room/{roomId}/game/time-over")
     public void handleTimeOver(@DestinationVariable Integer roomId,
-                               Principal principal) {
-        stompService.handleTimeOver(roomId, principal.getName());
+                               @Payload TimeOverMessage timeOverMessage) {
+        stompService.handleTimeOver(roomId, timeOverMessage.getUsername());
     }
 
 }

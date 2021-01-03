@@ -5,7 +5,7 @@ export default class Clock extends React.Component {
         super(props);
 
         this.stompClient = props.stompClient;
-        this.subscription = null;
+        this.subscriptions = [];
 
         this.state = {
             isMyTurn: false,
@@ -17,7 +17,10 @@ export default class Clock extends React.Component {
         const timeLeft = this.state.timeLeft;
 
         if (timeLeft === 0) {
-            this.stompClient.send("/app/room/" + this.props.room.id + "/game/time-over", {}, {});
+            const msgToSent = {
+                username: this.props.user.username
+            };
+            this.stompClient.send("/app/room/" + this.props.room.id + "/game/time-over", {}, JSON.stringify(msgToSent));
             return "00:00";
         }
 
@@ -37,7 +40,9 @@ export default class Clock extends React.Component {
     }
 
     componentDidMount() {
-        this.subscription = this.stompClient.subscribe("/room/" + this.props.room.id + "/move", (payload) => {
+        const roomId = this.props.room.id;
+
+        const moveSub = this.stompClient.subscribe("/room/" + roomId + "/move", (payload) => {
             const gameDto = JSON.parse(payload.body);
             const isMyTurnToUpdate = gameDto.nextTurnUsername === this.props.user.username;
 
@@ -45,11 +50,21 @@ export default class Clock extends React.Component {
                 isMyTurn: isMyTurnToUpdate
             });
         });
+
+        const startSub = this.stompClient.subscribe("/room/" + roomId + "/game/start", (payload) => {
+            console.log("From Room receive signal start game!");
+
+            this.setState({
+                timeLeft: 15 * 60 * 1000
+            });
+        });
+
+        this.subscriptions.push(moveSub, startSub);
     }
 
     componentWillUnmount() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
+        for (let i = 0; i < this.subscriptions.length; i++) {
+            this.subscriptions[i].unsubscribe();
         }
     }
 

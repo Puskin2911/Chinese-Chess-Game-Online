@@ -83,7 +83,8 @@ export default class Room extends React.Component {
                     isRedPlayer: false,
                     gameResultCached: {
                         winner: gameStop.winner,
-                        loser: gameStop.loser
+                        loser: gameStop.loser,
+                        reason: gameStop.reason
                     }
                 });
                 this.props.updateRoom(gameStop.room);
