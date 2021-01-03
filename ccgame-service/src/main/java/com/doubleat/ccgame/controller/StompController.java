@@ -65,4 +65,10 @@ public class StompController {
         stompService.handleSurrenderRequest(roomId, principal.getName());
     }
 
+    @MessageMapping("/room/{roomId}/game/time-over")
+    public void handleTimeOver(@DestinationVariable Integer roomId,
+                               Principal principal) {
+        stompService.handleTimeOver(roomId, principal.getName());
+    }
+
 }

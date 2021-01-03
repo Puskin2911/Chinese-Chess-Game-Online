@@ -6,6 +6,7 @@ import com.doubleat.ccgame.dto.message.ReadyMessage;
 import com.doubleat.ccgame.dto.response.PlayingGameDto;
 import com.doubleat.ccgame.dto.response.GameStartResponse;
 import com.doubleat.ccgame.dto.response.GameStopResponse;
+import com.doubleat.ccgame.game.GameOverReason;
 import com.doubleat.ccgame.room.RoomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,15 @@ public class StompServiceImpl implements StompService {
     @Override
     public void handleSurrenderRequest(Integer roomId, String loserUsername) {
         GameStopResponse gameStopResponse = roomStrategy.handleSurrenderRequest(roomId, loserUsername);
+        gameStopResponse.setReason(GameOverReason.SURRENDER);
+
+        sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
+    }
+
+    @Override
+    public void handleTimeOver(Integer roomId, String loserUsername) {
+        GameStopResponse gameStopResponse = roomStrategy.handleSurrenderRequest(roomId, loserUsername);
+        gameStopResponse.setReason(GameOverReason.TIME_UP);
 
         sendMessage("/room/" + roomId + "/game/stop", gameStopResponse);
     }

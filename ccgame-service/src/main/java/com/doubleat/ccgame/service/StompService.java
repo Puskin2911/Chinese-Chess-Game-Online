@@ -19,4 +19,6 @@ public interface StompService {
 
     void handleSurrenderRequest(Integer roomId, String loserUsername);
 
+    void handleTimeOver(Integer roomId, String loserUsername);
+
 }
