@@ -39,6 +39,18 @@ export default class UserProfile extends React.Component {
                                         <h5 className="m-4">
                                             <code className="border rounded bg-white p-2">{user.elo}</code>
                                         </h5>
+                                        <form>
+                                            <div className="form-group">
+                                                <label className="form-control">
+                                                    <span>Trận thắng: </span>
+                                                    <code>{user.numberOfWins}</code>
+                                                </label>
+                                                <label className="form-control">
+                                                    <span>Trận thua: </span>
+                                                    <code>{user.numberOfLoses}</code>
+                                                </label>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div className="border-top text-center p-3">
                                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Close
