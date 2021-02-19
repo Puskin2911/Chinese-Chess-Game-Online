@@ -1,16 +1,20 @@
 package com.doubleat.ccgame.dto.response;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ResponseError {
+
     private Date timestamp;
+
     private String message;
+
     private String details;
+
 }
