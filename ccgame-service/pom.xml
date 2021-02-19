@@ -66,6 +66,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <!--External dependencies-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
