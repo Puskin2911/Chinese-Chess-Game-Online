@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = AuthController.ROOT_API)
 public interface AuthController extends BaseController {
 
-    String AUTH_RESOURCE = "auth";
-    String ROOT_API = PUBLIC_API + VERSION_V1 + AUTH_RESOURCE;
+    String AUTH_RESOURCE = "/auth";
+    String ROOT_API = PUBLIC_API + AUTH_RESOURCE;
 
     String LOGIN_RESOURCE = "/login";
     String VALIDATE_RESOURCE = "/validate";

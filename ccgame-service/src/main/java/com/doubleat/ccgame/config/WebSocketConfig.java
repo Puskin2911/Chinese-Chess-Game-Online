@@ -14,10 +14,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private StompConfig stompConfig;
 
+    @Autowired
+    private MvcConfig mvcConfig;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp")
-                .setAllowedOrigins("*")
+                .setAllowedOrigins(mvcConfig.getAllowedOrigins().toArray(new String[0]))
                 .withSockJS()
                 .setStreamBytesLimit(stompConfig.getStreamBytesLimit())
                 .setHttpMessageCacheSize(stompConfig.getHttpMessageCacheSize())
